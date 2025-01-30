@@ -347,45 +347,56 @@ export default function AkashiHero() {
       <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.03] via-transparent to-zinc-800/[0.1] blur-3xl" />
       <div className="absolute inset-0 overflow-hidden">
         <Geometric3DShape
-          delay={0.2}
+          // delay={0.3}
+          width={600}
+          height={140}
+          rotate={12}
+          gradient="from-indigo-500/[0.15]"
+          className="left-[-10%] md:left-[-5%] top-[15%] md:top-[20%]"
+          lineCount={6}
+          lineSpacing={2}
+          lineThickness={2}
+        />
+        <Geometric3DShape
+          delay={0.5}
           width={500}
           height={120}
-          rotate={15}
-          gradient="from-emerald-500/[0.15]"
-          className="left-[-5%] top-[20%]"
+          rotate={-15}
+          gradient="from-rose-500/[0.15]"
+          className="right-[-5%] md:right-[0%] top-[70%] md:top-[75%]"
+          lineCount={6}
+          lineSpacing={2}
+          lineThickness={2}
+        />
+        <Geometric3DShape
+          delay={0.4}
+          width={300}
+          height={80}
+          rotate={-8}
+          gradient="from-violet-500/[0.15]"
+          className="left-[5%] md:left-[10%] bottom-[5%] md:bottom-[10%]"
+          lineCount={6}
+          lineSpacing={2}
+          lineThickness={2}
+        />
+        <Geometric3DShape
+          delay={0.7}
+          width={200}
+          height={60}
+          rotate={25}
+          gradient="from-amber-500/[0.15]"
+          className="right-[15%] md:right-[20%] top-[10%] md:top-[15%]"
           lineCount={6}
           lineSpacing={2}
           lineThickness={2}
         />
         <Geometric3DShape
           delay={0.2}
-          width={500}
-          height={120}
-          rotate={15}
-          gradient="from-emerald-500/[0.15]"
-          className="left-[76%] top-[20%]"
-          lineCount={6}
-          lineSpacing={2}
-          lineThickness={2}
-        />
-        <Geometric3DShape
-          delay={0.2}
-          width={500}
-          height={120}
-          rotate={15}
-          gradient="from-emerald-500/[0.15]"
-          className="left-[75%] top-[80%]"
-          lineCount={6}
-          lineSpacing={2}
-          lineThickness={2}
-        />
-        <Geometric3DShape
-          delay={0.2}
-          width={500}
-          height={120}
-          rotate={15}
-          gradient="from-emerald-500/[0.15]"
-          className="left-[-5%] top-[80%]"
+          width={150}
+          height={40}
+          rotate={-45}
+          gradient="from-cyan-500/[0.15]"
+          className="left-[20%] md:left-[25%] top-[5%] md:top-[10%]"
           lineCount={6}
           lineSpacing={2}
           lineThickness={2}
