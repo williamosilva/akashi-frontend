@@ -1,9 +1,9 @@
-import { Hero } from "@/components/sections/hero";
+import HeroGeometric from "@/components/sections/hero";
 
 export default function Home() {
   return (
     <main>
-      <Hero />
+      <HeroGeometric />
     </main>
   );
 }
