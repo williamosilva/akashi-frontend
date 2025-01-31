@@ -206,9 +206,6 @@ function Geometric3DShape({
   height = 100,
   rotate = 0,
   gradient = "from-emerald-500/[0.08]",
-  lineCount = 8, // Increased for more depth
-  lineSpacing = 4, // Increased spacing between layers
-  lineThickness = 2,
 }: {
   className?: string;
   delay?: number;
@@ -216,9 +213,6 @@ function Geometric3DShape({
   height?: number;
   rotate?: number;
   gradient?: string;
-  lineCount?: number;
-  lineSpacing?: number;
-  lineThickness?: number;
 }) {
   return (
     <motion.div
@@ -261,52 +255,16 @@ function Geometric3DShape({
         }}
         className="relative"
       >
-        {Array.from({ length: lineCount }).map((_, index) => {
-          const depth = index * lineSpacing;
-          const opacity = 1 - (index / lineCount) * 0.7;
-
-          return (
-            <div
-              key={index}
-              className={cn(
-                "absolute",
-                "border-2 border-emerald-500/20",
-                "clip-path-polygon"
-              )}
-              style={{
-                left: depth,
-                top: depth,
-                right: -depth,
-                bottom: -depth,
-                borderWidth: `${lineThickness}px`,
-                opacity,
-                transform: `translateZ(${-depth * 2}px)`,
-                backgroundColor: `rgba(52, 211, 153, ${
-                  0.02 * (lineCount - index)
-                })`,
-                boxShadow: `
-                    ${depth}px ${depth}px ${depth * 2}px rgba(52,211,153,${
-                  0.05 * opacity
-                }),
-                    inset ${-depth}px ${-depth}px ${depth}px rgba(52,211,153,${
-                  0.05 * opacity
-                })
-                  `,
-              }}
-            />
-          );
-        })}
-
         {/* Main shape with enhanced gradient and glow */}
         <div
           className={cn(
             "absolute inset-0",
             "bg-gradient-to-r to-transparent",
             gradient,
-            "backdrop-blur-[3px] border-2 border-emerald-500/20",
+            "backdrop-blur-[1000px] border-2 border-emerald-500/10",
             "shadow-[0_8px_32px_0_rgba(52,211,153,0.1)]",
             "after:absolute after:inset-0",
-            "after:bg-[radial-gradient(circle_at_50%_50%,rgba(52,211,153,0.2),transparent_70%)]",
+            "after:bg-[radial-gradient(circle_at_80%_80%,rgba(52,211,153,0.2),transparent_70%)]",
             "clip-path-polygon"
           )}
           style={{
@@ -345,67 +303,67 @@ export default function AkashiHero() {
   return (
     <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-zinc-900">
       <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.03] via-transparent to-zinc-800/[0.1] blur-3xl" />
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden Z-[1]">
         <Geometric3DShape
           // delay={0.3}
           width={600}
           height={140}
           rotate={12}
-          gradient="from-indigo-500/[0.15]"
+          // gradient="from-indigo-500/[0.15]"
           className="left-[-10%] md:left-[-5%] top-[15%] md:top-[20%]"
-          lineCount={6}
-          lineSpacing={2}
-          lineThickness={2}
+          // lineCount={6}
+          // lineSpacing={2}
+          // lineThickness={2}
         />
         <Geometric3DShape
           delay={0.5}
           width={500}
           height={120}
           rotate={-15}
-          gradient="from-rose-500/[0.15]"
+          // gradient="from-rose-500/[0.15]"
           className="right-[-5%] md:right-[0%] top-[70%] md:top-[75%]"
-          lineCount={6}
-          lineSpacing={2}
-          lineThickness={2}
+          // lineCount={6}
+          // lineSpacing={2}
+          // lineThickness={2}
         />
         <Geometric3DShape
           delay={0.4}
           width={300}
           height={80}
           rotate={-8}
-          gradient="from-violet-500/[0.15]"
+          // gradient="from-violet-500/[0.15]"
           className="left-[5%] md:left-[10%] bottom-[5%] md:bottom-[10%]"
-          lineCount={6}
-          lineSpacing={2}
-          lineThickness={2}
+          // lineCount={6}
+          // lineSpacing={2}
+          // lineThickness={2}
         />
         <Geometric3DShape
           delay={0.7}
           width={200}
           height={60}
           rotate={25}
-          gradient="from-amber-500/[0.15]"
+          // gradient="from-amber-500/[0.15]"
           className="right-[15%] md:right-[20%] top-[10%] md:top-[15%]"
-          lineCount={6}
-          lineSpacing={2}
-          lineThickness={2}
+          // lineCount={6}
+          // lineSpacing={2}
+          // lineThickness={2}
         />
         <Geometric3DShape
           delay={0.2}
           width={150}
           height={40}
           rotate={-45}
-          gradient="from-cyan-500/[0.15]"
+          // gradient="from-cyan-500/[0.15]"
           className="left-[20%] md:left-[25%] top-[5%] md:top-[10%]"
-          lineCount={6}
-          lineSpacing={2}
-          lineThickness={2}
+          // lineCount={6}
+          // lineSpacing={2}
+          // lineThickness={2}
         />
       </div>
 
       {/* Rest of the hero section remains the same */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(52,211,153,0.04),transparent_70%)]" />
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 Z-0">
         <NetworkCanvas />
       </div>
       <div className="flex flex-col m-auto">
