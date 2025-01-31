@@ -18,7 +18,7 @@ const nodes: Node[] = [
   // Computers (Left and Right)
   {
     id: "comp1",
-    label: "Client 1",
+    label: "API",
     x: 15,
     y: 20,
     connections: ["hub"],
@@ -26,7 +26,7 @@ const nodes: Node[] = [
   },
   {
     id: "comp2",
-    label: "Client 2",
+    label: "Database",
     x: 15,
     y: 50,
     connections: ["hub"],
@@ -34,7 +34,7 @@ const nodes: Node[] = [
   },
   {
     id: "comp3",
-    label: "Client 3",
+    label: "Blog",
     x: 15,
     y: 80,
     connections: ["hub"],
@@ -43,7 +43,7 @@ const nodes: Node[] = [
   // Central Hub
   {
     id: "hub",
-    label: "Atomic Hub",
+    label: "Akashi",
     x: 50,
     y: 50,
     connections: ["comp4", "comp5", "comp6"],
@@ -53,7 +53,7 @@ const nodes: Node[] = [
 
   {
     id: "comp5",
-    label: "Service 2",
+    label: "WebSite",
     x: 85,
     y: 50,
     connections: [],
@@ -103,7 +103,7 @@ const MindMapSection = () => {
               progress: i * 0.5,
               path: [node, connNode],
               speed: 0.0003 + Math.random() * 0.0002,
-              tailLength: 0.15, // Length of the trailing effect (0-1)
+              tailLength: 0.1, // Length of the trailing effect (0-1)
             });
           }
         }
@@ -224,8 +224,8 @@ const MindMapSection = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Draw grid background
-      const gridSize = 30;
-      ctx.strokeStyle = "rgba(52, 211, 153, 0.1)";
+      const gridSize = 80;
+      ctx.strokeStyle = "rgba(52, 211, 153, 0.05)";
       ctx.lineWidth = 1;
 
       for (let x = 0; x < canvas.width; x += gridSize) {
@@ -352,20 +352,21 @@ const MindMapSection = () => {
       >
         <h2 className="text-4xl font-bold mb-4 tracking-tighter">
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-500">
-            Atomic Data Flow
+            Akashi Data Flow
           </span>
         </h2>
         <p className="text-zinc-400 max-w-2xl mx-auto px-4">
-          Seamlessly connect and transform data through our atomic-powered cloud
-          hub, enabling efficient communication between clients and services.
+          Seamlessly connect and transform data through our akashi cloud hub,
+          enabling efficient communication between customers and services.
         </p>
       </motion.div>
 
-      <div className="relative w-full h-[600px]">
+      <div className="relative w-full h-[1000px]">
         <canvas ref={canvasRef} className="absolute inset-0" />
       </div>
 
       <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-transparent to-zinc-900/90 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-zinc-900 via-transparent to-zinc-900/90 pointer-events-none" />
     </section>
   );
 };
