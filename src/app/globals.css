@@ -6,6 +6,32 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+:root {
+  --mouse-x: 0px;
+  --mouse-y: 0px;
+}
+
+.grid:hover > .absolute {
+  opacity: 1;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgba(52, 211, 153, 0.2);
+  border-radius: 2px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(52, 211, 153, 0.4);
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
