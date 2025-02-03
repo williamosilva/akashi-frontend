@@ -3,12 +3,30 @@
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { JetBrains_Mono } from "next/font/google";
+import { JetBrains_Mono, Montserrat } from "next/font/google";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   weight: ["400", "700"],
   variable: "--font-jetbrains",
+});
+
+const fadeInUpVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      delay: i * 0.1,
+    },
+  }),
+};
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  variable: "--font-montserrat",
 });
 
 interface Node {
@@ -325,36 +343,41 @@ const MindMapSection = () => {
   }, []);
 
   return (
-    <section className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden ">
-      {/* <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.03] via-transparent to-zinc-800/[0.1] blur-3xl" /> */}
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-        className="absolute top-20 left-0 right-0 text-center z-10"
-      >
-        <h2
-          className={cn(
-            "text-4xl font-bold mb-4 tracking-tighter",
-            jetbrainsMono.className
-          )}
-        >
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-500">
-            Akashi Data Flow
-          </span>
-        </h2>
-        <p className="text-zinc-400 max-w-2xl mx-auto px-4">
-          Seamlessly connect and transform data through our akashi cloud hub,
-          enabling efficient communication between customers and services.
-        </p>
-      </motion.div>
-
-      <div className="relative w-full h-full">
-        <canvas ref={canvasRef} className="absolute inset-0" />
+    <section className="relative w-full h-screen flex flex-col mt-4">
+      <div className="absolute inset-0">
+        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
       </div>
 
-      {/* <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-transparent to-zinc-900/90 pointer-events-none" /> */}
+      <div className="relative z-10 flex flex-col justify-center items-center text-center mt-24 px-4">
+        <motion.div
+          custom={0}
+          variants={fadeInUpVariants}
+          initial="hidden"
+          animate="visible"
+          className="max-w-3xl w-full"
+        >
+          <h2
+            className={cn(
+              "text-4xl md:text-5xl font-bold mb-4 tracking-tighter",
+              jetbrainsMono.className
+            )}
+          >
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-500">
+              Akashi Data Flow
+            </span>
+          </h2>
+
+          <p
+            className={cn(
+              "text-zinc-400 text-base md:text-lg",
+              montserrat.className
+            )}
+          >
+            Seamlessly connect and transform data through our akashi cloud hub,
+            enabling efficient communication between customers and services.
+          </p>
+        </motion.div>
+      </div>
     </section>
   );
 };

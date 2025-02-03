@@ -140,32 +140,8 @@ export default function DynamicVSCodeSection() {
   }, []);
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden py-20">
-      {/* <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.03] via-trainsparent to-zinc-800/[0.1] blur-3xl" />
-      <div className="absolute inset-0 overflow-hidden z-[1]">
-        <Geometric3DShape
-          width={600}
-          height={140}
-          rotate={12}
-          className="left-[-10%] md:left-[-5%] top-[15%] md:top-[20%]"
-        />
-        <Geometric3DShape
-          delay={0.5}
-          width={500}
-          height={120}
-          rotate={-15}
-          className="right-[-5%] md:right-[0%] top-[70%] md:top-[75%]"
-        />
-        <Geometric3DShape
-          delay={0.4}
-          width={300}
-          height={80}
-          rotate={-8}
-          className="left-[5%] md:left-[10%] bottom-[5%] md:bottom-[10%]"
-        />
-      </div> */}
-
-      <div className="container mx-auto px-4 md:px-6 relative z-10">
+    <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden py-20 -mt-44">
+      <div className="container mx-auto px-4 md:px-6 relative z-10 h-full">
         <motion.div
           custom={0}
           variants={fadeInUpVariants}

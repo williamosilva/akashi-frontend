@@ -138,7 +138,7 @@ export default function Features() {
         >
           <h2
             className={cn(
-              "text-4xl sm:text-5xl font-bold mb-4 tracking-tighter",
+              "text-4xl font-bold mb-4 tracking-tighter",
               jetbrainsMono.className
             )}
           >
@@ -148,7 +148,7 @@ export default function Features() {
           </h2>
           <p
             className={cn(
-              "text-zinc-400 max-w-2xl mx-auto text-lg",
+              "text-zinc-400 max-w-2xl mx-auto",
               montserrat.className
             )}
           >
