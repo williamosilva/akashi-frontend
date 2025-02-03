@@ -7,7 +7,7 @@ import Footer from "@/components/ui/Footer";
 
 export default function Home() {
   return (
-    <main className="relative">
+    <main className="relative overflow-hidden">
       <div className=" w-full h-full z-[1] ">
         <Background />
       </div>
