@@ -1,15 +1,20 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { JetBrains_Mono } from "next/font/google";
+import { JetBrains_Mono, Montserrat } from "next/font/google";
 import { cn } from "@/lib/utils";
-import { useEffect, useRef, useState } from "react";
 import NetworkCanvas from "@/three/NetworkCanvas";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   weight: ["400", "700"],
   variable: "--font-jetbrains",
+});
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  variable: "--font-montserrat",
 });
 
 export default function AkashiHero() {
@@ -27,7 +32,13 @@ export default function AkashiHero() {
   };
 
   return (
-    <div className="relative min-h-screen w-full">
+    <div
+      className={cn(
+        "relative min-h-screen w-full",
+        montserrat.variable,
+        jetbrainsMono.variable
+      )}
+    >
       <div className="absolute inset-0">
         <NetworkCanvas />
       </div>
@@ -63,8 +74,8 @@ export default function AkashiHero() {
               >
                 <h1
                   className={cn(
-                    "text-5xl sm:text-7xl font-bold mb-6 tracking-tighter",
-                    jetbrainsMono.className
+                    "text-5xl sm:text-7xl font-bold mb-6 tracking-tight",
+                    montserrat.className
                   )}
                 >
                   <span className="bg-clip-text text-transparent bg-gradient-to-b from-zinc-100 to-zinc-400">
@@ -83,7 +94,7 @@ export default function AkashiHero() {
                 initial="hidden"
                 animate="visible"
               >
-                <p className="text-base sm:text-lg text-zinc-400 mb-8 leading-relaxed max-w-2xl mx-auto">
+                <p className="text-base sm:text-lg text-zinc-400 mb-8 leading-relaxed max-w-2xl mx-auto font-montserrat">
                   Connect and manage your project data dynamically. Update
                   content seamlessly through our intuitive API, without touching
                   your original codebase.
@@ -98,10 +109,10 @@ export default function AkashiHero() {
             animate="visible"
             className="flex flex-col sm:flex-row gap-4 justify-center items-center pointer-events-auto"
           >
-            <button className="px-6 py-3 rounded-lg bg-emerald-500 text-zinc-900 font-medium hover:bg-emerald-400 transition-colors">
+            <button className="px-6 py-3 rounded-lg bg-emerald-500 text-zinc-900 font-semibold hover:bg-emerald-400 transition-colors font-montserrat">
               Get Started
             </button>
-            <button className="px-6 py-3 rounded-lg bg-zinc-800 text-emerald-300 border border-emerald-500/20 hover:bg-zinc-700 transition-colors">
+            <button className="px-6 py-3 rounded-lg bg-zinc-800 text-emerald-300 border border-emerald-500/20 hover:bg-zinc-700 transition-colors font-montserrat">
               View Documentation
             </button>
           </motion.div>
