@@ -3,6 +3,7 @@ import MindMapSection from "@/components/sections/mentalMapSection";
 import Features from "@/components/sections/features";
 import DynamicVSCodeSection from "@/components/sections/dynamic-vscode-section";
 import Background from "@/components/ui/Background";
+import Footer from "@/components/ui/Footer";
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
         <Features />
         <MindMapSection />
         <DynamicVSCodeSection />
+        <Footer />
       </div>
     </main>
   );
