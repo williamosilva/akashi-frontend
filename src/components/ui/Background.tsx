@@ -61,10 +61,10 @@ export default function Background() {
 
         <Geometric3DShape
           delay={0.5}
-          width={500}
-          height={120}
+          width={300}
+          height={80}
           rotate={-15}
-          className="left-[-5%] md:left-[0%] top-[40%] "
+          className="left-[-5%] md:left-[2%] top-[40%] "
         />
         <Geometric3DShape
           delay={0.4}
