@@ -91,7 +91,6 @@ const MindMapSection = () => {
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
-    // Initialize particles
     nodes.forEach((node) => {
       node.connections.forEach((connId) => {
         const connNode = nodes.find((n) => n.id === connId);
@@ -209,38 +208,35 @@ const MindMapSection = () => {
       if (!ctx || !canvas) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw background
-      const gradient = ctx.createRadialGradient(
-        canvas.width / 2,
-        canvas.height / 2,
-        0,
-        canvas.width / 2,
-        canvas.height / 2,
-        Math.max(canvas.width, canvas.height) / 2
-      );
-      gradient.addColorStop(0, "rgba(24, 24, 27, 1)");
-      gradient.addColorStop(1, "rgba(9, 9, 11, 1)");
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // const gradient = ctx.createRadialGradient(
+      //   canvas.width / 2,
+      //   canvas.height / 2,
+      //   0,
+      //   canvas.width / 2,
+      //   canvas.height / 2,
+      //   Math.max(canvas.width, canvas.height) / 2
+      // );
+      // gradient.addColorStop(0, "rgba(24, 24, 27, 1)");
+      // gradient.addColorStop(1, "rgba(9, 9, 11, 1)");
+      // ctx.fillStyle = gradient;
+      // ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Draw grid
-      const gridSize = (80 * Math.min(canvas.width, canvas.height)) / 1000;
-      ctx.strokeStyle = "rgba(52, 211, 153, 0.05)";
-      ctx.lineWidth = (1 * Math.min(canvas.width, canvas.height)) / 1000;
-      for (let x = 0; x < canvas.width; x += gridSize) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.height);
-        ctx.stroke();
-      }
-      for (let y = 0; y < canvas.height; y += gridSize) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
-        ctx.stroke();
-      }
+      // const gridSize = (80 * Math.min(canvas.width, canvas.height)) / 1000;
+      // ctx.strokeStyle = "rgba(52, 211, 153, 0.05)";
+      // ctx.lineWidth = (1 * Math.min(canvas.width, canvas.height)) / 1000;
+      // for (let x = 0; x < canvas.width; x += gridSize) {
+      //   ctx.beginPath();
+      //   ctx.moveTo(x, 0);
+      //   ctx.lineTo(x, canvas.height);
+      //   ctx.stroke();
+      // }
+      // for (let y = 0; y < canvas.height; y += gridSize) {
+      //   ctx.beginPath();
+      //   ctx.moveTo(0, y);
+      //   ctx.lineTo(canvas.width, y);
+      //   ctx.stroke();
+      // }
 
-      // Draw connections
       nodes.forEach((node) => {
         node.connections.forEach((connId) => {
           const connNode = nodes.find((n) => n.id === connId);
@@ -257,7 +253,6 @@ const MindMapSection = () => {
         });
       });
 
-      // Update and draw particles
       particlesRef.current.forEach((particle) => {
         particle.progress += particle.speed;
         if (particle.progress >= 1) particle.progress = 0;
@@ -330,8 +325,8 @@ const MindMapSection = () => {
   }, []);
 
   return (
-    <section className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden bg-zinc-900">
-      <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.03] via-transparent to-zinc-800/[0.1] blur-3xl" />
+    <section className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden ">
+      {/* <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.03] via-transparent to-zinc-800/[0.1] blur-3xl" /> */}
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -359,7 +354,7 @@ const MindMapSection = () => {
         <canvas ref={canvasRef} className="absolute inset-0" />
       </div>
 
-      <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-transparent to-zinc-900/90 pointer-events-none" />
+      {/* <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-transparent to-zinc-900/90 pointer-events-none" /> */}
     </section>
   );
 };

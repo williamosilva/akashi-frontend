@@ -301,8 +301,8 @@ export default function AkashiHero() {
   };
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-zinc-900">
-      <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.03] via-transparent to-zinc-800/[0.1] blur-3xl" />
+    <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden ">
+      {/* <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.03] via-transparent to-zinc-800/[0.1] blur-3xl" />
       <div className="absolute inset-0 overflow-hidden Z-[1]">
         <Geometric3DShape
           // delay={0.3}
@@ -361,11 +361,11 @@ export default function AkashiHero() {
         />
       </div>
 
-      {/* Rest of the hero section remains the same */}
+
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(52,211,153,0.04),transparent_70%)]" />
       <div className="absolute inset-0 Z-0">
         <NetworkCanvas />
-      </div>
+      </div> */}
       <div className="flex flex-col m-auto">
         <div className="relative z-10 container mx-auto px-4 md:px-6 pointer-events-none">
           <div className="max-w-4xl mx-auto text-center">
@@ -439,7 +439,7 @@ export default function AkashiHero() {
         </motion.div>
       </div>
 
-      <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-transparent to-zinc-900/90 pointer-events-none" />
+      {/* <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-transparent to-zinc-900/90 pointer-events-none" /> */}
     </div>
   );
 }

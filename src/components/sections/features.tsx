@@ -93,7 +93,7 @@ function FeatureCard({ feature, index }) {
 
 export default function Features() {
   return (
-    <section className="py-24 bg-zinc-900 overflow-hidden">
+    <section className="py-24  overflow-hidden">
       <div className="container mx-auto px-4 max-w-6xl">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
