@@ -6,6 +6,27 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+@keyframes float {
+  0% {
+    transform: translateY(100vh) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-20vh) scale(1.5);
+    opacity: 0;
+  }
+}
+
+.animate-float {
+  animation: float 20s ease-in-out infinite;
+}
+
 :root {
   --mouse-x: 0px;
   --mouse-y: 0px;

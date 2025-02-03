@@ -7,10 +7,10 @@ import Background from "@/components/ui/Background";
 export default function Home() {
   return (
     <main className="relative">
-      <div className="fixed inset-0 w-full h-full z-[1]">
+      <div className=" w-full h-full z-[1] ">
         <Background />
       </div>
-      <div className="relative z-[2]">
+      <div className="relative z-[2]  ">
         <HeroGeometric />
         <Features />
         <MindMapSection />

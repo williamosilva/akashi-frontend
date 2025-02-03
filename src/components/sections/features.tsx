@@ -93,8 +93,9 @@ function FeatureCard({ feature, index }) {
 
 export default function Features() {
   return (
-    <section className="py-24  overflow-hidden">
-      <div className="container mx-auto px-4 max-w-6xl">
+    <section className="py-24 overflow-hidden relative">
+      <div className="absolute z-[0] inset-0 bg-gradient-to-b from-zinc-900 via-transparent to-transparent pointer-events-none" />
+      <div className="container mx-auto px-4 max-w-6xl z-[1] relative">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

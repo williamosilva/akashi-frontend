@@ -141,7 +141,7 @@ export default function DynamicVSCodeSection() {
 
   return (
     <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden py-20">
-      {/* <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.03] via-transparent to-zinc-800/[0.1] blur-3xl" />
+      {/* <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.03] via-trainsparent to-zinc-800/[0.1] blur-3xl" />
       <div className="absolute inset-0 overflow-hidden z-[1]">
         <Geometric3DShape
           width={600}
