@@ -113,7 +113,7 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="flex items-center space-x-3 mb-4 md:mb-0">
+          <div className="flex items-center space-x-3 mb-4 md:mb-0 w-full">
             <span
               className={cn(
                 "text-emerald-300 font-bold",
@@ -123,7 +123,7 @@ export default function Footer() {
               Akashi
             </span>
           </div>
-          <nav className="flex flex-wrap justify-center md:justify-end space-x-6 mb-4 md:mb-0">
+          <nav className="flex flex-wrap justify-center md:justify-center space-x-6 mb-4 md:mb-0 w-full">
             {["Product", "Docs", "Pricing", "About"].map((item) => (
               <motion.div key={item} whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
                 <Link
@@ -135,7 +135,7 @@ export default function Footer() {
               </motion.div>
             ))}
           </nav>
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 w-full justify-end">
             {[
               { name: "GitHub", icon: Github, href: "#" },
               { name: "LinkedIn", icon: Linkedin, href: "#" },

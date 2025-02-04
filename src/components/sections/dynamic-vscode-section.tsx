@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { JetBrains_Mono } from "next/font/google";
+import { JetBrains_Mono, Montserrat } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { FileCode, ChevronRight, X, Minus, Square } from "lucide-react";
 
@@ -10,6 +10,12 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   weight: ["400", "700"],
   variable: "--font-jetbrains",
+});
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  variable: "--font-montserrat",
 });
 
 const codeSnippet = `
@@ -141,17 +147,17 @@ export default function DynamicVSCodeSection() {
 
   return (
     <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden py-20 -mt-44">
-      <div className="container mx-auto px-4 md:px-6 relative z-10 h-full">
+      <div className=" mx-auto px-4 md:px-6 relative z-10 h-full flex flex-col justify-center items-center ">
         <motion.div
           custom={0}
           variants={fadeInUpVariants}
           initial="hidden"
           animate="visible"
-          className="text-center mb-12"
+          className="max-w-3xl w-full mx-auto mb-12 text-center"
         >
           <h2
             className={cn(
-              "text-4xl sm:text-5xl font-bold mb-4 tracking-tighter",
+              "text-4xl md:text-5xl font-bold mb-4 tracking-tighter",
               jetbrainsMono.className
             )}
           >
@@ -159,7 +165,13 @@ export default function DynamicVSCodeSection() {
               Seamless Integration
             </span>
           </h2>
-          <p className="text-zinc-400 max-w-2xl mx-auto text-lg">
+
+          <p
+            className={cn(
+              "text-zinc-400 text-base md:text-lg",
+              montserrat.className
+            )}
+          >
             Transform your projects with our powerful API. Experience the
             simplicity of integration.
           </p>

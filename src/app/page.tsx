@@ -4,6 +4,7 @@ import Features from "@/components/sections/features";
 import DynamicVSCodeSection from "@/components/sections/dynamic-vscode-section";
 import Background from "@/components/ui/Background";
 import Footer from "@/components/ui/Footer";
+import PriceSection from "@/components/sections/price";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
         <Features />
         <MindMapSection />
         <DynamicVSCodeSection />
+        <PriceSection />
         <Footer />
       </div>
     </main>

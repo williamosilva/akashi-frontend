@@ -40,8 +40,7 @@ const features = [
   },
   {
     name: "Enterprise Security",
-    description:
-      "Robust security protocols and compliance features to protect your most critical business data.",
+    description: "Secure and Scalable Infrastructure for Your Applications.",
     icon: Lock,
   },
 ];
@@ -152,8 +151,7 @@ export default function Features() {
               montserrat.className
             )}
           >
-            Unlock unprecedented efficiency with our comprehensive SaaS solution
-            designed to transform how you manage and scale your operations.
+            Easily Build, Scale, and Manage Your Backend with Akashi API.
           </p>
         </motion.div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
