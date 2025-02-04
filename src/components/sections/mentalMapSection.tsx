@@ -3,13 +3,8 @@
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { JetBrains_Mono, Montserrat } from "next/font/google";
 
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-jetbrains",
-});
+import { jetbrainsMono, montserrat } from "@/styles/fonts";
 
 const fadeInUpVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -22,12 +17,6 @@ const fadeInUpVariants = {
     },
   }),
 };
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["400", "600", "700"],
-  variable: "--font-montserrat",
-});
 
 interface Node {
   id: string;

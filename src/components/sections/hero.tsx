@@ -1,21 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { JetBrains_Mono, Montserrat } from "next/font/google";
 import { cn } from "@/lib/utils";
 import NetworkCanvas from "@/three/NetworkCanvas";
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-jetbrains",
-});
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["400", "600", "700"],
-  variable: "--font-montserrat",
-});
+import { jetbrainsMono, montserrat } from "@/styles/fonts";
 
 export default function AkashiHero() {
   const fadeUpVariants = {
@@ -118,7 +106,6 @@ export default function AkashiHero() {
           </motion.div>
         </div>
       </div>
-
       <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-transparent to-zinc-900/90 pointer-events-none" />
     </div>
   );
