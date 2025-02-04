@@ -34,15 +34,12 @@ export default function Navbar() {
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex justify-between items-center h-14">
           <Link href="/" className="flex items-center relative">
-            <span className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-emerald-600">
-              Akashi
-            </span>
             <Image
-              src="/images/logo.png"
+              src="/images/logo_extensa.png"
               alt="Akashi Logo"
-              width={10}
-              height={10}
-              className="mr-2 absolute -right-2 top-0"
+              width={80}
+              height={100}
+              className=" select-none "
             />
           </Link>
           <div className="flex items-center space-x-3">
