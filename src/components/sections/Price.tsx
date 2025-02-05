@@ -106,7 +106,7 @@ export default function PriceSection() {
 
   return (
     <div className="min-h-screen w-full py-24 ">
-      <div className="container mx-auto px-4 md:px-6">
+      <div className=" mx-auto px-4 md:px-6">
         <div className="text-center mb-16">
           <h2
             className={cn(

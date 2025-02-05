@@ -97,7 +97,7 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="flex items-center space-x-3 mb-4 md:mb-0 w-full">
+          <div className="flex items-center  md:justify-start justify-center space-x-3 mb-4 md:mb-0 w-full">
             <span
               className={cn(
                 "text-emerald-300 font-bold",
@@ -119,7 +119,7 @@ export default function Footer() {
               </motion.div>
             ))}
           </nav>
-          <div className="flex space-x-4 w-full justify-end">
+          <div className="flex space-x-4 w-full md:justify-end justify-center">
             {[
               { name: "GitHub", icon: Github, href: "#" },
               { name: "LinkedIn", icon: Linkedin, href: "#" },

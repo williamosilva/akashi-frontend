@@ -6,7 +6,7 @@ const SmokeBlob = ({ className = "" }) => (
 
 export default function Background() {
   return (
-    <div className="absolute w-full min-h-[500vh] flex items-center justify-center overflow-hidden bg-zinc-900">
+    <div className="absolute w-full min-h-[630vh] flex items-center justify-center overflow-hidden bg-zinc-900">
       <div className="absolute inset-0 overflow-hidden">
         <SmokeBlob className="w-96 h-96 left-[10%] top-[15%] opacity-20" />
         <SmokeBlob className="w-80 h-80 right-[15%] top-[25%] opacity-15" />
@@ -25,21 +25,21 @@ export default function Background() {
           width={600}
           height={140}
           rotate={12}
-          className="left-[-10%] md:left-[-5%] top-[10%]"
+          className="left-[-10%] md:left-[-5%] top-[8%]"
         />
         <Geometric3DShape
           delay={0.3}
           width={600}
           height={140}
           rotate={-18}
-          className="right-[-10%] md:right-[-5%] top-[20%]"
+          className="right-[-10%] md:right-[-5%] top-[18%]"
         />
         <Geometric3DShape
           delay={0.5}
           width={200}
           height={60}
           rotate={-30}
-          className="right-[-5%] md:right-[70%] top-[70%] md:top-[4%]"
+          className="right-[-5%] md:right-[70%] top-[70%] md:top-[2%]"
         />
 
         <Geometric3DShape
@@ -47,7 +47,7 @@ export default function Background() {
           width={210}
           height={70}
           rotate={20}
-          className="right-[15%] md:right-[25%] top-[10%] md:top-[5%]"
+          className="right-[15%] md:right-[25%] top-[10%] md:top-[3%]"
         />
 
         <Geometric3DShape
@@ -55,7 +55,7 @@ export default function Background() {
           width={300}
           height={80}
           rotate={-8}
-          className="left-[5%] md:left-[10%] bottom-[5%] md:bottom-[10%]"
+          className="left-[5%] md:left-[10%] bottom-[5%] md:bottom-[4%]"
         />
 
         <Geometric3DShape
@@ -63,7 +63,7 @@ export default function Background() {
           width={300}
           height={80}
           rotate={-15}
-          className="left-[-5%] md:left-[2%] top-[40%] "
+          className="left-[-5%] md:left-[2%] top-[38%] "
         />
         <Geometric3DShape
           delay={0.4}
@@ -76,8 +76,8 @@ export default function Background() {
           delay={0.7}
           width={200}
           height={60}
-          rotate={25}
-          className="right-[15%] md:right-[20%] top-[100%]"
+          rotate={-25}
+          className="left-[15%] md:left-[20%] top-[70%]"
         />
       </div>
     </div>
