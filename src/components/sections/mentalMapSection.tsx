@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { fadeInUpVariants } from "@/animations/variation";
@@ -15,50 +15,8 @@ interface Node {
   type: "computer" | "hub" | "cloud";
 }
 
-const nodes: Node[] = [
-  {
-    id: "comp1",
-    label: "API",
-    x: 30,
-    y: 35,
-    connections: ["hub"],
-    type: "computer",
-  },
-  {
-    id: "comp2",
-    label: "Database",
-    x: 30,
-    y: 50,
-    connections: ["hub"],
-    type: "computer",
-  },
-  {
-    id: "comp3",
-    label: "Blog",
-    x: 30,
-    y: 65,
-    connections: ["hub"],
-    type: "computer",
-  },
-  {
-    id: "hub",
-    label: "Akashi",
-    x: 50,
-    y: 50,
-    connections: ["comp4", "comp5", "comp6"],
-    type: "hub",
-  },
-  {
-    id: "comp5",
-    label: "WebSite",
-    x: 70,
-    y: 50,
-    connections: [],
-    type: "computer",
-  },
-];
-
 const MindMapSection = () => {
+  const [isMobile, setIsMobile] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<
     Array<{
@@ -71,6 +29,92 @@ const MindMapSection = () => {
     }>
   >([]);
 
+  const desktopNodes: Node[] = [
+    {
+      id: "comp1",
+      label: "API",
+      x: 30,
+      y: 35,
+      connections: ["hub"],
+      type: "computer",
+    },
+    {
+      id: "comp2",
+      label: "Database",
+      x: 30,
+      y: 50,
+      connections: ["hub"],
+      type: "computer",
+    },
+    {
+      id: "comp3",
+      label: "Blog",
+      x: 30,
+      y: 65,
+      connections: ["hub"],
+      type: "computer",
+    },
+    {
+      id: "hub",
+      label: "Akashi",
+      x: 50,
+      y: 50,
+      connections: ["comp4", "comp5", "comp6"],
+      type: "hub",
+    },
+    {
+      id: "comp5",
+      label: "WebSite",
+      x: 70,
+      y: 50,
+      connections: [],
+      type: "computer",
+    },
+  ];
+
+  const mobileNodes: Node[] = [
+    {
+      id: "comp1",
+      label: "API",
+      x: 12,
+      y: 35,
+      connections: ["hub"],
+      type: "computer",
+    },
+    {
+      id: "comp2",
+      label: "Database",
+      x: 12,
+      y: 55,
+      connections: ["hub"],
+      type: "computer",
+    },
+    {
+      id: "comp3",
+      label: "Blog",
+      x: 12,
+      y: 75,
+      connections: ["hub"],
+      type: "computer",
+    },
+    {
+      id: "hub",
+      label: "Akashi",
+      x: 50,
+      y: 55,
+      connections: ["comp4", "comp5", "comp6"],
+      type: "hub",
+    },
+    {
+      id: "comp5",
+      label: "WebSite",
+      x: 88,
+      y: 55,
+      connections: [],
+      type: "computer",
+    },
+  ];
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -79,30 +123,40 @@ const MindMapSection = () => {
     if (!ctx) return;
 
     const resizeCanvas = () => {
+      const mobile = window.innerWidth <= 768;
+      setIsMobile(mobile);
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      initializeParticles(mobile);
+    };
+
+    const initializeParticles = (mobile: boolean) => {
+      const nodes = mobile ? mobileNodes : desktopNodes;
+      particlesRef.current = [];
+      nodes.forEach((node) => {
+        node.connections.forEach((connId) => {
+          const connNode = nodes.find((n) => n.id === connId);
+          if (connNode) {
+            const particleCount = mobile ? 1 : 2;
+            for (let i = 0; i < particleCount; i++) {
+              particlesRef.current.push({
+                x: node.x,
+                y: node.y,
+                progress: i * 0.5,
+                path: [node, connNode],
+                speed: mobile
+                  ? 0.0005 + Math.random() * 0.0003
+                  : 0.0003 + Math.random() * 0.0002,
+                tailLength: mobile ? 0.05 : 0.1,
+              });
+            }
+          }
+        });
+      });
     };
 
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
-
-    nodes.forEach((node) => {
-      node.connections.forEach((connId) => {
-        const connNode = nodes.find((n) => n.id === connId);
-        if (connNode) {
-          for (let i = 0; i < 2; i++) {
-            particlesRef.current.push({
-              x: node.x,
-              y: node.y,
-              progress: i * 0.5,
-              path: [node, connNode],
-              speed: 0.0003 + Math.random() * 0.0002,
-              tailLength: 0.1,
-            });
-          }
-        }
-      });
-    });
 
     const createCurvedPath = (
       startX: number,
@@ -147,7 +201,8 @@ const MindMapSection = () => {
     };
 
     const drawNode = (x: number, y: number, node: Node) => {
-      const scale = Math.min(canvas.width, canvas.height) / 1000;
+      const scale =
+        Math.min(canvas.width, canvas.height) / (isMobile ? 500 : 1000);
       switch (node.type) {
         case "computer":
           ctx.beginPath();
@@ -202,6 +257,7 @@ const MindMapSection = () => {
     const animate = () => {
       if (!ctx || !canvas) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const nodes = isMobile ? mobileNodes : desktopNodes;
       nodes.forEach((node) => {
         node.connections.forEach((connId) => {
           const connNode = nodes.find((n) => n.id === connId);
@@ -256,7 +312,9 @@ const MindMapSection = () => {
         const finalOpacity = baseOpacity * Math.min(startFade, endFade);
 
         ctx.strokeStyle = `rgba(52, 211, 153, ${finalOpacity})`;
-        ctx.lineWidth = (2 * Math.min(canvas.width, canvas.height)) / 1000;
+        ctx.lineWidth =
+          ((isMobile ? 3 : 2) * Math.min(canvas.width, canvas.height)) /
+          (isMobile ? 500 : 1000);
         ctx.lineCap = "round";
         ctx.stroke();
 
@@ -284,7 +342,7 @@ const MindMapSection = () => {
     return () => {
       window.removeEventListener("resize", resizeCanvas);
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <section className="relative w-full h-screen flex flex-col mt-4">

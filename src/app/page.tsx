@@ -1,10 +1,10 @@
-import HeroGeometric from "@/components/sections/hero";
-import MindMapSection from "@/components/sections/mentalMapSection";
-import Features from "@/components/sections/features";
-import DynamicVSCodeSection from "@/components/sections/dynamic-vscode-section";
+import HeroGeometric from "@/components/sections/Hero";
+import MindMapSection from "@/components/sections/MentalMapSection";
+import Features from "@/components/sections/Features";
+import DynamicVSCodeSection from "@/components/sections/Dynamic-vscode-section";
 import Background from "@/components/ui/Background";
 import Footer from "@/components/ui/Footer";
-import PriceSection from "@/components/sections/price";
+import PriceSection from "@/components/sections/Price";
 
 export default function Home() {
   return (
