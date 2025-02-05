@@ -243,7 +243,7 @@ const MindMapSection = () => {
             );
             const startFade = Math.min(trailProgress / fadeDistance, 1);
             const endFade = Math.min((1 - trailProgress) / fadeDistance, 1);
-            const fadeOpacity = Math.min(startFade, endFade);
+
             if (i === 0) {
               ctx.moveTo(point.x, point.y);
             } else {
@@ -272,7 +272,6 @@ const MindMapSection = () => {
         ctx.shadowBlur = 0;
       });
 
-      // Draw nodes
       nodes.forEach((node) => {
         const x = (node.x / 100) * canvas.width;
         const y = (node.y / 100) * canvas.height;
