@@ -241,8 +241,6 @@ const MindMapSection = () => {
               endY,
               trailProgress
             );
-            const startFade = Math.min(trailProgress / fadeDistance, 1);
-            const endFade = Math.min((1 - trailProgress) / fadeDistance, 1);
 
             if (i === 0) {
               ctx.moveTo(point.x, point.y);
