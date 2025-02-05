@@ -8,27 +8,27 @@ import { jetbrainsMono, montserrat } from "@/styles/fonts";
 import { fadeInUpVariants } from "@/animations/variation";
 
 const codeSnippet = `
-import axios from 'axios';
+<span class="text-[#ff79c6]">import</span> <span class="text-[#f8f8f2]">axios</span> <span class="text-[#ff79c6]">from</span> <span class="text-[#f1fa8c]">'axios'</span><span class="text-[#f8f8f2]">;</span>
 
-async function getProjectData(projectId) {
-  try {
-    const response = await axios.get(\`https://api.yoursaas.com/projects/\${projectId}/data\`, {
-      headers: {
-        'Authorization': 'Bearer YOUR_ACCESS_TOKEN'
-      }
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching project data:', error);
-    throw error;
-  }
-}
+<span class="text-[#50fa7b]">async function</span> <span class="text-[#8be9fd]">getProjectData</span><span class="text-[#f8f8f2]">(</span><span class="text-[#ffb86c]">projectId</span><span class="text-[#f8f8f2]">) {</span>
+  <span class="text-[#ff79c6]">try</span> <span class="text-[#f8f8f2]">{</span>
+    <span class="text-[#ff79c6]">const</span> <span class="text-[#f8f8f2]">response = </span><span class="text-[#ff79c6]">await</span> <span class="text-[#f8f8f2]">axios.get(</span><span class="text-[#f1fa8c]">\`https://api.yoursaas.com/projects/\${projectId}/data\`</span><span class="text-[#f8f8f2]">, {</span>
+      <span class="text-[#f8f8f2]">headers: {</span>
+        <span class="text-[#f1fa8c]">'Authorization'</span><span class="text-[#f8f8f2]">: </span><span class="text-[#f1fa8c]">'Bearer YOUR_ACCESS_TOKEN'</span>
+      <span class="text-[#f8f8f2]">}</span>
+    <span class="text-[#f8f8f2]">});</span>
+    <span class="text-[#ff79c6]">return</span> <span class="text-[#f8f8f2]">response.data;</span>
+  <span class="text-[#f8f8f2]">} </span><span class="text-[#ff79c6]">catch</span> <span class="text-[#f8f8f2]">(error) {</span>
+    <span class="text-[#f8f8f2]">console.error(</span><span class="text-[#f1fa8c]">'Error fetching project data:'</span><span class="text-[#f8f8f2]">, error);</span>
+    <span class="text-[#ff79c6]">throw</span> <span class="text-[#f8f8f2]">error;</span>
+  <span class="text-[#f8f8f2]">}</span>
+<span class="text-[#f8f8f2]">}</span>
 
-// Usage
-const projectId = '12345';
-getProjectData(projectId)
-  .then(data => console.log('Project Data:', data))
-  .catch(error => console.error('Error:', error.message));
+<span class="text-[#6272a4]">// Usage</span>
+<span class="text-[#ff79c6]">const</span> <span class="text-[#f8f8f2]">projectId = </span><span class="text-[#f1fa8c]">'12345'</span><span class="text-[#f8f8f2]">;</span>
+<span class="text-[#f8f8f2]">getProjectData(projectId)</span>
+  <span class="text-[#f8f8f2]">.then(data => console.log(</span><span class="text-[#f1fa8c]">'Project Data:'</span><span class="text-[#f8f8f2]">, data))</span>
+  <span class="text-[#f8f8f2]">.catch(error => console.error(</span><span class="text-[#f1fa8c]">'Error:'</span><span class="text-[#f8f8f2]">, error.message));</span>
 `;
 
 export default function DynamicVSCodeSection() {
@@ -41,18 +41,18 @@ export default function DynamicVSCodeSection() {
   }, []);
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden py-20 -mt-44">
-      <div className=" mx-auto px-4 md:px-6 relative z-10 h-full flex flex-col justify-center items-center ">
+    <div className="relative w-full flex items-center justify-center overflow-hidden py-10 sm:py-20">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 relative z-10 flex flex-col justify-center items-center">
         <motion.div
           custom={0}
           variants={fadeInUpVariants}
           initial="hidden"
           animate="visible"
-          className="max-w-3xl w-full mx-auto mb-12 text-center"
+          className="w-full max-w-3xl mx-auto mb-8 sm:mb-12 text-center"
         >
           <h2
             className={cn(
-              "text-4xl md:text-5xl font-bold mb-4 tracking-tighter",
+              "text-3xl sm:text-4xl md:text-5xl font-bold mb-4 tracking-tighter",
               jetbrainsMono.className
             )}
           >
@@ -63,7 +63,7 @@ export default function DynamicVSCodeSection() {
 
           <p
             className={cn(
-              "text-zinc-400 text-base md:text-lg",
+              "text-zinc-400 text-sm sm:text-base md:text-lg",
               montserrat.className
             )}
           >
@@ -77,10 +77,9 @@ export default function DynamicVSCodeSection() {
           variants={fadeInUpVariants}
           initial="hidden"
           animate="visible"
-          className="max-w-5xl mx-auto"
+          className="w-full max-w-5xl mx-auto"
         >
-          <div className="bg-[#282a36] rounded-lg overflow-hidden shadow-2xl">
-            {/* macOS-like window controls */}
+          <div className="bg-[#282a36] rounded-lg overflow-hidden shadow-2xl transform scale-90 sm:scale-100">
             <div className="bg-[#44475a] px-4 py-2 flex items-center justify-between">
               <div className="flex space-x-2">
                 <div className="w-3 h-3 rounded-full bg-[#ff5555] hover:bg-[#ff6e6e] transition-colors" />
@@ -89,30 +88,32 @@ export default function DynamicVSCodeSection() {
               </div>
               <span
                 className={cn(
-                  "text-sm text-[#f8f8f2]",
+                  "text-xs sm:text-sm text-[#f8f8f2]",
                   jetbrainsMono.className
                 )}
               >
                 project-data.js
               </span>
-              <div className="w-3 h-3" /> {/* Spacer for alignment */}
+              <div className="w-3 h-3" />
             </div>
             <div className="flex">
-              <div className="bg-[#21222c] w-48 p-2 hidden sm:block">
+              <div className="bg-[#21222c] w-12 sm:w-48 p-2 hidden sm:block">
                 <div className="flex items-center text-[#6272a4] mb-2 hover:bg-[#44475a] rounded px-2 py-1 transition-colors cursor-pointer">
                   <ChevronRight size={16} />
-                  <span className="text-sm ml-1">src</span>
+                  <span className="text-sm ml-1 hidden sm:inline">src</span>
                 </div>
                 <div className="flex items-center text-[#f8f8f2] ml-4 hover:bg-[#44475a] rounded px-2 py-1 transition-colors cursor-pointer">
                   <FileCode size={14} className="mr-1" />
-                  <span className="text-sm">project-data.js</span>
+                  <span className="text-sm hidden sm:inline">
+                    project-data.js
+                  </span>
                 </div>
               </div>
-              <div className="flex-grow p-4 overflow-auto bg-[#282a36] max-h-[500px] scrollbar-thin scrollbar-thumb-[#44475a] scrollbar-track-[#282a36]">
+              <div className="flex-grow p-4 overflow-auto bg-[#282a36] h-[300px] sm:h-[400px] md:h-[500px] scrollbar-thin scrollbar-thumb-[#44475a] scrollbar-track-[#282a36]">
                 <pre
                   ref={codeRef}
                   className={cn(
-                    "text-sm text-[#f8f8f2] whitespace-pre-wrap",
+                    "text-xs sm:text-sm text-[#f8f8f2] whitespace-pre-wrap",
                     jetbrainsMono.className
                   )}
                 />
