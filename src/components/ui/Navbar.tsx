@@ -2,16 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { JetBrains_Mono } from "next/font/google";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-jetbrains",
-});
+import { jetbrainsMono } from "@/styles/fonts";
 
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

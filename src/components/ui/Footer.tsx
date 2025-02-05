@@ -1,29 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { JetBrains_Mono } from "next/font/google";
+
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Github, Linkedin, Globe } from "lucide-react";
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-jetbrains",
-});
-
-const fadeInVariants = {
-  hidden: { opacity: 0.8, y: 10 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.3,
-      ease: "easeOut",
-    },
-  },
-};
+import { fadeInUpVariants } from "@/animations/variation";
+import { jetbrainsMono } from "@/styles/fonts";
 
 export default function Footer() {
   const [gradientOpacity, setGradientOpacity] = useState(0.15);
@@ -39,7 +23,7 @@ export default function Footer() {
   return (
     <motion.footer
       className="relative w-full bg-zinc-900 py-12"
-      variants={fadeInVariants}
+      variants={fadeInUpVariants}
       initial="hidden"
       animate="visible"
     >

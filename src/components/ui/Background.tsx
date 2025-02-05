@@ -1,5 +1,4 @@
 import Geometric3DShape from "@/three/Geometric3DShape";
-import NetworkCanvas from "@/three/NetworkCanvas";
 
 const SmokeBlob = ({ className = "" }) => (
   <div className={`absolute rounded-full bg-black/10 blur-3xl ${className}`} />
@@ -81,14 +80,6 @@ export default function Background() {
           className="right-[15%] md:right-[20%] top-[100%]"
         />
       </div>
-
-      {/* Radial Gradient */}
-      {/* <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(52,211,153,0.04),transparent_70%)]" /> */}
-
-      {/* Canvas para efeito de rede */}
-      {/* <div className="absolute inset-0 z-0">
-        <NetworkCanvas />
-      </div> */}
     </div>
   );
 }

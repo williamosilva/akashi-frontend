@@ -2,60 +2,11 @@
 
 import { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { JetBrains_Mono, Montserrat } from "next/font/google";
+import { jetbrainsMono, montserrat } from "@/styles/fonts";
 import { cn } from "@/lib/utils";
-import { Database, Layers, Zap, Lock } from "lucide-react";
 import { useMousePosition } from "@/hooks/useMousePosition";
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-jetbrains",
-});
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["400", "600", "700"],
-  variable: "--font-montserrat",
-});
-
-const features = [
-  {
-    name: "Advanced Data Management",
-    description:
-      "Centralize, organize, and optimize your data workflows with intuitive tools and powerful analytics.",
-    icon: Database,
-  },
-  {
-    name: "Scalable Architecture",
-    description:
-      "Flexible infrastructure that grows with your business, ensuring performance and reliability.",
-    icon: Layers,
-  },
-  {
-    name: "Instant Automation",
-    description:
-      "Streamline repetitive tasks and reduce manual intervention with smart, configurable workflows.",
-    icon: Zap,
-  },
-  {
-    name: "Enterprise Security",
-    description: "Secure and Scalable Infrastructure for Your Applications.",
-    icon: Lock,
-  },
-];
-
-const fadeInUpVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      delay: i * 0.1,
-    },
-  }),
-};
+import { fadeInUpVariants } from "@/animations/variation";
+import { features } from "@/data";
 
 function FeatureCard({
   feature,

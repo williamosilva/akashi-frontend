@@ -1,59 +1,10 @@
 "use client";
 
-import { JetBrains_Mono, Montserrat } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Check, X } from "lucide-react";
+import { plans } from "@/data";
+import { jetbrainsMono, montserrat } from "@/styles/fonts";
 import { useState, useEffect } from "react";
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-jetbrains",
-});
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["400", "600", "700"],
-  variable: "--font-montserrat",
-});
-
-const plans = [
-  {
-    name: "Free",
-    price: "$0",
-    features: [
-      "Create 1 project",
-      "Basic Data Management",
-      "Limited API access",
-    ],
-    notIncluded: ["Multiple projects", "API integration"],
-    color: "emerald",
-  },
-  {
-    name: "Pro",
-    price: "$4",
-    features: [
-      "Create up to 5 projects",
-      "Basic Data Management",
-      "Limited API access",
-      "Priority support",
-    ],
-    notIncluded: ["API integration"],
-    color: "green",
-  },
-  {
-    name: "Premium",
-    price: "$5",
-    features: [
-      "Create up to 10 projects",
-      "Advanced API Features",
-      "API integration for all projects",
-      "24/7 Premium support",
-    ],
-    notIncluded: [],
-    color: "teal",
-  },
-];
 
 const PlanCard = ({
   plan,

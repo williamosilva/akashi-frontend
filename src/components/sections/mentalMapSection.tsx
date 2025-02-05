@@ -3,20 +3,8 @@
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-
+import { fadeInUpVariants } from "@/animations/variation";
 import { jetbrainsMono, montserrat } from "@/styles/fonts";
-
-const fadeInUpVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      delay: i * 0.1,
-    },
-  }),
-};
 
 interface Node {
   id: string;
@@ -214,36 +202,6 @@ const MindMapSection = () => {
     const animate = () => {
       if (!ctx || !canvas) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // const gradient = ctx.createRadialGradient(
-      //   canvas.width / 2,
-      //   canvas.height / 2,
-      //   0,
-      //   canvas.width / 2,
-      //   canvas.height / 2,
-      //   Math.max(canvas.width, canvas.height) / 2
-      // );
-      // gradient.addColorStop(0, "rgba(24, 24, 27, 1)");
-      // gradient.addColorStop(1, "rgba(9, 9, 11, 1)");
-      // ctx.fillStyle = gradient;
-      // ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // const gridSize = (80 * Math.min(canvas.width, canvas.height)) / 1000;
-      // ctx.strokeStyle = "rgba(52, 211, 153, 0.05)";
-      // ctx.lineWidth = (1 * Math.min(canvas.width, canvas.height)) / 1000;
-      // for (let x = 0; x < canvas.width; x += gridSize) {
-      //   ctx.beginPath();
-      //   ctx.moveTo(x, 0);
-      //   ctx.lineTo(x, canvas.height);
-      //   ctx.stroke();
-      // }
-      // for (let y = 0; y < canvas.height; y += gridSize) {
-      //   ctx.beginPath();
-      //   ctx.moveTo(0, y);
-      //   ctx.lineTo(canvas.width, y);
-      //   ctx.stroke();
-      // }
-
       nodes.forEach((node) => {
         node.connections.forEach((connId) => {
           const connNode = nodes.find((n) => n.id === connId);
