@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -18,12 +18,32 @@ export function AuthModal({
   initialView = "register",
 }: AuthModalProps) {
   const [view, setView] = useState<"login" | "register">(initialView);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setView(initialView);
   }, [initialView]);
 
-  console.log("AuthModalProps", { initialView, view });
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [isOpen, onClose]);
+
+  //   console.log("AuthModalProps", { initialView, view })
 
   return (
     <AnimatePresence>
@@ -35,6 +55,7 @@ export function AuthModal({
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
         >
           <motion.div
+            ref={modalRef}
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
@@ -157,15 +178,11 @@ export function AuthModal({
               </button>
             </div>
 
-            {/* Switch View
+            {/*       
             <p className="mt-6 text-center text-sm text-zinc-400">
-              {view === "register"
-                ? "Already have an account?"
-                : "Don't have an account?"}{" "}
+              {view === "register" ? "Already have an account?" : "Don't have an account?"}{" "}
               <button
-                onClick={() =>
-                  setView(view === "register" ? "login" : "register")
-                }
+                onClick={() => setView(view === "register" ? "login" : "register")}
                 className="text-emerald-400 hover:text-emerald-300 transition-colors"
               >
                 {view === "register" ? "Log in" : "Sign up"}
