@@ -85,10 +85,10 @@ export default function AkashiHero() {
             animate="visible"
             className="flex flex-col sm:flex-row gap-4 justify-center items-center pointer-events-auto"
           >
-            <button className=" md:w-auto w-1/2 px-6 py-3 rounded-lg bg-emerald-500 text-zinc-900 font-semibold hover:bg-emerald-400 transition-colors font-montserrat">
+            <button className="sm:w-1/2  md:w-auto w-[80%] px-6 py-3 rounded-lg bg-emerald-500 text-zinc-900 font-semibold hover:bg-emerald-400 transition-colors font-montserrat">
               Get Started
             </button>
-            <button className="px-6 md:w-auto w-1/2 py-3 rounded-lg bg-zinc-800 text-emerald-300 border border-emerald-500/20 hover:bg-zinc-700 transition-colors font-montserrat">
+            <button className="px-6 sm:w-1/2  md:w-auto w-[80%] py-3 rounded-lg bg-zinc-800 text-emerald-300 border border-emerald-500/20 hover:bg-zinc-700 transition-colors font-montserrat">
               View Documentation
             </button>
           </motion.div>
