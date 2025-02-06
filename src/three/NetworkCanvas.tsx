@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 export default function NetworkCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const [numNodes, setNumNodes] = useState(30);
   const mousePosition = useRef({ x: 0, y: 0 });
   const isMouseInCanvas = useRef(false);
 
@@ -18,6 +19,8 @@ export default function NetworkCanvas() {
         });
         canvasRef.current.width = offsetWidth;
         canvasRef.current.height = offsetHeight;
+
+        setNumNodes(offsetWidth < 800 ? 10 : 30);
       }
     };
 
@@ -39,7 +42,6 @@ export default function NetworkCanvas() {
       originalRadius: number;
     }> = [];
 
-    const numNodes = 30;
     const connectionRadius = 150;
     const mouseRadius = 200;
     const mouseForce = 0.1;
@@ -104,7 +106,6 @@ export default function NetworkCanvas() {
         node.vx *= 0.99;
         node.vy *= 0.99;
 
-        // Bounce off walls
         if (node.x <= 0 || node.x >= dimensions.width) {
           node.vx *= -1;
           node.x = Math.max(0, Math.min(dimensions.width, node.x));
@@ -173,7 +174,7 @@ export default function NetworkCanvas() {
       canvasRef.current?.removeEventListener("mouseenter", handleMouseEnter);
       canvasRef.current?.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, [dimensions]);
+  }, [dimensions, numNodes]);
 
   return <canvas ref={canvasRef} className="absolute inset-0 " />;
 }
