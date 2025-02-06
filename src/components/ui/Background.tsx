@@ -6,7 +6,7 @@ const SmokeBlob = ({ className = "" }) => (
 
 export default function Background() {
   return (
-    <div className="absolute w-full min-h-[630vh] flex items-center justify-center overflow-hidden bg-zinc-900">
+    <div className="absolute w-full min-h-[700vh] flex items-center justify-center overflow-hidden bg-zinc-900">
       <div className="absolute inset-0 overflow-hidden">
         <SmokeBlob className="w-96 h-96 left-[10%] top-[15%] opacity-20" />
         <SmokeBlob className="w-80 h-80 right-[15%] top-[25%] opacity-15" />
