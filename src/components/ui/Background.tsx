@@ -32,7 +32,7 @@ export default function Background() {
           width={600}
           height={140}
           rotate={-18}
-          className="right-[-10%] md:right-[-5%] top-[18%]"
+          className="right-[-10%] md:right-[-5%] top-[10%]"
         />
         <Geometric3DShape
           delay={0.5}
