@@ -30,7 +30,7 @@ export default function Navbar() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 bg-zinc-900/80 backdrop-blur-sm border-b border-emerald-500/20",
+          "fixed top-0 left-0 right-0 z-50 h-16 bg-zinc-900/80 backdrop-blur-sm border-b border-emerald-500/20",
           jetbrainsMono.className
         )}
       >
