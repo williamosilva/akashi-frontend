@@ -24,7 +24,7 @@ export const AuroraBackground = ({
         )}
         {...props}
       >
-        <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div
             className={cn(
               `[--white-gradient:repeating-linear-gradient(100deg,var(--zinc-800)_0%,var(--zinc-800)_7%,var(--transparent)_10%,var(--transparent)_12%,var(--zinc-800)_16%)]

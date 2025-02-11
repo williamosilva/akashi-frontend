@@ -20,16 +20,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { Input } from "@/components/ui/Input";
 
-const projects = [
-  { id: "1", name: "Dashboard", icon: LayoutDashboard },
-  { id: "2", name: "Accounts", icon: Wallet },
-  { id: "3", name: "Cards", icon: CreditCard },
-  { id: "4", name: "Transaction", icon: Receipt },
-  { id: "5", name: "Spend Groups", icon: PieChart },
-  { id: "6", name: "Integrations", icon: Settings },
-  { id: "7", name: "Payees", icon: Users },
-  { id: "8", name: "Invoices", icon: FileText },
-];
+const projects = [{ id: "1", name: "Project 1" }];
 
 const Sidebar = ({ className }: any) => {
   const [isExpanded, setIsExpanded] = useState(true);
