@@ -39,6 +39,13 @@ export default function FormPage() {
       ).toISOString(),
       size: `${Math.floor(Math.random() * 1000)}KB`,
       description: `This is a sample description for Object ${i + 1}.`,
+      asdas: `${Math.floor(Math.random() * 1000)}KB`,
+      dcc: `${Math.floor(Math.random() * 1000)}KB`,
+      asdasdasdas: `${Math.floor(Math.random() * 1000)}KB`,
+      asasdasdas: `${Math.floor(Math.random() * 1000)}KB`,
+      asffdas: `${Math.floor(Math.random() * 1000)}KB`,
+      bb: `${Math.floor(Math.random() * 1000)}KB`,
+      nn: `${Math.floor(Math.random() * 1000)}KB`,
     }))
   );
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -67,6 +74,7 @@ export default function FormPage() {
       ],
       createdAt: new Date().toISOString(),
       size: `${Math.floor(Math.random() * 1000)}KB`,
+      asdas: `${Math.floor(Math.random() * 1000)}KB`,
       description: `This is a sample description for Object ${
         objects.length + 1
       }.`,
@@ -164,7 +172,7 @@ export default function FormPage() {
               </div>
 
               <motion.div
-                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-10 gap-4 overflow-y-auto flex-grow"
+                className="grid   grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-10 gap-4 overflow-y-auto flex-grow"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
@@ -199,7 +207,7 @@ export default function FormPage() {
         {selectedObject && (
           <div className="w-full relative max-w-[1200px] mx-auto max-h-[80vh] overflow-y-auto rounded-lg">
             <div className="flex relative justify-between flex-col items-center pb-4">
-              <div className="flex relative flex-col items-start gap-4 justify-center w-full">
+              <div className="flex relative flex-col items-start gap-8 justify-center w-full">
                 <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-500">
                   {selectedObject.name}
                 </h2>
@@ -260,7 +268,7 @@ export default function FormPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-1">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-1 max-h-96 overflow-hidden overflow-y-auto">
               {Object.entries(selectedObject)
                 .filter(([key]) => key !== "id")
                 .sort(([keyA], [keyB]) => {
@@ -290,7 +298,7 @@ export default function FormPage() {
                     </div>
                     <button
                       onClick={() => handleDeleteKey(key)}
-                      className="ml-2 text-zinc-400 opacity-0 group-hover:opacity-100 hover:text-red-400 transition-all"
+                      className="ml-2 text-zinc-400 opacity-100 hover:text-red-400 transition-all"
                     >
                       <Trash size={14} />
                     </button>
@@ -298,7 +306,7 @@ export default function FormPage() {
                 ))}
             </div>
 
-            <div className="flex flex-col sm:flex-row justify-end items-center gap-3 pt-4">
+            <div className="flex flex-col sm:flex-row justify-end items-center gap-4 pt-4">
               <button
                 onClick={handleDeleteObject}
                 className="w-full sm:w-auto px-4 py-2 rounded-lg bg-zinc-800 border border-red-500/20 text-red-400 text-sm font-medium hover:bg-red-500/10 transition-colors flex items-center justify-center"

@@ -41,23 +41,53 @@ body {
   opacity: 1;
 }
 
-.scrollbar-thin::-webkit-scrollbar {
-  width: 4px;
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(52, 211, 153, 0.2) rgba(24, 24, 27, 0.02);
 }
 
-.scrollbar-thin::-webkit-scrollbar-track {
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(24, 24, 27, 0.01);
+  border-radius: 100vh;
+  margin: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(52, 211, 153, 0.2);
+  border-radius: 100vh;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: all 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(52, 211, 153, 0.4);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-corner {
   background: transparent;
 }
 
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background-color: rgba(52, 211, 153, 0.2);
-  border-radius: 2px;
+  background: rgba(52, 211, 153, 0.2);
+  border-radius: 100vh;
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(52, 211, 153, 0.4);
+  background: rgba(52, 211, 153, 0.4);
 }
-
 @layer base {
   :root {
     --background: 0 0% 100%;
