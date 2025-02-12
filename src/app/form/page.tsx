@@ -12,7 +12,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/components/ui/Tooltip";
 import {
   ArrowUpDown,
   Plus,
@@ -28,6 +28,10 @@ import {
   EyeIcon,
 } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
+import PremiumButton from "@/components/ui/PremiumButton";
+
+type SubscriptionPlan = "free" | "basic" | "premium"
+
 
 interface ObjectItem {
   id: string;
@@ -48,6 +52,25 @@ export default function FormPage() {
 
   const [loadingStates, setLoadingStates] = useState({});
   const [apiResponses, setApiResponses] = useState({});
+
+  const [userPlan, setUserPlan] = useState<SubscriptionPlan>("premium")
+
+  const handleSimpleObjectCreate = () => {
+    console.log("Creating simple object")
+    // Adicione aqui a lógica para criar um objeto simples
+  }
+
+  const handleApiIntegrationCreate = () => {
+    console.log("Creating API integration")
+    // Adicione aqui a lógica para criar uma integração de API
+  }
+
+  const handlePlanChange = (newPlan: SubscriptionPlan) => {
+    setUserPlan(newPlan)
+    console.log(`Changed plan to: ${newPlan}`)
+    // Adicione aqui qualquer lógica adicional para mudança de plano
+  }
+
 
   const [objects, setObjects] = useState(
     Array.from({ length: 10 }, (_, i) => ({
@@ -332,42 +355,12 @@ export default function FormPage() {
                       Sort {sortAscending ? "a-z" : "z-a"}
                     </span>
                   </button>
-                  <button
-                    onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="px-3 py-2 rounded-lg bg-zinc-800 border border-emerald-500/20 text-emerald-300 text-sm font-medium hover:bg-zinc-700 transition-all flex items-center"
-                  >
-                    <Plus size={14} className="mr-1" />
-                    Create Object
-                    <ChevronDown
-                      size={14}
-                      className={`ml-1 transition-transform duration-200 ${
-                        dropdownOpen ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
-
-                  {dropdownOpen && (
-                    <div className="absolute top-full z-[4] right-0 mt-1 w-48 py-1 bg-zinc-800 border border-emerald-500/20 rounded-lg shadow-lg transform origin-top transition-all duration-200 ease-out">
-                      <button
-                        className="w-full px-4 py-2 text-left text-sm text-zinc-300 hover:bg-zinc-700 transition-colors"
-                        onClick={() => {
-                          // Handle simple object creation
-                          setDropdownOpen(false);
-                        }}
-                      >
-                        Create Simple Object
-                      </button>
-                      <button
-                        className="w-full px-4 py-2 text-left text-sm text-zinc-300 hover:bg-zinc-700 transition-colors"
-                        onClick={() => {
-                          // Handle API integration
-                          setDropdownOpen(false);
-                        }}
-                      >
-                        Create API Integration
-                      </button>
-                    </div>
-                  )}
+                  <PremiumButton
+        userPlan={userPlan}
+        onSimpleObjectCreate={handleSimpleObjectCreate}
+        onApiIntegrationCreate={handleApiIntegrationCreate}
+        
+      />
                 </div>
               </div>
             </div>
