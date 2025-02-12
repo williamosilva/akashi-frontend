@@ -15,6 +15,7 @@ import {
   Save,
   X,
   ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
 
@@ -27,7 +28,7 @@ export default function FormPage() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [sortAscending, setSortAscending] = useState(true);
 
-  const [objects, setObjects] = useState<ObjectItem[]>(
+  const [objects, setObjects] = useState(
     Array.from({ length: 10 }, (_, i) => ({
       id: `${i + 1}`,
       name: `Object ${i + 1}`,
@@ -46,12 +47,36 @@ export default function FormPage() {
       asffdas: `${Math.floor(Math.random() * 1000)}KB`,
       bb: `${Math.floor(Math.random() * 1000)}KB`,
       nn: `${Math.floor(Math.random() * 1000)}KB`,
+      data: {
+        apiUrl: `https://api.api-ninjas.com/v1/loremipsum?paragraphs=2`,
+        ref: `text`,
+      },
+      data2: {
+        apiUrl: `https://api.kanye.rest`,
+        ref: `quote`,
+      },
     }))
   );
+
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [selectedObject, setSelectedObject] = useState<ObjectItem | null>(null);
   const [editingKey, setEditingKey] = useState<string | null>(null);
   const [editedValue, setEditedValue] = useState<string>("");
+  const [apiResponses, setApiResponses] = useState({});
+  const [expandedStates, setExpandedStates] = useState({});
+  const [loadingStates, setLoadingStates] = useState({});
+
+  const handleTryApi = async (key, apiUrl) => {
+    setLoadingStates((prev) => ({ ...prev, [key]: true }));
+    try {
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+      setApiResponses((prev) => ({ ...prev, [key]: data }));
+    } catch (error) {
+      setApiResponses((prev) => ({ ...prev, [key]: { error: error.message } }));
+    }
+    setLoadingStates((prev) => ({ ...prev, [key]: false }));
+  };
 
   const handleSort = () => {
     const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
@@ -205,7 +230,7 @@ export default function FormPage() {
 
       <Modal isOpen={!!selectedObject} onClose={() => setSelectedObject(null)}>
         {selectedObject && (
-          <div className="w-full relative max-w-[1200px] mx-auto max-h-[80vh] overflow-y-auto rounded-lg">
+          <div className=" relative w-[1000px] mx-auto max-h-[80vh] overflow-y-auto rounded-lg">
             <div className="flex relative justify-between flex-col items-center pb-4">
               <div className="flex relative flex-col items-start gap-8 justify-center w-full">
                 <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-500">
@@ -276,34 +301,162 @@ export default function FormPage() {
                     ? keyA.localeCompare(keyB)
                     : keyB.localeCompare(keyA);
                 })
-                .map(([key, value]) => (
-                  <div
-                    key={key}
-                    className="flex items-center p-3 rounded-lg border border-emerald-500/10 hover:border-emerald-500/50 hover:shadow-[0_0px_10px_rgba(0,0,0,0.25)] hover:shadow-emerald-500/10 transition-all group bg-zinc-800"
-                  >
-                    <div className="flex-1 flex items-center space-x-2">
-                      <input
-                        type="text"
-                        defaultValue={key}
-                        className="w-2/5 text-emerald-300 text-sm font-medium bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
-                        onChange={(e) => handleKeyChange(key, e.target.value)}
-                      />
-                      <span className="text-emerald-300">:</span>
-                      <input
-                        type="text"
-                        defaultValue={value}
-                        className="flex-1 text-zinc-400 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
-                        onChange={(e) => handleValueChange(key, e.target.value)}
-                      />
-                    </div>
-                    <button
-                      onClick={() => handleDeleteKey(key)}
-                      className="ml-2 text-zinc-400 opacity-100 hover:text-red-400 transition-all"
+                .map(([key, value]) => {
+                  const isSpecialObject =
+                    typeof value === "object" &&
+                    value !== null &&
+                    "ref" in value &&
+                    "apiUrl" in value;
+
+                  return (
+                    <div
+                      key={key}
+                      className={`flex flex-col p-3 rounded-lg border border-emerald-500/10 hover:border-emerald-500/50 hover:shadow-[0_0px_10px_rgba(0,0,0,0.25)] hover:shadow-emerald-500/10 transition-all group bg-zinc-800 ${
+                        isSpecialObject ? "col-span-full" : ""
+                      }`}
                     >
-                      <Trash size={14} />
-                    </button>
-                  </div>
-                ))}
+                      <div className="flex items-center w-full">
+                        <div
+                          className={cn(
+                            "flex-1 flex items-center ",
+                            isSpecialObject ? "space-x-10" : "space-x-2"
+                          )}
+                        >
+                          <div
+                            className={cn(
+                              "flex flex-col",
+                              isSpecialObject ? "w-full" : "w-2/5"
+                            )}
+                          >
+                            {isSpecialObject && (
+                              <span className="text-xs text-emerald-500 mb-2">
+                                API Integration
+                              </span>
+                            )}
+                            <input
+                              type="text"
+                              defaultValue={key}
+                              className="w-full text-emerald-300 text-sm font-medium bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
+                              onChange={(e) =>
+                                handleKeyChange(key, e.target.value)
+                              }
+                            />
+                          </div>
+                          {!isSpecialObject && (
+                            <span className="text-emerald-300">|</span>
+                          )}
+                          {isSpecialObject ? (
+                            <div className="w-[91%] flex flex-col space-y-2">
+                              <div className="flex items-center space-x-2">
+                                <span className="text-emerald-300 text-sm">
+                                  apiUrl:
+                                </span>
+                                <input
+                                  type="text"
+                                  defaultValue={value.apiUrl}
+                                  className="flex-1 text-zinc-400 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
+                                  onChange={(e) =>
+                                    handleValueChange(key, {
+                                      ...value,
+                                      apiUrl: e.target.value,
+                                    })
+                                  }
+                                />
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <span className="text-emerald-300 text-sm w-10">
+                                  ref:
+                                </span>
+                                <input
+                                  type="text"
+                                  defaultValue={value.ref}
+                                  className="flex-1 text-zinc-400 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
+                                  onChange={(e) =>
+                                    handleValueChange(key, {
+                                      ...value,
+                                      ref: e.target.value,
+                                    })
+                                  }
+                                />
+                              </div>
+                            </div>
+                          ) : (
+                            <input
+                              type="text"
+                              defaultValue={value}
+                              className="flex-1 text-zinc-400 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
+                              onChange={(e) =>
+                                handleValueChange(key, e.target.value)
+                              }
+                            />
+                          )}
+                        </div>
+                        <button
+                          onClick={() => handleDeleteKey(key)}
+                          className="ml-2 text-zinc-400 opacity-100 hover:text-red-400 transition-all"
+                        >
+                          <Trash size={14} />
+                        </button>
+                      </div>
+
+                      {/* New API Response Section */}
+                      {isSpecialObject && (
+                        <div className="mt-4 w-full bg-zinc-900 rounded-lg relative">
+                          <div
+                            className={`overflow-hidden transition-[height] duration-300 ease-in-out ${
+                              expandedStates[key] ? "h-40" : "h-[68px]"
+                            }`}
+                          >
+                            <div className="p-4 h-full overflow-y-auto ">
+                              <pre className="text-zinc-400 text-sm overflow-x-auto pr-32">
+                                {loadingStates[key] ? (
+                                  <span className="text-orange-500">
+                                    Loading...
+                                  </span>
+                                ) : (
+                                  apiResponses[key] && (
+                                    <code className="block w-full whitespace-pre-wrap break-all">
+                                      {JSON.stringify(
+                                        apiResponses[key],
+                                        null,
+                                        2
+                                      )}
+                                    </code>
+                                  )
+                                )}
+                              </pre>
+                            </div>
+                          </div>
+
+                          <div className="absolute bottom-4 right-4 flex items-center gap-2">
+                            <button
+                              onClick={() =>
+                                setExpandedStates((prev) => ({
+                                  ...prev,
+                                  [key]: !prev[key],
+                                }))
+                              }
+                              className="px-2 py-1 text-zinc-400 hover:text-zinc-200 transition-colors"
+                            >
+                              {expandedStates[key] ? (
+                                <ChevronUp size={20} />
+                              ) : (
+                                <ChevronDown size={20} />
+                              )}
+                            </button>
+                            <button
+                              onClick={() => handleTryApi(key, value.apiUrl)}
+                              className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors text-sm font-medium"
+                              disabled={loadingStates[key]}
+                            >
+                              {loadingStates[key] ? "Trying..." : "Try"}
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
             </div>
 
             <div className="flex flex-col sm:flex-row justify-end items-center gap-4 pt-4">
