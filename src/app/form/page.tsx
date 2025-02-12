@@ -6,6 +6,13 @@ import { AuroraBackground } from "@/components/ui/Aurora-background";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { montserrat, jetbrainsMono } from "@/styles/fonts";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   ArrowUpDown,
   Plus,
@@ -16,6 +23,9 @@ import {
   X,
   ChevronDown,
   ChevronUp,
+  Info,
+  EyeOffIcon,
+  EyeIcon,
 } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
 
@@ -27,6 +37,17 @@ interface ObjectItem {
 export default function FormPage() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [sortAscending, setSortAscending] = useState(true);
+
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [selectedObject, setSelectedObject] = useState<ObjectItem | null>(null);
+  const [editingKey, setEditingKey] = useState<string | null>(null);
+  const [editedValue, setEditedValue] = useState<string>("");
+
+  const [expandedStates, setExpandedStates] = useState({});
+  const [headerLabels, setHeaderLabels] = useState({});
+
+  const [loadingStates, setLoadingStates] = useState({});
+  const [apiResponses, setApiResponses] = useState({});
 
   const [objects, setObjects] = useState(
     Array.from({ length: 10 }, (_, i) => ({
@@ -40,42 +61,100 @@ export default function FormPage() {
       ).toISOString(),
       size: `${Math.floor(Math.random() * 1000)}KB`,
       description: `This is a sample description for Object ${i + 1}.`,
-      asdas: `${Math.floor(Math.random() * 1000)}KB`,
-      dcc: `${Math.floor(Math.random() * 1000)}KB`,
-      asdasdasdas: `${Math.floor(Math.random() * 1000)}KB`,
-      asasdasdas: `${Math.floor(Math.random() * 1000)}KB`,
-      asffdas: `${Math.floor(Math.random() * 1000)}KB`,
-      bb: `${Math.floor(Math.random() * 1000)}KB`,
-      nn: `${Math.floor(Math.random() * 1000)}KB`,
       data: {
-        apiUrl: `https://api.api-ninjas.com/v1/loremipsum?paragraphs=2`,
-        ref: `text`,
+        apiUrl: "https://api.thecatapi.com/v1/images/search",
+        ref: "",
+        x_api_key:
+          "live_MBxUcNm3mVG9wyDvPehmIMxbyXib6suW8QFy7KuYm4E1zxM3inOUb6wO9Qx9lupF",
       },
       data2: {
-        apiUrl: `https://api.kanye.rest`,
-        ref: `quote`,
+        apiUrl: "https://api.agraphs=2",
+        ref: "breeasdasdds",
+        custom_auth: "Authorization",
       },
     }))
   );
 
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [selectedObject, setSelectedObject] = useState<ObjectItem | null>(null);
-  const [editingKey, setEditingKey] = useState<string | null>(null);
-  const [editedValue, setEditedValue] = useState<string>("");
-  const [apiResponses, setApiResponses] = useState({});
-  const [expandedStates, setExpandedStates] = useState({});
-  const [loadingStates, setLoadingStates] = useState({});
+  const [showApiKey, setShowApiKey] = useState(false);
 
-  const handleTryApi = async (key, apiUrl) => {
+  const toggleApiKeyVisibility = () => {
+    setShowApiKey(!showApiKey);
+  };
+  const handleTryApi = async (key, apiUrl, headerValue, ref) => {
+    console.log("Trying API", key, apiUrl, headerValue, ref);
     setLoadingStates((prev) => ({ ...prev, [key]: true }));
+
     try {
-      const response = await fetch(apiUrl);
-      const data = await response.json();
-      setApiResponses((prev) => ({ ...prev, [key]: data }));
+      // Get the custom header name from headerLabels or default to x_api_key
+      const headerName = headerLabels[key] || "x-api-key"; // Changed to x-api-key to match API expectation
+
+      // Get the API key value from the selected object
+      const selectedData = selectedObject[key];
+      const apiKeyValue = Object.entries(selectedData).find(
+        ([k]) => k !== "apiUrl" && k !== "ref"
+      )?.[1];
+
+      // Create headers object with the dynamic header name and API key value
+      const headers = {
+        [headerName]: apiKeyValue,
+      };
+
+      console.log("Request headers:", headers); // Para debug
+
+      const response = await fetch(apiUrl, {
+        method: "GET",
+        headers,
+      });
+
+      // Log the response status and headers for debugging
+      console.log("Response status:", response.status);
+      console.log("Response headers:", Object.fromEntries(response.headers));
+
+      const statusCode = response.status;
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        setApiResponses((prev) => ({
+          ...prev,
+          [key]: {
+            error: responseData.error || response.statusText,
+            statusCode,
+            message: responseData.message, // Incluindo possível mensagem de erro da API
+          },
+        }));
+        return;
+      }
+
+      if (!ref) {
+        setApiResponses((prev) => ({ ...prev, [key]: responseData }));
+        return;
+      }
+
+      const refValue = ref
+        .split(".")
+        .reduce((obj, part) => obj?.[part], responseData);
+
+      if (refValue === undefined) {
+        setApiResponses((prev) => ({
+          ...prev,
+          [key]: `O valor de '${ref}' não existe dentro do objeto original`,
+        }));
+        return;
+      }
+
+      setApiResponses((prev) => ({
+        ...prev,
+        [key]: refValue,
+      }));
     } catch (error) {
-      setApiResponses((prev) => ({ ...prev, [key]: { error: error.message } }));
+      console.error("API Error:", error); // Para debug
+      setApiResponses((prev) => ({
+        ...prev,
+        [key]: { error: error.message, statusCode: 500 },
+      }));
+    } finally {
+      setLoadingStates((prev) => ({ ...prev, [key]: false }));
     }
-    setLoadingStates((prev) => ({ ...prev, [key]: false }));
   };
 
   const handleSort = () => {
@@ -230,7 +309,7 @@ export default function FormPage() {
 
       <Modal isOpen={!!selectedObject} onClose={() => setSelectedObject(null)}>
         {selectedObject && (
-          <div className=" relative w-[1000px] mx-auto max-h-[80vh] overflow-y-auto rounded-lg">
+          <div className="relative w-full max-w-[1000px] mx-auto max-h-[100vh] rounded-lg h-auto px-0 sm:px-6 ">
             <div className="flex relative justify-between flex-col items-center pb-4">
               <div className="flex relative flex-col items-start gap-8 justify-center w-full">
                 <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-500">
@@ -268,7 +347,7 @@ export default function FormPage() {
                   </button>
 
                   {dropdownOpen && (
-                    <div className="absolute top-full right-0 mt-1 w-48 py-1 bg-zinc-800 border border-emerald-500/20 rounded-lg shadow-lg transform origin-top transition-all duration-200 ease-out">
+                    <div className="absolute top-full z-[4] right-0 mt-1 w-48 py-1 bg-zinc-800 border border-emerald-500/20 rounded-lg shadow-lg transform origin-top transition-all duration-200 ease-out">
                       <button
                         className="w-full px-4 py-2 text-left text-sm text-zinc-300 hover:bg-zinc-700 transition-colors"
                         onClick={() => {
@@ -293,7 +372,7 @@ export default function FormPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-1 max-h-96 overflow-hidden overflow-y-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-1 min-h-[55vh] max-h-[55vh] overflow-hidden overflow-y-auto">
               {Object.entries(selectedObject)
                 .filter(([key]) => key !== "id")
                 .sort(([keyA], [keyB]) => {
@@ -315,17 +394,19 @@ export default function FormPage() {
                         isSpecialObject ? "col-span-full" : ""
                       }`}
                     >
-                      <div className="flex items-center w-full">
+                      <div className="flex items-center sm:w-full w-auto flex-1 sm:flex-0">
                         <div
                           className={cn(
-                            "flex-1 flex items-center ",
-                            isSpecialObject ? "space-x-10" : "space-x-2"
+                            "flex-1 flex md:flex-row flex-col items-center md:gap-0 gap-2  ",
+                            isSpecialObject
+                              ? "md:space-x-10 space-x-0"
+                              : "md:space-x-2 space-x-0"
                           )}
                         >
                           <div
                             className={cn(
                               "flex flex-col",
-                              isSpecialObject ? "w-full" : "w-2/5"
+                              isSpecialObject ? "w-full" : "md:w-2/5 w-full"
                             )}
                           >
                             {isSpecialObject && (
@@ -336,17 +417,19 @@ export default function FormPage() {
                             <input
                               type="text"
                               defaultValue={key}
-                              className="w-full text-emerald-300 text-sm font-medium bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
+                              className="flex- w-auto sm:w-full sm:flex-1 text-emerald-300 text-sm font-medium bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
                               onChange={(e) =>
                                 handleKeyChange(key, e.target.value)
                               }
                             />
                           </div>
                           {!isSpecialObject && (
-                            <span className="text-emerald-300">|</span>
+                            <span className="text-emerald-300 md:block hidden">
+                              |
+                            </span>
                           )}
                           {isSpecialObject ? (
-                            <div className="w-[91%] flex flex-col space-y-2">
+                            <div className="md:w-[91%] w-full flex flex-col space-y-2">
                               <div className="flex items-center space-x-2">
                                 <span className="text-emerald-300 text-sm">
                                   apiUrl:
@@ -379,12 +462,94 @@ export default function FormPage() {
                                   }
                                 />
                               </div>
+                              <div className="flex items-center space-x-2">
+                                <div className="relative w-[38%]">
+                                  {/* Header Name Input - Mostra a chave do terceiro campo */}
+                                  <input
+                                    type="text"
+                                    defaultValue={
+                                      Object.keys(value).find(
+                                        (k) => k !== "apiUrl" && k !== "ref"
+                                      ) || "x_api_key"
+                                    }
+                                    className="w-full text-emerald-300 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
+                                    onChange={(e) => {
+                                      const oldKey = Object.keys(value).find(
+                                        (k) => k !== "apiUrl" && k !== "ref"
+                                      );
+                                      const newValue = { ...value };
+                                      if (oldKey) {
+                                        const headerValue = newValue[oldKey];
+                                        delete newValue[oldKey];
+                                        newValue[e.target.value] = headerValue;
+                                      }
+                                      handleValueChange(key, newValue);
+                                      setHeaderLabels((prev) => ({
+                                        ...prev,
+                                        [key]: e.target.value,
+                                      }));
+                                    }}
+                                  />
+                                  <TooltipProvider>
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <Info className="w-3 h-3 text-emerald-300 absolute left-[95%] top-[12%] transform -translate-y-1/2 cursor-help" />
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                        <p>
+                                          Define o nome do header usado para a
+                                          API
+                                        </p>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
+                                </div>
+                                <span className="text-emerald-300">|</span>
+                                {/* Header Value Input - Mostra o valor do terceiro campo */}
+                                <div className="flex items-center w-full">
+                                  <input
+                                    type={showApiKey ? "text" : "password"}
+                                    defaultValue={
+                                      Object.entries(value).find(
+                                        ([k]) => k !== "apiUrl" && k !== "ref"
+                                      )?.[1] || ""
+                                    }
+                                    className="flex-1 text-zinc-400 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
+                                    onChange={(e) => {
+                                      const headerKey =
+                                        Object.keys(value).find(
+                                          (k) => k !== "apiUrl" && k !== "ref"
+                                        ) || "x_api_key";
+                                      handleValueChange(key, {
+                                        ...value,
+                                        [headerKey]: e.target.value,
+                                      });
+                                    }}
+                                  />{" "}
+                                  <button
+                                    type="button"
+                                    onClick={toggleApiKeyVisibility}
+                                    className="bg-zinc-800 hover:bg-zinc-700 text-zinc-400 rounded-r px-2 py-1 focus:outline-none  "
+                                  >
+                                    {showApiKey ? (
+                                      <EyeOffIcon className="w-4 h-4" />
+                                    ) : (
+                                      <EyeIcon className="w-4 h-4" />
+                                    )}
+                                    <span className="sr-only">
+                                      {showApiKey
+                                        ? "Hide API Key"
+                                        : "Show API Key"}
+                                    </span>
+                                  </button>
+                                </div>
+                              </div>
                             </div>
                           ) : (
                             <input
                               type="text"
                               defaultValue={value}
-                              className="flex-1 text-zinc-400 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
+                              className="md:flex-1 md:w-auto w-full  text-zinc-400 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
                               onChange={(e) =>
                                 handleValueChange(key, e.target.value)
                               }
@@ -399,7 +564,7 @@ export default function FormPage() {
                         </button>
                       </div>
 
-                      {/* New API Response Section */}
+                      {/* API Response Section */}
                       {isSpecialObject && (
                         <div className="mt-4 w-full bg-zinc-900 rounded-lg relative">
                           <div
@@ -407,7 +572,7 @@ export default function FormPage() {
                               expandedStates[key] ? "h-40" : "h-[68px]"
                             }`}
                           >
-                            <div className="p-4 h-full overflow-y-auto ">
+                            <div className="p-4 h-full overflow-y-auto">
                               <pre className="text-zinc-400 text-sm overflow-x-auto pr-32">
                                 {loadingStates[key] ? (
                                   <span className="text-orange-500">
@@ -445,7 +610,14 @@ export default function FormPage() {
                               )}
                             </button>
                             <button
-                              onClick={() => handleTryApi(key, value.apiUrl)}
+                              onClick={() =>
+                                handleTryApi(
+                                  key,
+                                  value.apiUrl,
+                                  value.headerValue,
+                                  value.ref
+                                )
+                              }
                               className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors text-sm font-medium"
                               disabled={loadingStates[key]}
                             >
