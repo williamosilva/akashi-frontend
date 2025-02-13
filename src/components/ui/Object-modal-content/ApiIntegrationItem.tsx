@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import jp from "jsonpath";
+// import jp from "jsonpath";
 import {
   ChevronDown,
   ChevronUp,
@@ -65,16 +65,14 @@ export function ApiIntegrationItem({
       }
 
       try {
-        // Tenta aplicar o JSONPath
-        const extractedData = jp.query(data, value.JSONPath);
-
-        if (extractedData.length === 0) {
-          throw new Error(
-            "O JSONPath é válido, mas não encontrou nenhum dado."
-          );
-        }
-
-        setApiResponse({ data: extractedData });
+        // // Tenta aplicar o JSONPath
+        // const extractedData = jp.query(data, value.JSONPath);
+        // if (extractedData.length === 0) {
+        //   throw new Error(
+        //     "O JSONPath é válido, mas não encontrou nenhum dado."
+        //   );
+        // }
+        // setApiResponse({ data: extractedData });
       } catch (error) {
         const errorMessage =
           error instanceof Error
