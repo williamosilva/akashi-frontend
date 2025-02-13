@@ -31,8 +31,7 @@ import {
 import { Modal } from "@/components/ui/Modal";
 import PremiumButton from "@/components/ui/PremiumButton";
 
-type SubscriptionPlan = "free" | "basic" | "premium"
-
+type SubscriptionPlan = "free" | "basic" | "premium";
 
 interface ObjectItem {
   id: string;
@@ -54,24 +53,23 @@ export default function FormPage() {
   const [loadingStates, setLoadingStates] = useState({});
   const [apiResponses, setApiResponses] = useState({});
 
-  const [userPlan, setUserPlan] = useState<SubscriptionPlan>("premium")
+  const [userPlan, setUserPlan] = useState<SubscriptionPlan>("premium");
 
   const handleSimpleObjectCreate = () => {
-    console.log("Creating simple object")
+    console.log("Creating simple object");
     // Adicione aqui a lógica para criar um objeto simples
-  }
+  };
 
   const handleApiIntegrationCreate = () => {
-    console.log("Creating API integration")
+    console.log("Creating API integration");
     // Adicione aqui a lógica para criar uma integração de API
-  }
+  };
 
   const handlePlanChange = (newPlan: SubscriptionPlan) => {
-    setUserPlan(newPlan)
-    console.log(`Changed plan to: ${newPlan}`)
+    setUserPlan(newPlan);
+    console.log(`Changed plan to: ${newPlan}`);
     // Adicione aqui qualquer lógica adicional para mudança de plano
-  }
-
+  };
 
   const [objects, setObjects] = useState(
     Array.from({ length: 10 }, (_, i) => ({
@@ -266,44 +264,63 @@ export default function FormPage() {
             )}
           >
             <div className="container mx-auto px-4 py-8 flex flex-col h-screen">
-              <motion.h1
-                className={cn(
-                  "text-2xl font-semibold mb-6 text-start bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-500",
-                  montserrat.className
-                )}
+              <motion.div
+                className="mb-8 pb-4 border-b border-emerald-500/30"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                Objects
-              </motion.h1>
-
-              <div className="flex justify-start space-x-4 mb-6">
-                <motion.button
-                  className="px-3 py-1 rounded-md bg-zinc-800 text-emerald-300 text-sm font-medium border border-emerald-500/20 hover:bg-zinc-700 transition-colors flex items-center"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleSort}
+                <motion.h1
+                  className={cn(
+                    "text-4xl font-bold mb-2 text-start bg-clip-text text-transparent bg-gradient-to-r from-emerald-300 via-emerald-200 to-emerald-400",
+                    montserrat.className
+                  )}
                 >
-                  <ArrowUpDown className="mr-1" size={14} />
-                  Sort {sortOrder === "asc" ? "A-Z" : "Z-A"}
-                </motion.button>
-                <motion.button
-                  className="px-3 py-1 rounded-md bg-emerald-500 text-zinc-900 text-sm font-medium hover:bg-emerald-400 transition-colors flex items-center"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleAdd}
-                >
-                  <Plus className="mr-1" size={14} />
-                  Add
-                </motion.button>
-              </div>
+                  Nome
+                </motion.h1>
+              </motion.div>
 
               <motion.div
-                className="grid   grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-10 gap-4 overflow-y-auto "
+                className="flex justify-between items-center mb-6"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+              >
+                <motion.h2
+                  className={cn(
+                    "text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-500",
+                    montserrat.className
+                  )}
+                >
+                  Objects
+                </motion.h2>
+                <div className="flex space-x-4">
+                  <motion.button
+                    className="px-3 py-1 rounded-md bg-zinc-800 text-emerald-300 text-sm font-medium border border-emerald-500/20 hover:bg-zinc-700 transition-colors flex items-center"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleSort}
+                  >
+                    <ArrowUpDown className="mr-1" size={14} />
+                    Sort {sortOrder === "asc" ? "A-Z" : "Z-A"}
+                  </motion.button>
+                  <motion.button
+                    className="px-3 py-1 rounded-md bg-emerald-500 text-zinc-900 text-sm font-medium hover:bg-emerald-400 transition-colors flex items-center"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleAdd}
+                  >
+                    <Plus className="mr-1" size={14} />
+                    Add
+                  </motion.button>
+                </div>
+              </motion.div>
+
+              <motion.div
+                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-10 gap-4 overflow-y-auto"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
               >
                 {objects.map((object, index) => (
                   <motion.div
@@ -316,6 +333,7 @@ export default function FormPage() {
                       "aspect-square p-3 rounded-lg bg-zinc-800/50 border border-emerald-500/20 hover:bg-zinc-700/50 transition-colors flex flex-col items-center justify-center cursor-pointer",
                       jetbrainsMono.className
                     )}
+                    whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handleObjectClick(object)}
                   >
@@ -357,11 +375,10 @@ export default function FormPage() {
                     </span>
                   </button>
                   <PremiumButton
-        userPlan={userPlan}
-        onSimpleObjectCreate={handleSimpleObjectCreate}
-        onApiIntegrationCreate={handleApiIntegrationCreate}
-        
-      />
+                    userPlan={userPlan}
+                    onSimpleObjectCreate={handleSimpleObjectCreate}
+                    onApiIntegrationCreate={handleApiIntegrationCreate}
+                  />
                 </div>
               </div>
             </div>
@@ -484,10 +501,10 @@ export default function FormPage() {
                                       }));
                                     }}
                                   />
-                                  <TooltipProvider>
+                                  {/* <TooltipProvider>
                                     <Tooltip>
                                       <TooltipTrigger asChild>
-                                        <Info className="w-3 h-3 text-emerald-300 absolute left-[95%] top-[12%] transform -translate-y-1/2 cursor-help" />
+                                        <Info className="w-3 h-3 text-emerald-300 absolute left-[-6%] top-[12%] transform -translate-y-1/2 cursor-help" />
                                       </TooltipTrigger>
                                       <TooltipContent>
                                         <p>
@@ -496,7 +513,7 @@ export default function FormPage() {
                                         </p>
                                       </TooltipContent>
                                     </Tooltip>
-                                  </TooltipProvider>
+                                  </TooltipProvider> */}
                                 </div>
                                 <span className="text-emerald-300">|</span>
                                 {/* Header Value Input - Mostra o valor do terceiro campo */}
@@ -604,20 +621,19 @@ export default function FormPage() {
                               )}
                             </button>
                             <button
-  onClick={() =>
-    handleTryApi(
-      key,
-      value.apiUrl,
-      value.headerValue,
-      value.ref
-    )
-  }
-  className="px-4 py-2 flex items-center gap-2 bg-gradient-to-r from-orange-400 to-orange-600 text-white rounded-md hover:from-orange-500 hover:to-orange-700 transition-all text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-  disabled={loadingStates[key]}
->
- 
-  {loadingStates[key] ? "Trying..." : "Try"}
-</button>
+                              onClick={() =>
+                                handleTryApi(
+                                  key,
+                                  value.apiUrl,
+                                  value.headerValue,
+                                  value.ref
+                                )
+                              }
+                              className="px-4  py-2 flex items-center gap-2 bg-gradient-to-r from-orange-400 to-orange-600 text-white rounded-lg hover:from-orange-500 hover:to-orange-700 transition-all text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                              disabled={loadingStates[key]}
+                            >
+                              {loadingStates[key] ? "Trying..." : "Try"}
+                            </button>
                           </div>
                         </div>
                       )}
