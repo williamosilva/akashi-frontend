@@ -66,7 +66,7 @@ export function ApiIntegrationItem({
       });
       const data = (await response.json()) as ApiResponse;
       setApiResponse(data);
-    } catch (_) {
+    } catch (error) {
       setApiResponse({ error: "An error occurred while fetching data" });
     } finally {
       setLoading(false);
