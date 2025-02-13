@@ -26,6 +26,7 @@ import {
   Info,
   EyeOffIcon,
   EyeIcon,
+  Settings,
 } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
 import PremiumButton from "@/components/ui/PremiumButton";
@@ -603,19 +604,20 @@ export default function FormPage() {
                               )}
                             </button>
                             <button
-                              onClick={() =>
-                                handleTryApi(
-                                  key,
-                                  value.apiUrl,
-                                  value.headerValue,
-                                  value.ref
-                                )
-                              }
-                              className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors text-sm font-medium"
-                              disabled={loadingStates[key]}
-                            >
-                              {loadingStates[key] ? "Trying..." : "Try"}
-                            </button>
+  onClick={() =>
+    handleTryApi(
+      key,
+      value.apiUrl,
+      value.headerValue,
+      value.ref
+    )
+  }
+  className="px-4 py-2 flex items-center gap-2 bg-gradient-to-r from-orange-400 to-orange-600 text-white rounded-md hover:from-orange-500 hover:to-orange-700 transition-all text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+  disabled={loadingStates[key]}
+>
+ 
+  {loadingStates[key] ? "Trying..." : "Try"}
+</button>
                           </div>
                         </div>
                       )}
