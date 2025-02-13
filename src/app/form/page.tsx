@@ -11,7 +11,7 @@ import { ArrowUpDown, Plus, Folder } from "lucide-react";
 import ModalObject from "@/components/ui/ModalObject";
 
 export default function FormPage() {
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [sortOrder] = useState<"asc" | "desc">("asc");
 
   return (
     <main className="relative overflow-hidden">
