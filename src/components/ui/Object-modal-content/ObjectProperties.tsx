@@ -3,22 +3,12 @@ import { useState } from "react";
 import { PropertyItem } from "./PropertyItem";
 import { ApiIntegrationItem } from "./ApiIntegrationItem";
 import type {
-  ObjectItem,
   PropertyValue,
   SimplePropertyValue,
   ApiIntegrationValue,
+  ApiResponse,
+  ObjectPropertiesProps,
 } from "@/types";
-
-interface ApiResponse {
-  error?: string;
-  [key: string]: unknown;
-}
-
-interface ObjectPropertiesProps {
-  object: ObjectItem;
-  sortAscending: boolean;
-  onObjectUpdate: (updatedObject: ObjectItem) => void;
-}
 
 export function ObjectProperties({
   object,

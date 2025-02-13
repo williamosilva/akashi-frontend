@@ -1,13 +1,5 @@
 import { Trash } from "lucide-react";
-import type { PropertyValue, SimplePropertyValue } from "@/types";
-
-interface PropertyItemProps {
-  propertyKey: string;
-  value: SimplePropertyValue;
-  onValueChange: (key: string, value: PropertyValue) => void;
-  onKeyChange: (oldKey: string, newKey: string) => void;
-  onDeleteKey: (key: string) => void;
-}
+import type { PropertyItemProps } from "@/types";
 
 export function PropertyItem({
   propertyKey,

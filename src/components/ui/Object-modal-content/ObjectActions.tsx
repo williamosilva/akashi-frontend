@@ -1,9 +1,5 @@
 import { Save, Trash } from "lucide-react";
-
-interface ObjectActionsProps {
-  onSave: () => void;
-  onDelete: () => void;
-}
+import { ObjectActionsProps } from "@/types";
 
 export function ObjectActions({ onSave, onDelete }: ObjectActionsProps) {
   return (

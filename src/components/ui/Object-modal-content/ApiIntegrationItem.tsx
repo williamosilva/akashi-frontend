@@ -8,31 +8,11 @@ import {
   EyeOffIcon,
   Trash,
 } from "lucide-react";
-
-interface ApiResponse {
-  error?: string;
-  [key: string]: unknown;
-}
-
-export interface ApiIntegrationValue {
-  apiUrl: string;
-  ref: string;
-  [key: string]: string;
-}
-
-interface ApiIntegrationItemProps {
-  propertyKey: string;
-  value: ApiIntegrationValue;
-  onValueChange: (key: string, value: ApiIntegrationValue) => void;
-  onKeyChange: (oldKey: string, newKey: string) => void;
-  onDeleteKey: (key: string) => void;
-  expanded: boolean;
-  loading: boolean;
-  apiResponse: ApiResponse | null;
-  setExpanded: (expanded: boolean) => void;
-  setLoading: (loading: boolean) => void;
-  setApiResponse: (response: ApiResponse | null) => void;
-}
+import type {
+  ApiResponse,
+  ApiIntegrationValue,
+  ApiIntegrationItemProps,
+} from "@/types";
 
 export function ApiIntegrationItem({
   propertyKey,

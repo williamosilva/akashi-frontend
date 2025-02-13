@@ -1,14 +1,7 @@
 // components/Object-modal-content/ObjectHeader.tsx
 import { ArrowUpDown } from "lucide-react";
 import PremiumButton from "@/components/ui/PremiumButton";
-import type { SubscriptionPlan } from "@/types";
-
-interface ObjectHeaderProps {
-  name: string; // Changed to required string
-  sortAscending: boolean;
-  setSortAscending: (value: boolean) => void;
-  userPlan: SubscriptionPlan;
-}
+import type { ObjectHeaderProps } from "@/types";
 
 export function ObjectHeader({
   name,

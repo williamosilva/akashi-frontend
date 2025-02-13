@@ -46,3 +46,48 @@ export interface ApiItem {
 }
 
 export type SubscriptionPlan = "free" | "basic" | "premium";
+
+export interface ApiResponse {
+  error?: string;
+  [key: string]: unknown;
+}
+
+export interface ApiIntegrationItemProps {
+  propertyKey: string;
+  value: ApiIntegrationValue;
+  onValueChange: (key: string, value: ApiIntegrationValue) => void;
+  onKeyChange: (oldKey: string, newKey: string) => void;
+  onDeleteKey: (key: string) => void;
+  expanded: boolean;
+  loading: boolean;
+  apiResponse: ApiResponse | null;
+  setExpanded: (expanded: boolean) => void;
+  setLoading: (loading: boolean) => void;
+  setApiResponse: (response: ApiResponse | null) => void;
+}
+
+export interface PropertyItemProps {
+  propertyKey: string;
+  value: SimplePropertyValue;
+  onValueChange: (key: string, value: PropertyValue) => void;
+  onKeyChange: (oldKey: string, newKey: string) => void;
+  onDeleteKey: (key: string) => void;
+}
+
+export interface ObjectPropertiesProps {
+  object: ObjectItem;
+  sortAscending: boolean;
+  onObjectUpdate: (updatedObject: ObjectItem) => void;
+}
+
+export interface ObjectActionsProps {
+  onSave: () => void;
+  onDelete: () => void;
+}
+
+export interface ObjectHeaderProps {
+  name: string; // Changed to required string
+  sortAscending: boolean;
+  setSortAscending: (value: boolean) => void;
+  userPlan: SubscriptionPlan;
+}
