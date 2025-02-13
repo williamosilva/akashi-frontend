@@ -1,9 +1,18 @@
-// components/ObjectProperties.tsx
 "use client";
 import { useState } from "react";
 import { PropertyItem } from "./PropertyItem";
 import { ApiIntegrationItem } from "./ApiIntegrationItem";
-import type { ObjectItem, PropertyValue, ApiIntegrationValue } from "@/types";
+import type {
+  ObjectItem,
+  PropertyValue,
+  SimplePropertyValue,
+  ApiIntegrationValue,
+} from "@/types";
+
+interface ApiResponse {
+  error?: string;
+  [key: string]: unknown;
+}
 
 interface ObjectPropertiesProps {
   object: ObjectItem;
@@ -22,7 +31,9 @@ export function ObjectProperties({
   const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
     {}
   );
-  const [apiResponses, setApiResponses] = useState<Record<string, any>>({});
+  const [apiResponses, setApiResponses] = useState<
+    Record<string, ApiResponse | null>
+  >({});
 
   const handleValueChange = (key: string, value: PropertyValue) => {
     onObjectUpdate({ ...object, [key]: value });
@@ -70,9 +81,9 @@ export function ObjectProperties({
               onValueChange={handleValueChange}
               onKeyChange={handleKeyChange}
               onDeleteKey={handleDeleteKey}
-              expanded={expandedStates[key]}
-              loading={loadingStates[key]}
-              apiResponse={apiResponses[key]}
+              expanded={expandedStates[key] || false}
+              loading={loadingStates[key] || false}
+              apiResponse={apiResponses[key] || null}
               setExpanded={(expanded) =>
                 setExpandedStates((prev) => ({ ...prev, [key]: expanded }))
               }
@@ -86,11 +97,23 @@ export function ObjectProperties({
           );
         }
 
+        // Only render PropertyItem for simple values
+        const isSimpleValue =
+          value === null ||
+          value === undefined ||
+          typeof value === "string" ||
+          typeof value === "number" ||
+          typeof value === "boolean";
+
+        if (!isSimpleValue) {
+          return null; // Skip complex objects that aren't API integrations
+        }
+
         return (
           <PropertyItem
             key={key}
             propertyKey={key}
-            value={value}
+            value={value as SimplePropertyValue}
             onValueChange={handleValueChange}
             onKeyChange={handleKeyChange}
             onDeleteKey={handleDeleteKey}

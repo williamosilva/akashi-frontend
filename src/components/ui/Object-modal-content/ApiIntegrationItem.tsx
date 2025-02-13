@@ -9,22 +9,29 @@ import {
   Trash,
 } from "lucide-react";
 
+interface ApiResponse {
+  error?: string;
+  [key: string]: unknown;
+}
+
+export interface ApiIntegrationValue {
+  apiUrl: string;
+  ref: string;
+  [key: string]: string;
+}
+
 interface ApiIntegrationItemProps {
   propertyKey: string;
-  value: {
-    apiUrl: string;
-    ref: string;
-    [key: string]: string;
-  };
-  onValueChange: (key: string, value: any) => void;
+  value: ApiIntegrationValue;
+  onValueChange: (key: string, value: ApiIntegrationValue) => void;
   onKeyChange: (oldKey: string, newKey: string) => void;
   onDeleteKey: (key: string) => void;
   expanded: boolean;
   loading: boolean;
-  apiResponse: any;
+  apiResponse: ApiResponse | null;
   setExpanded: (expanded: boolean) => void;
   setLoading: (loading: boolean) => void;
-  setApiResponse: (response: any) => void;
+  setApiResponse: (response: ApiResponse | null) => void;
 }
 
 export function ApiIntegrationItem({
@@ -45,7 +52,6 @@ export function ApiIntegrationItem({
   const handleTryApi = async () => {
     setLoading(true);
     try {
-      // Implement API call logic here
       const response = await fetch(value.apiUrl, {
         method: "GET",
         headers: {
@@ -58,9 +64,9 @@ export function ApiIntegrationItem({
             ) || "",
         },
       });
-      const data = await response.json();
+      const data = (await response.json()) as ApiResponse;
       setApiResponse(data);
-    } catch (error) {
+    } catch (_) {
       setApiResponse({ error: "An error occurred while fetching data" });
     } finally {
       setLoading(false);
@@ -122,7 +128,7 @@ export function ApiIntegrationItem({
                     const oldKey = Object.keys(value).find(
                       (k) => k !== "apiUrl" && k !== "ref"
                     );
-                    const newValue = { ...value };
+                    const newValue = { ...value } as ApiIntegrationValue;
                     if (oldKey) {
                       const headerValue = newValue[oldKey];
                       delete newValue[oldKey];

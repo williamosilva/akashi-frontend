@@ -1,9 +1,10 @@
 import { Trash } from "lucide-react";
+import type { PropertyValue, SimplePropertyValue } from "@/types";
 
 interface PropertyItemProps {
   propertyKey: string;
-  value: any;
-  onValueChange: (key: string, value: any) => void;
+  value: SimplePropertyValue;
+  onValueChange: (key: string, value: PropertyValue) => void;
   onKeyChange: (oldKey: string, newKey: string) => void;
   onDeleteKey: (key: string) => void;
 }
@@ -15,6 +16,10 @@ export function PropertyItem({
   onKeyChange,
   onDeleteKey,
 }: PropertyItemProps) {
+  // Convert value to string for display, handling null/undefined
+  const displayValue =
+    value === null || value === undefined ? "" : String(value);
+
   return (
     <div className="flex flex-col p-3 rounded-lg border border-emerald-500/10 hover:border-emerald-500/50 hover:shadow-[0_0px_10px_rgba(0,0,0,0.25)] hover:shadow-emerald-500/10 transition-all group bg-zinc-800">
       <div className="flex items-center sm:w-full w-auto flex-1 sm:flex-0">
@@ -30,7 +35,7 @@ export function PropertyItem({
           <span className="text-emerald-300 md:block hidden">|</span>
           <input
             type="text"
-            defaultValue={value}
+            value={displayValue}
             className="md:flex-1 md:w-auto w-full text-zinc-400 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
             onChange={(e) => onValueChange(propertyKey, e.target.value)}
           />

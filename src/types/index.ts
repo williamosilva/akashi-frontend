@@ -4,6 +4,16 @@ export interface ModalObjectProps {
   isVisible: boolean;
 }
 
+export interface ApiIntegrationValue {
+  apiUrl: string;
+  ref: string;
+  [key: string]: string;
+}
+
+export type SimplePropertyValue = string | number | boolean | null | undefined;
+
+export type PropertyValue = SimplePropertyValue | ApiIntegrationValue;
+
 export interface ObjectItem {
   [key: string]:
     | string
@@ -15,6 +25,7 @@ export interface ObjectItem {
     | PropertyValue
     | undefined;
 }
+
 export interface ExpandedStates {
   [key: string]: boolean;
 }
@@ -23,22 +34,10 @@ export interface LoadingStates {
   [key: string]: boolean;
 }
 
-export interface ApiIntegrationValue {
-  ref: string;
-  apiUrl: string;
-  [key: string]: string;
-}
-
-export type PropertyValue =
-  | string
-  | number
-  | boolean
-  | null
-  | ApiIntegrationValue;
-
 export interface ApiResponses {
-  [key: string]: any;
+  [key: string]: unknown;
 }
+
 export interface ApiItem {
   apiUrl: string;
   headerValue: string;

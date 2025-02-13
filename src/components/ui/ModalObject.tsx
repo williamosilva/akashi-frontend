@@ -55,7 +55,7 @@ export default function ModalObject({ isVisible }: ModalObjectProps) {
       {selectedObject && (
         <div className="relative w-full max-w-[1000px] mx-auto max-h-[100vh] rounded-lg h-auto px-0">
           <ObjectHeader
-            // @ts-ignore
+            // @ts-expect-error: Should expect string
             name={selectedObject.name}
             sortAscending={sortAscending}
             setSortAscending={setSortAscending}
