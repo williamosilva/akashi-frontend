@@ -25,7 +25,7 @@ export default function ModalObject({ isVisible }: ModalObjectProps) {
         description: "This is a mock object for testing purposes.",
         data: {
           apiUrl: "https://api.example.com/test",
-          ref: "result",
+          JSONPath: "result",
           x_api_key: "mock_api_key_12345",
         },
       };

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import jp from "jsonpath";
 import {
   ChevronDown,
   ChevronUp,
@@ -30,24 +31,74 @@ export function ApiIntegrationItem({
   const [showApiKey, setShowApiKey] = useState(false);
 
   const handleTryApi = async () => {
+    console.log("Trying API...");
+    console.log(value);
+
     setLoading(true);
+
     try {
+      // Fazendo a requisição
       const response = await fetch(value.apiUrl, {
         method: "GET",
         headers: {
-          [Object.keys(value).find((k) => k !== "apiUrl" && k !== "ref") ||
+          [Object.keys(value).find((k) => k !== "apiUrl" && k !== "JSONPath") ||
           "x-api-key"]:
             Object.values(value).find(
               (_, i) =>
                 Object.keys(value)[i] !== "apiUrl" &&
-                Object.keys(value)[i] !== "ref"
+                Object.keys(value)[i] !== "JSONPath"
             ) || "",
         },
       });
-      const data = (await response.json()) as ApiResponse;
-      setApiResponse(data);
-    } catch {
-      setApiResponse({ error: "An error occurred while fetching data" });
+
+      const data = await response.json();
+
+      // Se a API retornou um erro (por exemplo, código de status diferente de 200)
+      if (!response.ok) {
+        setApiResponse({
+          error: `API Error: ${response.status} - ${response.statusText}`,
+          responseData: data,
+        });
+        return;
+      }
+
+      // Se JSONPath não foi passado, retorna a resposta completa
+      if (!value.JSONPath) {
+        setApiResponse(data);
+        return;
+      }
+
+      try {
+        // Tenta aplicar o JSONPath
+        const extractedData = jp.query(data, value.JSONPath);
+
+        if (extractedData.length === 0) {
+          throw new Error(
+            "O JSONPath é válido, mas não encontrou nenhum dado."
+          );
+        }
+
+        setApiResponse(extractedData);
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error
+            ? error.message.includes("Lexical error")
+              ? "Formato inválido"
+              : error.message
+            : "Erro desconhecido";
+
+        setApiResponse({
+          error: `Erro ao processar o JSONPath: ${errorMessage}`,
+        });
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Erro desconhecido";
+
+      setApiResponse({
+        error: "Ocorreu um erro ao buscar os dados.",
+        details: errorMessage,
+      });
     } finally {
       setLoading(false);
     }
@@ -84,13 +135,18 @@ export function ApiIntegrationItem({
               />
             </div>
             <div className="flex items-center space-x-2">
-              <span className="text-emerald-300 text-sm w-10">ref:</span>
+              <span className="text-emerald-300 text-sm w-[70px]">
+                JSONPath:
+              </span>
               <input
                 type="text"
-                defaultValue={value.ref}
+                defaultValue={value.JSONPath}
                 className="flex-1 text-zinc-400 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
                 onChange={(e) =>
-                  onValueChange(propertyKey, { ...value, ref: e.target.value })
+                  onValueChange(propertyKey, {
+                    ...value,
+                    JSONPath: e.target.value,
+                  })
                 }
               />
             </div>
@@ -100,13 +156,13 @@ export function ApiIntegrationItem({
                   type="text"
                   defaultValue={
                     Object.keys(value).find(
-                      (k) => k !== "apiUrl" && k !== "ref"
+                      (k) => k !== "apiUrl" && k !== "JSONPath"
                     ) || "x_api_key"
                   }
                   className="w-full text-emerald-300 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
                   onChange={(e) => {
                     const oldKey = Object.keys(value).find(
-                      (k) => k !== "apiUrl" && k !== "ref"
+                      (k) => k !== "apiUrl" && k !== "JSONPath"
                     );
                     const newValue = { ...value } as ApiIntegrationValue;
                     if (oldKey) {
@@ -126,14 +182,14 @@ export function ApiIntegrationItem({
                     Object.values(value).find(
                       (_, i) =>
                         Object.keys(value)[i] !== "apiUrl" &&
-                        Object.keys(value)[i] !== "ref"
+                        Object.keys(value)[i] !== "JSONPath"
                     ) || ""
                   }
                   className="flex-1 text-zinc-400 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
                   onChange={(e) => {
                     const headerKey =
                       Object.keys(value).find(
-                        (k) => k !== "apiUrl" && k !== "ref"
+                        (k) => k !== "apiUrl" && k !== "JSONPath"
                       ) || "x_api_key";
                     onValueChange(propertyKey, {
                       ...value,

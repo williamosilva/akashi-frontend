@@ -54,12 +54,12 @@ export function ObjectProperties({
     });
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-1 min-h-[55vh] max-h-[55vh] overflow-hidden overflow-y-auto">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-1  max-h-[55vh] overflow-hidden overflow-y-auto">
       {sortedEntries.map(([key, value]) => {
         const isApiIntegration =
           typeof value === "object" &&
           value !== null &&
-          "ref" in value &&
+          "JSONPath" in value &&
           "apiUrl" in value;
 
         if (isApiIntegration) {
