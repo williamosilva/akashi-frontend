@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-const jp = require("jsonpath");
+import { JSONPath } from 'jsonpath-plus';
+
 
 import {
   ChevronDown,
@@ -27,77 +28,82 @@ export function ApiIntegrationItem({
 }: ApiIntegrationItemProps) {
   const [showApiKey, setShowApiKey] = useState(false);
 
+ 
   const handleTryApi = async () => {
-    console.log("Trying API...");
-    console.log(value);
-
-    setLoading(true);
-
-    try {
-      // Fazendo a requisição
-      const response = await fetch(value.apiUrl, {
-        method: "GET",
-        headers: {
-          [Object.keys(value).find((k) => k !== "apiUrl" && k !== "JSONPath") ||
-          "x-api-key"]:
-            Object.values(value).find(
-              (_, i) =>
-                Object.keys(value)[i] !== "apiUrl" &&
-                Object.keys(value)[i] !== "JSONPath"
-            ) || "",
-        },
-      });
-
-      const data = await response.json();
-
-      // Se a API retornou um erro (por exemplo, código de status diferente de 200)
-      if (!response.ok) {
-        setApiResponse({
-          error: `API Error: ${response.status} - ${response.statusText}`,
-          responseData: data,
-        });
-        return;
-      }
-
-      // Se JSONPath não foi passado, retorna a resposta completa
-      if (!value.JSONPath) {
-        setApiResponse(data);
-        return;
-      }
-
+      console.log("Trying API...");
+      console.log(value);
+  
+      setLoading(true);
+  
       try {
-        // Tenta aplicar o JSONPath
-        const extractedData = jp.query(data, value.JSONPath);
-        if (extractedData.length === 0) {
-          throw new Error(
-            "O JSONPath é válido, mas não encontrou nenhum dado."
-          );
+        // Fazendo a requisição
+        const response = await fetch(value.apiUrl, {
+          method: "GET",
+          headers: {
+            [Object.keys(value).find((k) => k !== "apiUrl" && k !== "JSONPath") ||
+            "x-api-key"]:
+              Object.values(value).find(
+                (_, i) =>
+                  Object.keys(value)[i] !== "apiUrl" &&
+                  Object.keys(value)[i] !== "JSONPath"
+              ) || "",
+          },
+        });
+  
+        const data = await response.json();
+  
+        // Se a API retornou um erro (por exemplo, código de status diferente de 200)
+        if (!response.ok) {
+          setApiResponse({
+            error: `API Error: ${response.status} - ${response.statusText}`,
+            responseData: data,
+          });
+          return;
         }
-        setApiResponse({ data: extractedData });
+  
+        // Se JSONPath não foi passado, retorna a resposta completa
+        if (!value.JSONPath) {
+          setApiResponse(data);
+          return;
+        }
+  
+        try {
+          // Tenta aplicar o JSONPath
+          const extractedData = JSONPath({
+            path: value.JSONPath,
+            json: data
+          });
+          
+          if (extractedData.length === 0) {
+            throw new Error(
+              "O JSONPath é válido, mas não encontrou nenhum dado."
+            );
+          }
+          setApiResponse({ data: extractedData });
+        } catch (error) {
+          const errorMessage =
+            error instanceof Error
+              ? error.message.includes("Lexical error")
+                ? "Formato inválido"
+                : error.message
+              : "Erro desconhecido";
+  
+          setApiResponse({
+            error: `Erro ao processar o JSONPath: ${errorMessage}`,
+          });
+        }
       } catch (error) {
         const errorMessage =
-          error instanceof Error
-            ? error.message.includes("Lexical error")
-              ? "Formato inválido"
-              : error.message
-            : "Erro desconhecido";
-
+          error instanceof Error ? error.message : "Erro desconhecido";
+  
         setApiResponse({
-          error: `Erro ao processar o JSONPath: ${errorMessage}`,
+          error: "Ocorreu um erro ao buscar os dados.",
+          details: errorMessage,
         });
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Erro desconhecido";
-
-      setApiResponse({
-        error: "Ocorreu um erro ao buscar os dados.",
-        details: errorMessage,
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
   return (
     <div className="flex flex-col p-3 rounded-lg border border-emerald-500/10 hover:border-emerald-500/50 hover:shadow-[0_0px_10px_rgba(0,0,0,0.25)] hover:shadow-emerald-500/10 transition-all group bg-zinc-800 col-span-full">
