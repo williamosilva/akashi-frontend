@@ -17,11 +17,6 @@ interface ModalObjectProps {
   isVisible: boolean;
 }
 
-interface BaseObject {
-  id: string;
-  [key: string]: any;
-}
-
 interface ObjectItem {
   [key: string]: string | number | boolean | ObjectItem | ReactNode | ApiItem;
 }
@@ -51,13 +46,13 @@ export default function ModalObject({ isVisible }: ModalObjectProps) {
 
   const [selectedObject, setSelectedObject] = useState<ObjectItem | null>(null);
   const [editingKey, setEditingKey] = useState<string | null>(null);
-  const [editedValue, setEditedValue] = useState<string>("");
+  const [editedValue] = useState<string>("");
   const [expandedStates, setExpandedStates] = useState<ExpandedStates>({});
   const [loadingStates, setLoadingStates] = useState<LoadingStates>({});
   const [apiResponses, setApiResponses] = useState<ApiResponses>({});
   const headerLabels: Record<string, string> = {};
 
-  const [userPlan, setUserPlan] = useState<SubscriptionPlan>("premium");
+  const [userPlan] = useState<SubscriptionPlan>("premium");
 
   const mockObject: ObjectItem = {
     id: "mock1",
@@ -379,7 +374,7 @@ export default function ModalObject({ isVisible }: ModalObjectProps) {
                               </span>
                               <input
                                 type="text"
-                                // @ts-ignore
+                                // @ts-expect-error
                                 defaultValue={value.apiUrl}
                                 className="flex-1 text-zinc-400 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
                                 onChange={(e) =>
@@ -396,7 +391,7 @@ export default function ModalObject({ isVisible }: ModalObjectProps) {
                               </span>
                               <input
                                 type="text"
-                                // @ts-ignore
+                                // @ts-expect-error
                                 defaultValue={value.ref}
                                 className="flex-1 text-zinc-400 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
                                 onChange={(e) =>
@@ -429,7 +424,7 @@ export default function ModalObject({ isVisible }: ModalObjectProps) {
                                       newValue[e.target.value] = headerValue;
                                     }
                                     handleValueChange(key, newValue);
-                                    // @ts-ignore
+                                    // @ts-expect-error
                                     setHeaderLabels((prev) => ({
                                       ...prev,
                                       [key]: e.target.value,
@@ -442,7 +437,7 @@ export default function ModalObject({ isVisible }: ModalObjectProps) {
                               <div className="flex items-center w-full">
                                 <input
                                   type={showApiKey ? "text" : "password"}
-                                  // @ts-ignore
+                                  // @ts-expect-error
                                   defaultValue={
                                     Object.entries(value).find(
                                       ([k]) => k !== "apiUrl" && k !== "ref"
@@ -482,7 +477,7 @@ export default function ModalObject({ isVisible }: ModalObjectProps) {
                         ) : (
                           <input
                             type="text"
-                            // @ts-ignore
+                            // @ts-expect-error
                             defaultValue={value}
                             className="md:flex-1 md:w-auto w-full  text-zinc-400 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
                             onChange={(e) =>
@@ -544,7 +539,7 @@ export default function ModalObject({ isVisible }: ModalObjectProps) {
                             onClick={() =>
                               handleTryApi(
                                 key,
-                                // @ts-ignore
+                                // @ts-expect-error
                                 value.apiUrl,
                                 value.headerValue,
                                 value.ref
