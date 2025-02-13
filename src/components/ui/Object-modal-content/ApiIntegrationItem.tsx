@@ -74,7 +74,7 @@ export function ApiIntegrationItem({
           );
         }
 
-        setApiResponse(extractedData);
+        setApiResponse({ data: extractedData });
       } catch (error) {
         const errorMessage =
           error instanceof Error
