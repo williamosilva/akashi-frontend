@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
-import { ReactNode } from "react";
+import {
+  ApiResponses,
+  ExpandedStates,
+  LoadingStates,
+  ModalObjectProps,
+  ObjectItem,
+  SubscriptionPlan,
+} from "@/types";
 import { Modal } from "./Modal";
 import {
   ArrowUpDown,
@@ -12,33 +19,6 @@ import {
 } from "lucide-react";
 import PremiumButton from "./PremiumButton";
 import { cn } from "@/lib/utils";
-
-interface ModalObjectProps {
-  isVisible: boolean;
-}
-
-interface ObjectItem {
-  [key: string]: string | number | boolean | ObjectItem | ReactNode | ApiItem;
-}
-interface ExpandedStates {
-  [key: string]: boolean;
-}
-
-interface LoadingStates {
-  [key: string]: boolean;
-}
-
-interface ApiResponses {
-  [key: string]: any;
-}
-interface ApiItem {
-  apiUrl: string;
-  headerValue: string;
-  ref?: string;
-  [key: string]: string | undefined;
-}
-
-type SubscriptionPlan = "free" | "basic" | "premium";
 
 export default function ModalObject({ isVisible }: ModalObjectProps) {
   const [showApiKey, setShowApiKey] = useState(false);
@@ -374,7 +354,6 @@ export default function ModalObject({ isVisible }: ModalObjectProps) {
                               </span>
                               <input
                                 type="text"
-                                // @ts-expect-error
                                 defaultValue={value.apiUrl}
                                 className="flex-1 text-zinc-400 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
                                 onChange={(e) =>
@@ -391,7 +370,6 @@ export default function ModalObject({ isVisible }: ModalObjectProps) {
                               </span>
                               <input
                                 type="text"
-                                // @ts-expect-error
                                 defaultValue={value.ref}
                                 className="flex-1 text-zinc-400 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
                                 onChange={(e) =>
@@ -477,7 +455,6 @@ export default function ModalObject({ isVisible }: ModalObjectProps) {
                         ) : (
                           <input
                             type="text"
-                            // @ts-expect-error
                             defaultValue={value}
                             className="md:flex-1 md:w-auto w-full  text-zinc-400 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
                             onChange={(e) =>
@@ -539,7 +516,6 @@ export default function ModalObject({ isVisible }: ModalObjectProps) {
                             onClick={() =>
                               handleTryApi(
                                 key,
-                                // @ts-expect-error
                                 value.apiUrl,
                                 value.headerValue,
                                 value.ref
