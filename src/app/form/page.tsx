@@ -299,7 +299,7 @@ export default function FormPage() {
               </div>
 
               <motion.div
-                className="grid   grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-10 gap-4 overflow-y-auto flex-grow"
+                className="grid   grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-10 gap-4 overflow-y-auto "
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
