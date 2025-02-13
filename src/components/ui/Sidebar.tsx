@@ -52,8 +52,10 @@ const Sidebar = ({
   const SidebarContent = () => (
     <motion.div
       className={cn("flex flex-col h-full relative overflow-hidden", className)}
-      animate={{ width: isExpanded || isMobile ? "100%" : "5rem" }}
-      transition={{ duration: 0.3, ease: "easeInOut" }}
+      animate={{
+        width: isExpanded || isMobile ? "100%" : "5rem",
+        transition: { duration: 0.3, ease: "easeInOut" },
+      }}
     >
       {/* Smoke effect background */}
       <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-zinc-800/90 to-zinc-900">
@@ -138,9 +140,19 @@ const Sidebar = ({
                 isCreateDisabled ? "text-zinc-500" : "text-emerald-300"
               )}
             />
-            {(isExpanded || isMobile) && (
-              <span className="text-sm">Create Project</span>
-            )}
+            <AnimatePresence>
+              {(isExpanded || isMobile) && (
+                <motion.span
+                  className="text-sm"
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: "auto" }}
+                  exit={{ opacity: 0, width: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  Create Project
+                </motion.span>
+              )}
+            </AnimatePresence>
           </motion.button>
           {projects.map((project) => {
             const isSelected = project.id === selectedProjectId;
