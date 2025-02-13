@@ -9,11 +9,7 @@ import {
   EyeOffIcon,
   Trash,
 } from "lucide-react";
-import type {
-  ApiResponse,
-  ApiIntegrationValue,
-  ApiIntegrationItemProps,
-} from "@/types";
+import type { ApiIntegrationValue, ApiIntegrationItemProps } from "@/types";
 
 export function ApiIntegrationItem({
   propertyKey,
