@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { montserrat, jetbrainsMono } from "@/styles/fonts";
+import { authService } from "@/services";
+import { useRouter } from "next/navigation";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -17,8 +19,18 @@ export function AuthModal({
   onClose,
   initialView = "register",
 }: AuthModalProps) {
+  const router = useRouter();
   const [view, setView] = useState<"login" | "register">(initialView);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const modalRef = useRef<HTMLDivElement>(null);
+
+  // Form states
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    password: "",
+  });
 
   useEffect(() => {
     setView(initialView);
@@ -43,7 +55,46 @@ export function AuthModal({
     };
   }, [isOpen, onClose]);
 
-  //   console.log("AuthModalProps", { initialView, view })
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    setError(""); // Clear error when user types
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
+
+    try {
+      if (view === "register") {
+        await authService.register({
+          email: formData.email,
+          password: formData.password,
+          fullName: formData.fullName,
+        });
+      } else {
+        await authService.login({
+          email: formData.email,
+          password: formData.password,
+        });
+      }
+
+      onClose();
+      router.push("/form");
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "An error occurred. Please try again."
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -84,16 +135,26 @@ export function AuthModal({
               {view === "register" ? "Sign Up" : "Login"}
             </h2>
 
-            <form className="space-y-4">
+            {error && (
+              <div className="mb-4 p-3 text-sm bg-red-500/10 border border-red-500/50 rounded-lg text-red-500">
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-4">
               {view === "register" && (
                 <div>
                   <label className="block text-sm font-medium text-zinc-400 mb-1.5">
                     Full Name
                   </label>
                   <input
+                    name="fullName"
                     type="text"
+                    value={formData.fullName}
+                    onChange={handleInputChange}
                     className="w-full px-4 py-2.5 bg-zinc-800/50 border border-emerald-500/20 rounded-lg focus:outline-none focus:border-emerald-500/50 text-zinc-100"
                     placeholder="Enter your name"
+                    required
                   />
                 </div>
               )}
@@ -103,9 +164,13 @@ export function AuthModal({
                   Email
                 </label>
                 <input
+                  name="email"
                   type="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
                   className="w-full px-4 py-2.5 bg-zinc-800/50 border border-emerald-500/20 rounded-lg focus:outline-none focus:border-emerald-500/50 text-zinc-100"
                   placeholder="Enter your email"
+                  required
                 />
               </div>
 
@@ -114,17 +179,22 @@ export function AuthModal({
                   Password
                 </label>
                 <input
+                  name="password"
                   type="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
                   className="w-full px-4 py-2.5 bg-zinc-800/50 border border-emerald-500/20 rounded-lg focus:outline-none focus:border-emerald-500/50 text-zinc-100"
                   placeholder="Enter your password"
+                  required
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full py-2.5 bg-emerald-500 text-zinc-900 rounded-lg font-semibold hover:bg-emerald-400 transition-colors"
+                disabled={isLoading}
+                className="w-full py-2.5 bg-emerald-500 text-zinc-900 rounded-lg font-semibold hover:bg-emerald-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Continue
+                {isLoading ? "Please wait..." : "Continue"}
               </button>
             </form>
 
@@ -138,7 +208,10 @@ export function AuthModal({
             </div>
 
             <div className="space-y-3">
-              <button className="w-full flex items-center justify-center gap-2 py-2.5 bg-zinc-800 border border-emerald-500/20 rounded-lg text-zinc-100 hover:bg-zinc-700 transition-colors">
+              <button
+                disabled={isLoading}
+                className="w-full flex items-center justify-center gap-2 py-2.5 bg-zinc-800 border border-emerald-500/20 rounded-lg text-zinc-100 hover:bg-zinc-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 <svg
                   viewBox="0 0 24 24"
                   className="w-5 h-5"
@@ -163,7 +236,10 @@ export function AuthModal({
                 </svg>
                 Continue with Google
               </button>
-              <button className="w-full flex items-center justify-center gap-2 py-2.5 bg-zinc-800 border border-emerald-500/20 rounded-lg text-zinc-100 hover:bg-zinc-700 transition-colors">
+              <button
+                disabled={isLoading}
+                className="w-full flex items-center justify-center gap-2 py-2.5 bg-zinc-800 border border-emerald-500/20 rounded-lg text-zinc-100 hover:bg-zinc-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 <svg
                   viewBox="0 0 24 24"
                   className="w-5 h-5"
@@ -178,16 +254,21 @@ export function AuthModal({
               </button>
             </div>
 
-            {/*       
             <p className="mt-6 text-center text-sm text-zinc-400">
-              {view === "register" ? "Already have an account?" : "Don't have an account?"}{" "}
+              {view === "register"
+                ? "Already have an account?"
+                : "Don't have an account?"}{" "}
               <button
-                onClick={() => setView(view === "register" ? "login" : "register")}
+                onClick={() => {
+                  setView(view === "register" ? "login" : "register");
+                  setError("");
+                  setFormData({ fullName: "", email: "", password: "" });
+                }}
                 className="text-emerald-400 hover:text-emerald-300 transition-colors"
               >
                 {view === "register" ? "Log in" : "Sign up"}
               </button>
-            </p> */}
+            </p>
           </motion.div>
         </motion.div>
       )}

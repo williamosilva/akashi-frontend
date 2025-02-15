@@ -1,10 +1,21 @@
-"use client"; // Indica que é um componente Client, necessário para usar useParams
-
-import { useParams } from "next/navigation";
-import FormPage from "../../form/page";
+"use client";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function SuccessPage() {
-  const { token } = useParams(); // Captura o token da URL
+  const router = useRouter();
+  const { token } = useParams();
 
-  return console.log(token);
+  useEffect(() => {
+    if (!token) {
+      router.replace("/");
+    }
+  }, [token, router]);
+
+  return (
+    <div className="p-4">
+      <h1>Success Page</h1>
+      <p>Token: {token}</p>
+    </div>
+  );
 }
