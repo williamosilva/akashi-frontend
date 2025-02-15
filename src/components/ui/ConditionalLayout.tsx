@@ -8,7 +8,7 @@ import type React from "react";
 import { AuthService } from "@/services/auth.service";
 
 // Lista de rotas válidas
-const VALID_ROUTES = ["/form", "/success"];
+const VALID_ROUTES = ["/", "/form", "/success"];
 
 export default function ConditionalLayout({
   children,
@@ -20,21 +20,19 @@ export default function ConditionalLayout({
   const [isValidating, setIsValidating] = useState(true);
   const authService = AuthService.getInstance();
 
-  // Verifica se a rota é válida
-  const isValidRoute = VALID_ROUTES.some((route) => pathname.startsWith(route));
   const isFormRoute = pathname.startsWith("/form");
+  const isHome = pathname === "/";
+  const isValidRoute = VALID_ROUTES.includes(pathname);
 
   useEffect(() => {
     const validate = async () => {
-      // Redireciona imediatamente para home se rota inválida
-      if (!isValidRoute) {
-        router.replace("/");
-        return;
-      }
+      try {
+        if (isHome || !isValidRoute) {
+          setIsValidating(false);
+          return;
+        }
 
-      // Só faz validação de auth para rotas protegidas
-      if (isFormRoute) {
-        try {
+        if (isFormRoute) {
           const accessToken = authService.getAccessToken();
           const refreshToken = authService.getRefreshToken();
           const userId = authService.getUserId();
@@ -48,7 +46,7 @@ export default function ConditionalLayout({
 
           if (!isValid) {
             const newTokens = await authService.refreshToken();
-            if (!newTokens) throw new Error("Falha na renovação");
+            if (!newTokens) throw new Error("Falha na renovação do token");
 
             authService.saveTokens(
               newTokens.accessToken,
@@ -57,20 +55,20 @@ export default function ConditionalLayout({
               email
             );
           }
-        } catch (error) {
-          console.error("Falha na autenticação:", error);
-          authService.logout();
-          router.replace("/");
         }
+      } catch (error) {
+        console.error("Erro de autenticação:", error);
+        authService.logout();
+        router.push("/");
+      } finally {
+        setIsValidating(false);
       }
-
-      setIsValidating(false);
     };
 
     validate();
-  }, [pathname, router, isValidRoute, isFormRoute, authService]);
+  }, [pathname, router, isFormRoute, authService, isHome, isValidRoute]);
 
-  if (!isValidRoute || isValidating) {
+  if (isValidating) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
@@ -78,7 +76,16 @@ export default function ConditionalLayout({
     );
   }
 
+  console.log("pathname", pathname);
+  console.log("isValidRoute", isValidRoute);
+  // Se não for uma rota válida, retorna apenas o children sem nenhum layout
+  if (!isValidRoute) {
+    console.log("1");
+    return <>{children}</>;
+  }
+
   if (isFormRoute) {
+    console.log("2");
     return (
       <div className="flex h-screen">
         <Sidebar />
@@ -86,7 +93,7 @@ export default function ConditionalLayout({
       </div>
     );
   }
-
+  console.log("3");
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
