@@ -18,24 +18,39 @@ import { CreateProjectModal } from "./CreateProjectModal";
 import { ProjectService } from "@/services/project.service";
 import { Project, CreateProjectDto } from "@/types/project.types";
 
-const projects = [{ id: "1", name: "Project 1" }];
-
 const Sidebar = ({
   className,
   isCreateDisabled = false,
+  selectedProjectId: propSelectedProjectId,
+  onProjectSelect,
 }: {
   className?: string;
   isCreateDisabled?: boolean;
+  selectedProjectId?: string | null;
+  onProjectSelect?: (projectId: string) => void;
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
-    "1"
+    propSelectedProjectId || null
   );
   const [isMobile, setIsMobile] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const [projects, setProjects] = useState<Project[]>([]);
+
+  useEffect(() => {
+    if (propSelectedProjectId) {
+      setSelectedProjectId(propSelectedProjectId);
+    }
+  }, [propSelectedProjectId]);
+
+  const handleProjectSelect = (projectId: string) => {
+    setSelectedProjectId(projectId);
+    if (onProjectSelect) {
+      onProjectSelect(projectId);
+    }
+  };
 
   useEffect(() => {
     const checkMobile = () => {
@@ -168,12 +183,14 @@ const Sidebar = ({
           {/* Create Object Button */}
           <motion.button
             className={cn(
-              "w-full px-4 py-3 mb-2 rounded-lg flex items-center justify-center gap-2 group transition-all",
+              "w-full px-4 py-3 rounded-lg flex items-center justify-center gap-2 group transition-all",
               isCreateDisabled
                 ? "bg-zinc-700/50 text-zinc-500 cursor-not-allowed"
                 : "bg-emerald-500/10 hover:bg-emerald-500/30 text-emerald-300"
             )}
-            onClick={isCreateDisabled ? undefined : createObject}
+            onClick={
+              isCreateDisabled ? undefined : () => setIsCreateModalOpen(true)
+            }
             whileTap={isCreateDisabled ? undefined : { scale: 0.98 }}
             disabled={isCreateDisabled}
           >
@@ -191,7 +208,6 @@ const Sidebar = ({
                   animate={{ opacity: 1, width: "auto" }}
                   exit={{ opacity: 0, width: 0 }}
                   transition={{ duration: 0.3 }}
-                  onClick={() => setIsCreateModalOpen(true)}
                 >
                   Create Project
                 </motion.span>
@@ -204,7 +220,7 @@ const Sidebar = ({
             return (
               <motion.button
                 key={project._id}
-                onClick={() => setSelectedProjectId(project._id)}
+                onClick={() => handleProjectSelect(project._id)}
                 className={cn(
                   "relative w-full overflow-hidden group",
                   isSelected && "pointer-events-none rounded-lg"

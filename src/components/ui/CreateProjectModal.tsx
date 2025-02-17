@@ -6,7 +6,6 @@ import { Modal } from "./Modal";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { ProjectService } from "@/services/project.service";
 
 interface CreateProjectModalProps {
   isOpen: boolean;
@@ -31,12 +30,7 @@ export function CreateProjectModal({
       setIsLoading(true);
       setError("");
 
-      const projectService = ProjectService.getInstance();
-      const newProject = await projectService.createProject({
-        name: projectName.trim(),
-      });
-
-      onCreateProject(newProject.name);
+      onCreateProject(projectName.trim());
       setProjectName("");
       onClose();
     } catch (err) {

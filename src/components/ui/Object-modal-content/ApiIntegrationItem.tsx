@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { JSONPath } from 'jsonpath-plus';
-
+import { JSONPath } from "jsonpath-plus";
 
 import {
   ChevronDown,
@@ -28,82 +27,81 @@ export function ApiIntegrationItem({
 }: ApiIntegrationItemProps) {
   const [showApiKey, setShowApiKey] = useState(false);
 
- 
   const handleTryApi = async () => {
-      console.log("Trying API...");
-      console.log(value);
-  
-      setLoading(true);
-  
-      try {
-        // Fazendo a requisição
-        const response = await fetch(value.apiUrl, {
-          method: "GET",
-          headers: {
-            [Object.keys(value).find((k) => k !== "apiUrl" && k !== "JSONPath") ||
-            "x-api-key"]:
-              Object.values(value).find(
-                (_, i) =>
-                  Object.keys(value)[i] !== "apiUrl" &&
-                  Object.keys(value)[i] !== "JSONPath"
-              ) || "",
-          },
-        });
-  
-        const data = await response.json();
-  
-        // Se a API retornou um erro (por exemplo, código de status diferente de 200)
-        if (!response.ok) {
-          setApiResponse({
-            error: `API Error: ${response.status} - ${response.statusText}`,
-            responseData: data,
-          });
-          return;
-        }
-  
-        // Se JSONPath não foi passado, retorna a resposta completa
-        if (!value.JSONPath) {
-          setApiResponse(data);
-          return;
-        }
-  
-        try {
-          // Tenta aplicar o JSONPath
-          const extractedData = JSONPath({
-            path: value.JSONPath,
-            json: data
-          });
-          
-          if (extractedData.length === 0) {
-            throw new Error(
-              "O JSONPath é válido, mas não encontrou nenhum dado."
-            );
-          }
-          setApiResponse({ data: extractedData });
-        } catch (error) {
-          const errorMessage =
-            error instanceof Error
-              ? error.message.includes("Lexical error")
-                ? "Formato inválido"
-                : error.message
-              : "Erro desconhecido";
-  
-          setApiResponse({
-            error: `Erro ao processar o JSONPath: ${errorMessage}`,
-          });
-        }
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : "Erro desconhecido";
-  
-        setApiResponse({
-          error: "Ocorreu um erro ao buscar os dados.",
-          details: errorMessage,
-        });
-      } finally {
-        setLoading(false);
+    console.log("Trying API...");
+    console.log(value);
+
+    // Resetar resposta anterior
+    setApiResponse(null);
+    setLoading(true);
+
+    try {
+      // Verificar campos obrigatórios
+      if (!value.apiUrl) {
+        setApiResponse({ error: "API URL é obrigatória" });
+        return;
       }
-    };
+
+      // Construir headers dinamicamente
+      const headers: Record<string, string> = {};
+      const apiKeyField = Object.keys(value).find(
+        (k) => k !== "apiUrl" && k !== "JSONPath"
+      );
+
+      if (apiKeyField && value[apiKeyField]) {
+        headers[apiKeyField] = value[apiKeyField];
+      }
+
+      // Fazer a requisição
+      const response = await fetch(value.apiUrl, {
+        method: "GET",
+        headers,
+      });
+
+      // Processar resposta
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        setApiResponse({
+          error: `Erro ${response.status}: ${response.statusText}`,
+          details: responseData,
+        });
+        return;
+      }
+
+      // Aplicar JSONPath se existir
+      if (value.JSONPath) {
+        try {
+          const results = JSONPath({
+            path: value.JSONPath,
+            json: responseData,
+          });
+          setApiResponse(
+            results.length > 0
+              ? { data: results }
+              : {
+                  error: "JSONPath não retornou resultados",
+                }
+          );
+        } catch (error) {
+          setApiResponse({
+            error: "Erro no JSONPath",
+            details:
+              error instanceof Error ? error.message : "Erro desconhecido",
+          });
+        }
+      } else {
+        setApiResponse({ data: responseData });
+      }
+    } catch (error) {
+      setApiResponse({
+        error: "Erro na requisição",
+        details: error instanceof Error ? error.message : "Erro desconhecido",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex flex-col p-3 rounded-lg border border-emerald-500/10 hover:border-emerald-500/50 hover:shadow-[0_0px_10px_rgba(0,0,0,0.25)] hover:shadow-emerald-500/10 transition-all group bg-zinc-800 col-span-full">
@@ -232,13 +230,27 @@ export function ApiIntegrationItem({
           <div className="p-4 h-full overflow-y-auto">
             <pre className="text-zinc-400 text-sm overflow-x-auto pr-32">
               {loading ? (
-                <span className="text-orange-500">Loading...</span>
+                <span className="text-orange-500">Carregando...</span>
+              ) : apiResponse ? (
+                <>
+                  {apiResponse.error && (
+                    <div className="text-red-400">
+                      <div>Erro: {apiResponse.error}</div>
+                      {apiResponse.details && (
+                        <div className="text-red-300">
+                          Detalhes: {JSON.stringify(apiResponse.details)}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {apiResponse.data && (
+                    <code className="block w-full whitespace-pre-wrap break-all">
+                      {JSON.stringify(apiResponse.data, null, 2)}
+                    </code>
+                  )}
+                </>
               ) : (
-                apiResponse && (
-                  <code className="block w-full whitespace-pre-wrap break-all">
-                    {JSON.stringify(apiResponse, null, 2)}
-                  </code>
-                )
+                <span className="text-zinc-500">Nenhum dado recebido</span>
               )}
             </pre>
           </div>

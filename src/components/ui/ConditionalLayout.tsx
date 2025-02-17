@@ -6,8 +6,21 @@ import Navbar from "@/components/ui/Navbar";
 import Sidebar from "@/components/ui/Sidebar";
 import type React from "react";
 import { AuthService } from "@/services/auth.service";
+import { createContext, useContext } from "react";
 
 const VALID_ROUTES = ["/", "/form", "/success"];
+
+interface ProjectContextType {
+  selectedProjectId: string | null;
+  setSelectedProjectId: (id: string) => void;
+}
+
+export const ProjectContext = createContext<ProjectContextType>({
+  selectedProjectId: null,
+  setSelectedProjectId: () => {},
+});
+
+export const useProject = () => useContext(ProjectContext);
 
 export default function ConditionalLayout({
   children,
@@ -18,7 +31,9 @@ export default function ConditionalLayout({
   const pathname = usePathname();
   const [isValidating, setIsValidating] = useState(true);
   const authService = AuthService.getInstance();
-
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
+    null
+  );
   const isFormRoute = pathname.startsWith("/form");
   const isHome = pathname === "/";
   const isValidRoute = VALID_ROUTES.includes(pathname);
@@ -79,19 +94,31 @@ export default function ConditionalLayout({
     return <>{children}</>;
   }
 
+  const projectContextValue = {
+    selectedProjectId,
+    setSelectedProjectId,
+  };
+
   if (isFormRoute) {
     return (
-      <div className="flex h-screen">
-        <Sidebar />
-        <main className="flex-1 overflow-auto">{children}</main>
-      </div>
+      <ProjectContext.Provider value={projectContextValue}>
+        <div className="flex h-screen">
+          <Sidebar
+            selectedProjectId={selectedProjectId}
+            onProjectSelect={setSelectedProjectId}
+          />
+          <main className="flex-1 overflow-auto">{children}</main>
+        </div>
+      </ProjectContext.Provider>
     );
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Navbar />
-      <main className="flex-1">{children}</main>
-    </div>
+    <ProjectContext.Provider value={projectContextValue}>
+      <div className="flex flex-col min-h-screen">
+        <Navbar />
+        <main className="flex-1">{children}</main>
+      </div>
+    </ProjectContext.Provider>
   );
 }

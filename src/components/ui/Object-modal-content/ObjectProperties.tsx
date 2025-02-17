@@ -11,9 +11,9 @@ import type {
 } from "@/types";
 
 export function ObjectProperties({
-  object,
-  sortAscending,
-  onObjectUpdate,
+  data,
+  onUpdate,
+  isApiEditable,
 }: ObjectPropertiesProps) {
   const [expandedStates, setExpandedStates] = useState<Record<string, boolean>>(
     {}
@@ -25,42 +25,50 @@ export function ObjectProperties({
     Record<string, ApiResponse | null>
   >({});
 
+  // Garantir que data sempre seja um objeto
+  const safeData = data || {};
+
   const handleValueChange = (key: string, value: PropertyValue) => {
-    onObjectUpdate({ ...object, [key]: value });
+    onUpdate({ ...safeData, [key]: value });
   };
 
+  // Filtra apenas campos com valores definidos
+  const filteredEntries = Object.entries(safeData)
+    .filter(([_, value]) => {
+      // Remover campos vazios e null/undefined
+      if (value === null || value === undefined) return false;
+      if (typeof value === "string" && value.trim() === "") return false;
+      return true;
+    })
+    .filter(([key]) => !["objectId", "dataReturn"].includes(key));
+  // Ordena mantendo campos da API primeiro
+  const sortedEntries = filteredEntries.sort(([keyA], [keyB]) => {
+    const isApiA = ["apiUrl", "JSONPath", "x_api_key"].includes(keyA);
+    const isApiB = ["apiUrl", "JSONPath", "x_api_key"].includes(keyB);
+
+    if (isApiA === isApiB) return keyA.localeCompare(keyB);
+    return isApiA ? -1 : 1;
+  });
+
   const handleKeyChange = (oldKey: string, newKey: string) => {
-    const updatedObject = { ...object };
+    const updatedObject = { ...safeData };
     const oldValue = updatedObject[oldKey];
     delete updatedObject[oldKey];
     updatedObject[newKey] = oldValue;
-    onObjectUpdate(updatedObject);
+    onUpdate(updatedObject);
   };
 
   const handleDeleteKey = (keyToDelete: string) => {
-    if (keyToDelete !== "id" && keyToDelete !== "name") {
-      const updatedObject = { ...object };
-      delete updatedObject[keyToDelete];
-      onObjectUpdate(updatedObject);
-    }
+    const updatedObject = { ...safeData };
+    delete updatedObject[keyToDelete];
+    onUpdate(updatedObject);
   };
 
-  const sortedEntries = Object.entries(object)
-    .filter(([key]) => key !== "id" && key !== "name")
-    .sort(([keyA], [keyB]) => {
-      return sortAscending
-        ? keyA.localeCompare(keyB)
-        : keyB.localeCompare(keyA);
-    });
-
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-1  max-h-[55vh] overflow-hidden overflow-y-auto">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-1 max-h-[55vh] overflow-hidden overflow-y-auto">
       {sortedEntries.map(([key, value]) => {
         const isApiIntegration =
-          typeof value === "object" &&
-          value !== null &&
-          "JSONPath" in value &&
-          "apiUrl" in value;
+          key === "apiUrl" || key === "JSONPath" || key === "x_api_key";
 
         if (isApiIntegration) {
           return (
@@ -74,6 +82,8 @@ export function ObjectProperties({
               expanded={expandedStates[key] || false}
               loading={loadingStates[key] || false}
               apiResponse={apiResponses[key] || null}
+              // @ts-ignore
+              editable={isApiEditable}
               setExpanded={(expanded) =>
                 setExpandedStates((prev) => ({ ...prev, [key]: expanded }))
               }
@@ -85,18 +95,6 @@ export function ObjectProperties({
               }
             />
           );
-        }
-
-        // Only render PropertyItem for simple values
-        const isSimpleValue =
-          value === null ||
-          value === undefined ||
-          typeof value === "string" ||
-          typeof value === "number" ||
-          typeof value === "boolean";
-
-        if (!isSimpleValue) {
-          return null; // Skip complex objects that aren't API integrations
         }
 
         return (

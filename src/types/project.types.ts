@@ -17,4 +17,18 @@ export type UpdateProjectDto = {
   dataInfo?: Record<string, any>;
 };
 
+export type PartialProjectData = {
+  name: string;
+  dataInfo?: Record<string, any>;
+};
+
 export type ProjectDataInfo = Record<string, any>;
+
+export interface ProjectDataItem {
+  objectId?: string;
+  apiUrl?: string;
+  JSONPath?: string;
+  x_api_key?: string;
+  dataReturn?: any;
+  [key: string]: any;
+}

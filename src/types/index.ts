@@ -75,11 +75,10 @@ export interface PropertyItemProps {
 }
 
 export interface ObjectPropertiesProps {
-  object: ObjectItem;
-  sortAscending: boolean;
-  onObjectUpdate: (updatedObject: ObjectItem) => void;
+  data: Record<string, any>;
+  onUpdate: (updatedData: Record<string, any>) => void;
+  isApiEditable?: boolean;
 }
-
 export interface ObjectActionsProps {
   onSave: () => void;
   onDelete: () => void;

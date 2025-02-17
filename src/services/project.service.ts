@@ -3,6 +3,7 @@ import {
   Project,
   CreateProjectDto,
   UpdateProjectDto,
+  ProjectDataItem,
   ProjectDataInfo,
 } from "@/types/project.types";
 
@@ -25,30 +26,6 @@ export class ProjectService extends ApiService {
     return localStorage.getItem("userId");
   }
 
-  // Cria um novo projeto
-  public async createProject(data: CreateProjectDto): Promise<Project> {
-    const userId = this.getUserIdFromStorage();
-    if (!userId) {
-      throw new Error("User ID not found in storage");
-    }
-
-    const projectData = {
-      ...data,
-      userId,
-      dataInfo: {}, // objeto dataInfo vazio
-    };
-
-    console.log("[ProjectService] Creating project:", projectData);
-
-    return this.request<Project>("/projects", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(projectData),
-    });
-  }
-
   // Busca projetos de um usuário
   public async getProjectsByUser(userId: string): Promise<Project[]> {
     console.log("[ProjectService] Fetching user projects:", userId);
@@ -60,31 +37,57 @@ export class ProjectService extends ApiService {
   public async getProjectDataInfo(projectId: string): Promise<ProjectDataInfo> {
     console.log("[ProjectService] Fetching project data info:", projectId);
 
-    return this.request<ProjectDataInfo>(`/projects/${projectId}/data-info`);
+    return this.request<ProjectDataInfo>(`/projects/${projectId}/datainfo`);
   }
 
-  // Atualiza um projeto
-  public async updateProject(
-    projectId: string,
-    data: UpdateProjectDto
-  ): Promise<Project> {
-    console.log("[ProjectService] Updating project:", projectId, data);
+  public async createProject(data: CreateProjectDto): Promise<Project> {
+    const userId = this.getUserIdFromStorage();
+    if (!userId) {
+      throw new Error("User ID not found in storage");
+    }
 
-    return this.request<Project>(`/projects/${projectId}`, {
+    return this.request<Project>("/projects", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...data,
+        userId,
+      }),
+    });
+  }
+
+  public async updateDataInfoItem(
+    projectId: string,
+    itemKey: string,
+    itemData: ProjectDataItem
+  ): Promise<Project> {
+    return this.request<Project>(`/projects/${projectId}/datainfo`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        dataInfo: {
+          [itemKey]: itemData,
+        },
+      }),
+    });
+  }
+
+  public async deleteDataInfoItem(
+    projectId: string,
+    itemKey: string
+  ): Promise<Project> {
+    return this.request<Project>(`/projects/${projectId}/datainfo`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
-    });
-  }
-
-  // Deleta um projeto
-  public async deleteProject(projectId: string): Promise<{ message: string }> {
-    console.log("[ProjectService] Deleting project:", projectId);
-
-    return this.request<{ message: string }>(`/projects/${projectId}`, {
-      method: "DELETE",
+      body: JSON.stringify({
+        deleteKeys: [itemKey],
+      }),
     });
   }
 
