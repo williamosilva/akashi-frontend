@@ -14,6 +14,9 @@ import {
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { Input } from "@/components/ui/Input";
+import { CreateProjectModal } from "./CreateProjectModal";
+import { ProjectService } from "@/services/project.service";
+import { Project, CreateProjectDto } from "@/types/project.types";
 
 const projects = [{ id: "1", name: "Project 1" }];
 
@@ -30,6 +33,9 @@ const Sidebar = ({
   );
   const [isMobile, setIsMobile] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+  const [projects, setProjects] = useState<Project[]>([]);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -49,6 +55,48 @@ const Sidebar = ({
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  useEffect(() => {
+    const loadProjects = async () => {
+      try {
+        const userId = localStorage.getItem("userId");
+        if (!userId) {
+          console.error("User ID not found");
+          return;
+        }
+
+        const projects = await ProjectService.getInstance().getProjectsByUser(
+          userId
+        );
+        setProjects(projects);
+      } catch (error) {
+        console.error("Error loading projects:", error);
+      }
+    };
+
+    loadProjects();
+  }, []);
+
+  const handleCreateProject = async (projectName: string) => {
+    try {
+      const newProject = await ProjectService.getInstance().createProject({
+        name: projectName,
+      } as CreateProjectDto);
+
+      setProjects((prevProjects) => [...prevProjects, newProject]);
+    } catch (error) {
+      console.error("Error creating project:", error);
+    }
+  };
+
   const SidebarContent = () => (
     <motion.div
       className={cn("flex flex-col h-full relative overflow-hidden", className)}
@@ -57,15 +105,12 @@ const Sidebar = ({
         transition: { duration: 0.3, ease: "easeInOut" },
       }}
     >
-      {/* Smoke effect background */}
       <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-zinc-800/90 to-zinc-900">
         <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/10 via-transparent to-transparent" />
         <div className="absolute inset-0 backdrop-blur-[1px]" />
       </div>
 
-      {/* Content container */}
       <div className="relative z-10 flex flex-col h-full">
-        {/* Profile section */}
         <div className="p-4 border-b border-emerald-500/20 backdrop-blur-sm">
           <motion.div
             className="flex items-center"
@@ -98,8 +143,6 @@ const Sidebar = ({
             </AnimatePresence>
           </motion.div>
         </div>
-
-        {/* Search section */}
         <div className="p-4">
           <div className="relative">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-emerald-400/70" />
@@ -121,7 +164,7 @@ const Sidebar = ({
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto p-2 space-y-1.5">
+        <nav className="flex-1 overflow-y-auto p-2 space-y-1.5 w-full flex-col flex">
           {/* Create Object Button */}
           <motion.button
             className={cn(
@@ -148,6 +191,7 @@ const Sidebar = ({
                   animate={{ opacity: 1, width: "auto" }}
                   exit={{ opacity: 0, width: 0 }}
                   transition={{ duration: 0.3 }}
+                  onClick={() => setIsCreateModalOpen(true)}
                 >
                   Create Project
                 </motion.span>
@@ -155,12 +199,12 @@ const Sidebar = ({
             </AnimatePresence>
           </motion.button>
           {projects.map((project) => {
-            const isSelected = project.id === selectedProjectId;
+            const isSelected = project._id === selectedProjectId;
 
             return (
               <motion.button
-                key={project.id}
-                onClick={() => setSelectedProjectId(project.id)}
+                key={project._id}
+                onClick={() => setSelectedProjectId(project._id)}
                 className={cn(
                   "relative w-full overflow-hidden group",
                   isSelected && "pointer-events-none rounded-lg"
@@ -261,7 +305,6 @@ const Sidebar = ({
       </div>
     </motion.div>
   );
-
   return (
     <>
       {isMobile ? (
@@ -309,6 +352,11 @@ const Sidebar = ({
           <SidebarContent />
         </motion.div>
       )}
+      <CreateProjectModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onCreateProject={handleCreateProject}
+      />
     </>
   );
 };

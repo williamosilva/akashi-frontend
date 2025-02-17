@@ -1,4 +1,5 @@
 import { API_CONFIG } from "@/config/api.config";
+import { AuthService } from "./auth.service";
 
 export class ApiService {
   protected async request<T>(
@@ -6,6 +7,7 @@ export class ApiService {
     options: RequestInit = {}
   ): Promise<T> {
     try {
+      const accessToken = AuthService.getAccessToken();
       const url = `${API_CONFIG.baseURL}${endpoint}`;
 
       // Garantindo que o secretKey não seja undefined
@@ -14,10 +16,10 @@ export class ApiService {
       }
 
       console.log(API_CONFIG.secretKey); // Para debug
-
       const headers = {
         "Content-Type": "application/json",
-        "x-secret-key": API_CONFIG.secretKey, // Removido o || "" para evitar header vazio
+        "x-secret-key": API_CONFIG.secretKey,
+        ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
         ...options.headers,
       };
 

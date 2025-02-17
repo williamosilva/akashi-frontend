@@ -1,6 +1,10 @@
 import { ApiService } from "./api.service";
 import { AuthResponse, LoginDto, RegisterDto } from "@/types/auth.types";
 
+/**
+ * Serviço de autenticação que gerencia operações relacionadas a login,
+ * registro e gerenciamento de tokens.
+ */
 export class AuthService extends ApiService {
   private static instance: AuthService;
 
@@ -8,14 +12,21 @@ export class AuthService extends ApiService {
     super();
   }
 
-  static getInstance(): AuthService {
+  /**
+   * Retorna a instância singleton do AuthService
+   */
+  public static getInstance(): AuthService {
     if (!AuthService.instance) {
       AuthService.instance = new AuthService();
     }
     return AuthService.instance;
   }
 
-  async register(data: RegisterDto): Promise<AuthResponse> {
+  /**
+   * Registra um novo usuário
+   * @param data Dados de registro (nome, email, senha, etc)
+   */
+  public async register(data: RegisterDto): Promise<AuthResponse> {
     console.log("[AuthService] Register request:", data);
 
     const response = await this.request<AuthResponse>("/auth/register", {
@@ -29,10 +40,10 @@ export class AuthService extends ApiService {
     console.log("[AuthService] Register response:", response);
 
     if (response.accessToken) {
-      this.saveTokens(
+      AuthService.saveTokensAndUserData(
         response.accessToken,
         response.refreshToken,
-        response.id, // Adiciona o id do response
+        response.id,
         response.email
       );
     } else {
@@ -42,7 +53,11 @@ export class AuthService extends ApiService {
     return response;
   }
 
-  async login(data: LoginDto): Promise<AuthResponse> {
+  /**
+   * Realiza login do usuário
+   * @param data Dados de login (email, senha)
+   */
+  public async login(data: LoginDto): Promise<AuthResponse> {
     console.log("[AuthService] Login request:", data);
 
     const response = await this.request<AuthResponse>("/auth/login", {
@@ -56,7 +71,7 @@ export class AuthService extends ApiService {
     console.log("[AuthService] Login response:", response);
 
     if (response.accessToken) {
-      this.saveTokens(
+      AuthService.saveTokensAndUserData(
         response.accessToken,
         response.refreshToken,
         response.id,
@@ -69,7 +84,11 @@ export class AuthService extends ApiService {
     return response;
   }
 
-  async validateToken(token: string): Promise<boolean> {
+  /**
+   * Valida se um token é válido
+   * @param token Token a ser validado
+   */
+  public async validateToken(token: string): Promise<boolean> {
     try {
       const response = await this.request<{ ok: boolean }>("/auth/validate", {
         headers: {
@@ -82,13 +101,16 @@ export class AuthService extends ApiService {
     }
   }
 
-  async refreshToken(): Promise<{
+  /**
+   * Atualiza o token de acesso usando o refresh token
+   */
+  public async refreshToken(): Promise<{
     accessToken: string;
     refreshToken: string;
   } | null> {
     try {
-      const userId = this.getUserId();
-      const email = localStorage.getItem("email");
+      const userId = AuthService.getUserId();
+      const email = AuthService.getEmail();
 
       if (!userId || !email) {
         throw new Error("Dados do usuário não encontrados");
@@ -102,18 +124,36 @@ export class AuthService extends ApiService {
         body: JSON.stringify({ userId, email }),
       });
 
-      return {
-        accessToken: response.accessToken,
-        refreshToken: response.refreshToken,
-      };
+      if (response.accessToken && response.refreshToken) {
+        AuthService.setAccessToken(response.accessToken);
+        AuthService.setRefreshToken(response.refreshToken);
+
+        return {
+          accessToken: response.accessToken,
+          refreshToken: response.refreshToken,
+        };
+      } else {
+        throw new Error("Tokens não recebidos na resposta");
+      }
     } catch (error) {
       console.error("Falha ao renovar tokens:", error);
       return null;
     }
   }
 
-  // Atualizado para salvar email
-  public saveTokens(
+  /**
+   * Realiza logout do usuário removendo dados do localStorage
+   */
+  public logout(): void {
+    AuthService.clearAuthData();
+  }
+
+  // ===== MÉTODOS ESTÁTICOS PARA GERENCIAMENTO DE TOKENS E DADOS DO USUÁRIO =====
+
+  /**
+   * Salva tokens e dados do usuário no localStorage
+   */
+  public static saveTokensAndUserData(
     accessToken: string,
     refreshToken: string,
     userId: string,
@@ -127,36 +167,74 @@ export class AuthService extends ApiService {
     }
   }
 
-  getEmail(): string | null {
-    return typeof window !== "undefined" ? localStorage.getItem("email") : null;
+  /**
+   * Salva o token de acesso no localStorage
+   */
+  public static setAccessToken(token: string): void {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("accessToken", token);
+    }
   }
 
-  getAccessToken(): string | null {
+  /**
+   * Salva o token de refresh no localStorage
+   */
+  public static setRefreshToken(token: string): void {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("refreshToken", token);
+    }
+  }
+
+  /**
+   * Obtém o token de acesso do localStorage
+   */
+  public static getAccessToken(): string | null {
     if (typeof window !== "undefined") {
       return localStorage.getItem("accessToken");
     }
     return null;
   }
 
-  getRefreshToken(): string | null {
+  /**
+   * Obtém o token de refresh do localStorage
+   */
+  public static getRefreshToken(): string | null {
     if (typeof window !== "undefined") {
       return localStorage.getItem("refreshToken");
     }
     return null;
   }
 
-  getUserId(): string | null {
+  /**
+   * Obtém o ID do usuário do localStorage
+   */
+  public static getUserId(): string | null {
     if (typeof window !== "undefined") {
       return localStorage.getItem("userId");
     }
     return null;
   }
 
-  logout(): void {
+  /**
+   * Obtém o email do usuário do localStorage
+   */
+  public static getEmail(): string | null {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("email");
+    }
+    return null;
+  }
+
+  /**
+   * Limpa todos os dados de autenticação do localStorage
+   */
+  public static clearAuthData(): void {
     if (typeof window !== "undefined") {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
-      localStorage.removeItem("userId"); // Novo removeItem
+      localStorage.removeItem("userId");
+      localStorage.removeItem("email");
+      localStorage.removeItem("user");
     }
   }
 }
