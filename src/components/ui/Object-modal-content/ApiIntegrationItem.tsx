@@ -1,8 +1,6 @@
 "use client";
-
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { JSONPath } from "jsonpath-plus";
-
 import {
   ChevronDown,
   ChevronUp,
@@ -18,47 +16,45 @@ export function ApiIntegrationItem({
   onValueChange,
   onKeyChange,
   onDeleteKey,
-  expanded,
-  loading,
-  apiResponse,
-  setExpanded,
-  setLoading,
-  setApiResponse,
+  editable,
+  error,
 }: ApiIntegrationItemProps) {
+  // Estados internos
   const [showApiKey, setShowApiKey] = useState(false);
+  const [draftKey, setDraftKey] = useState(propertyKey || "");
+  const [expanded, setExpanded] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [apiResponse, setApiResponse] = useState<any>(null);
+
+  const prevPropertyKeyRef = useRef(propertyKey);
+
+  useEffect(() => {
+    if (prevPropertyKeyRef.current !== propertyKey) {
+      setDraftKey(propertyKey || "");
+      prevPropertyKeyRef.current = propertyKey;
+    }
+  }, [propertyKey]);
 
   const handleTryApi = async () => {
-    console.log("Trying API...");
-    console.log(value);
-
-    // Resetar resposta anterior
     setApiResponse(null);
     setLoading(true);
 
     try {
-      // Verificar campos obrigatórios
       if (!value.apiUrl) {
         setApiResponse({ error: "API URL é obrigatória" });
         return;
       }
 
-      // Construir headers dinamicamente
       const headers: Record<string, string> = {};
       const apiKeyField = Object.keys(value).find(
-        (k) => k !== "apiUrl" && k !== "JSONPath"
+        (k) => k !== "apiUrl" && k !== "JSONPath" && k !== "dataReturn"
       );
 
       if (apiKeyField && value[apiKeyField]) {
         headers[apiKeyField] = value[apiKeyField];
       }
 
-      // Fazer a requisição
-      const response = await fetch(value.apiUrl, {
-        method: "GET",
-        headers,
-      });
-
-      // Processar resposta
+      const response = await fetch(value.apiUrl, { method: "GET", headers });
       const responseData = await response.json();
 
       if (!response.ok) {
@@ -69,7 +65,6 @@ export function ApiIntegrationItem({
         return;
       }
 
-      // Aplicar JSONPath se existir
       if (value.JSONPath) {
         try {
           const results = JSONPath({
@@ -79,9 +74,7 @@ export function ApiIntegrationItem({
           setApiResponse(
             results.length > 0
               ? { data: results }
-              : {
-                  error: "JSONPath não retornou resultados",
-                }
+              : { error: "JSONPath não retornou resultados" }
           );
         } catch (error) {
           setApiResponse({
@@ -93,13 +86,29 @@ export function ApiIntegrationItem({
       } else {
         setApiResponse({ data: responseData });
       }
+
+      if (propertyKey) {
+        onValueChange(propertyKey, { ...value, dataReturn: responseData });
+      }
     } catch (error) {
-      setApiResponse({
-        error: "Erro na requisição",
-        details: error instanceof Error ? error.message : "Erro desconhecido",
-      });
+      const errorMessage =
+        error instanceof Error ? error.message : "Erro desconhecido";
+      setApiResponse({ error: "Erro na requisição", details: errorMessage });
+
+      if (propertyKey) {
+        onValueChange(propertyKey, {
+          ...value,
+          dataReturn: `Error: ${errorMessage}`,
+        });
+      }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleKeyBlur = () => {
+    if (draftKey !== propertyKey && propertyKey) {
+      onKeyChange(propertyKey, draftKey);
     }
   };
 
@@ -111,26 +120,35 @@ export function ApiIntegrationItem({
             <span className="text-xs text-emerald-500 mb-2">
               API Integration
             </span>
+
             <input
               type="text"
-              defaultValue={propertyKey}
-              className="flex- w-auto sm:w-full sm:flex-1 text-emerald-300 text-sm font-medium bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
-              onChange={(e) => onKeyChange(propertyKey, e.target.value)}
+              id="integrationName"
+              value={draftKey}
+              className={`flex- w-auto sm:w-full sm:flex-1 text-emerald-300 text-sm font-medium bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1 ${
+                error ? "border border-red-500" : ""
+              }`}
+              onChange={(e) => setDraftKey(e.target.value)} // Atualiza apenas o draftKey local
+              onBlur={handleKeyBlur} // Chama onKeyChange apenas quando o input perde o foco
+              disabled={!editable}
             />
+            {error && <div className="text-red-500 text-xs mt-1">{error}</div>}
           </div>
           <div className="md:w-[91%] w-full flex flex-col space-y-2">
             <div className="flex items-center space-x-2">
               <span className="text-emerald-300 text-sm">apiUrl:</span>
               <input
                 type="text"
-                defaultValue={value.apiUrl}
+                id="apiUrl"
+                value={value.apiUrl || ""}
                 className="flex-1 text-zinc-400 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
                 onChange={(e) =>
-                  onValueChange(propertyKey, {
+                  onValueChange(propertyKey || "", {
                     ...value,
                     apiUrl: e.target.value,
                   })
                 }
+                disabled={!editable}
               />
             </div>
             <div className="flex items-center space-x-2">
@@ -139,67 +157,81 @@ export function ApiIntegrationItem({
               </span>
               <input
                 type="text"
-                defaultValue={value.JSONPath}
+                id="JSONPath"
+                value={value.JSONPath || ""}
                 className="flex-1 text-zinc-400 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
                 onChange={(e) =>
-                  onValueChange(propertyKey, {
+                  onValueChange(propertyKey || "", {
                     ...value,
                     JSONPath: e.target.value,
                   })
                 }
+                disabled={!editable}
               />
             </div>
             <div className="flex items-center space-x-2">
               <div className="relative w-[38%]">
                 <input
                   type="text"
-                  defaultValue={
+                  id="apiKey"
+                  value={
                     Object.keys(value).find(
-                      (k) => k !== "apiUrl" && k !== "JSONPath"
+                      (k) =>
+                        k !== "apiUrl" && k !== "JSONPath" && k !== "dataReturn"
                     ) || "x_api_key"
                   }
                   className="w-full text-emerald-300 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
                   onChange={(e) => {
-                    const oldKey = Object.keys(value).find(
-                      (k) => k !== "apiUrl" && k !== "JSONPath"
+                    const oldHeaderKey = Object.keys(value).find(
+                      (k) =>
+                        k !== "apiUrl" && k !== "JSONPath" && k !== "dataReturn"
                     );
-                    const newValue = { ...value } as ApiIntegrationValue;
-                    if (oldKey) {
-                      const headerValue = newValue[oldKey];
-                      delete newValue[oldKey];
-                      newValue[e.target.value] = headerValue;
+                    const newHeaderKey = e.target.value;
+
+                    if (oldHeaderKey && oldHeaderKey !== newHeaderKey) {
+                      const newValue = { ...value };
+                      newValue[newHeaderKey] = newValue[oldHeaderKey];
+                      delete newValue[oldHeaderKey];
+                      onValueChange(propertyKey, newValue);
                     }
-                    onValueChange(propertyKey, newValue);
                   }}
+                  disabled={!editable}
                 />
               </div>
               <span className="text-emerald-300">|</span>
               <div className="flex items-center w-full">
                 <input
                   type={showApiKey ? "text" : "password"}
-                  defaultValue={
+                  id="apiResponse"
+                  value={
                     Object.values(value).find(
                       (_, i) =>
                         Object.keys(value)[i] !== "apiUrl" &&
-                        Object.keys(value)[i] !== "JSONPath"
+                        Object.keys(value)[i] !== "JSONPath" &&
+                        Object.keys(value)[i] !== "dataReturn"
                     ) || ""
                   }
                   className="flex-1 text-zinc-400 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
                   onChange={(e) => {
                     const headerKey =
                       Object.keys(value).find(
-                        (k) => k !== "apiUrl" && k !== "JSONPath"
+                        (k) =>
+                          k !== "apiUrl" &&
+                          k !== "JSONPath" &&
+                          k !== "dataReturn"
                       ) || "x_api_key";
-                    onValueChange(propertyKey, {
+                    onValueChange(propertyKey || "", {
                       ...value,
                       [headerKey]: e.target.value,
                     });
                   }}
+                  disabled={!editable}
                 />
                 <button
                   type="button"
                   onClick={() => setShowApiKey(!showApiKey)}
                   className="bg-zinc-800 hover:bg-zinc-700 text-zinc-400 rounded-r px-2 py-1 focus:outline-none"
+                  disabled={!editable}
                 >
                   {showApiKey ? (
                     <EyeOffIcon className="w-4 h-4" />
@@ -215,8 +247,9 @@ export function ApiIntegrationItem({
           </div>
         </div>
         <button
-          onClick={() => onDeleteKey(propertyKey)}
+          onClick={() => onDeleteKey(propertyKey || "")}
           className="ml-2 text-zinc-400 opacity-100 hover:text-red-400 transition-all"
+          disabled={!editable}
         >
           <Trash size={14} />
         </button>
@@ -249,6 +282,12 @@ export function ApiIntegrationItem({
                     </code>
                   )}
                 </>
+              ) : value.dataReturn ? (
+                <code className="block w-full whitespace-pre-wrap break-all">
+                  {typeof value.dataReturn === "string"
+                    ? value.dataReturn
+                    : JSON.stringify(value.dataReturn, null, 2)}
+                </code>
               ) : (
                 <span className="text-zinc-500">Nenhum dado recebido</span>
               )}
@@ -265,7 +304,7 @@ export function ApiIntegrationItem({
           <button
             onClick={handleTryApi}
             className="px-4 py-2 flex items-center gap-2 bg-gradient-to-r from-orange-400 to-orange-600 text-white rounded-lg hover:from-orange-500 hover:to-orange-700 transition-all text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={loading}
+            disabled={loading || !editable}
           >
             {loading ? "Trying..." : "Try"}
           </button>

@@ -8,17 +8,9 @@ export function ObjectHeader({
   sortAscending,
   setSortAscending,
   userPlan,
+  onApiIntegrationCreate,
+  onSimpleObjectCreate,
 }: ObjectHeaderProps) {
-  const handleSimpleObjectCreate = () => {
-    console.log("Creating simple object");
-    // Add logic to create a simple object
-  };
-
-  const handleApiIntegrationCreate = () => {
-    console.log("Creating API integration");
-    // Add logic to create an API integration
-  };
-
   return (
     <div className="flex relative flex-col items-start gap-8 justify-center w-full pb-4">
       <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-500">
@@ -42,8 +34,8 @@ export function ObjectHeader({
         </button>
         <PremiumButton
           userPlan={userPlan}
-          onSimpleObjectCreate={handleSimpleObjectCreate}
-          onApiIntegrationCreate={handleApiIntegrationCreate}
+          onSimpleObjectCreate={onSimpleObjectCreate}
+          onApiIntegrationCreate={onApiIntegrationCreate}
         />
       </div>
     </div>

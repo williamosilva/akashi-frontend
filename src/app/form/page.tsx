@@ -60,6 +60,8 @@ export default function FormPage() {
     fetchProjectData();
   }, [selectedProjectId]);
 
+  console.log("teste", projectData);
+
   function handleLogout() {
     AuthService.getInstance().logout();
     router.push("/");
@@ -207,9 +209,16 @@ export default function FormPage() {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: index * 0.1 }}
-                                onClick={() =>
-                                  setSelectedObject({ key, data: value })
-                                }
+                                onClick={() => {
+                                  // Cria um objeto com o ID como chave e o valor como conteúdo
+                                  const objectWithIdAsKey = {
+                                    [key]: value,
+                                  };
+                                  setSelectedObject({
+                                    key,
+                                    data: objectWithIdAsKey,
+                                  });
+                                }}
                               >
                                 <h3 className="text-emerald-300 font-medium mb-2">
                                   {key}

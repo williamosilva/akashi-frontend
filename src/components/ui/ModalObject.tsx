@@ -12,13 +12,7 @@ import type {
   SubscriptionPlan,
 } from "@/types";
 
-const DEFAULT_DATA: ProjectDataItem = {
-  objectId: "",
-  apiUrl: "",
-  JSONPath: "",
-  x_api_key: "",
-  dataReturn: null,
-};
+const DEFAULT_DATA: ProjectDataItem = {};
 
 export default function ModalObject({
   isVisible,
@@ -32,59 +26,60 @@ export default function ModalObject({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentKey, setCurrentKey] = useState(itemKey || "new-object");
-
-  console.log("ModalObject", projectId, itemKey, initialData);
+  const [objectId, setObjectId] = useState<string | null>(null);
+  const [objectName, setObjectName] = useState<string>("New Object");
 
   useEffect(() => {
     if (isVisible) {
       setError(null);
 
       if (initialData) {
-        // Clonar dados iniciais excluindo dataReturn
-        const { dataReturn, ...cleanData } = initialData;
-        setCurrentData({
-          ...cleanData,
-          objectId: cleanData.objectId || "",
-          apiUrl: cleanData.apiUrl || "",
-          JSONPath: cleanData.JSONPath || "",
-          x_api_key: cleanData.x_api_key || "",
-        });
-        setCurrentKey(itemKey || "");
+        const keys = Object.keys(initialData);
+        if (keys.length > 0) {
+          const id = keys[0];
+          const objectData = initialData[id];
+          const { akashiObjectName, ...restData } = objectData;
+
+          setObjectId(id);
+          setCurrentData(restData);
+          setCurrentKey(itemKey || id);
+          setObjectName(akashiObjectName || itemKey || id);
+        } else {
+          setCurrentData(initialData);
+          setCurrentKey(itemKey || "");
+          setObjectId(null);
+          setObjectName(itemKey || "New Object");
+        }
       } else {
-        // Resetar para dados padrão sem dataReturn
-        setCurrentData({
-          apiUrl: "",
-          JSONPath: "",
-          x_api_key: "",
-        });
-        setCurrentKey(`new-object-${Date.now()}`);
+        setCurrentData({});
+        setObjectId(null);
+        setObjectName("New Object");
       }
     }
   }, [isVisible, initialData, itemKey]);
 
+  // Computar dataForProperties dinamicamente
+  const dataForProperties = objectId
+    ? { [objectId]: currentData }
+    : { [currentKey]: currentData };
+
   const handleSave = async () => {
-    if (!currentData || !projectId) return;
+    if (!projectId) return;
 
     try {
       setIsLoading(true);
-
       const payload = {
         ...currentData,
-        // Garantir que campos da API estejam presentes
-        apiUrl: currentData.apiUrl || undefined,
-        JSONPath: currentData.JSONPath || undefined,
-        x_api_key: currentData.x_api_key || undefined,
+        akashiObjectName: objectName,
       };
 
-      if (initialData) {
-        // Atualização
+      if (objectId) {
         await ProjectService.getInstance().updateDataInfoItem(
           projectId,
-          currentKey,
+          objectId,
           payload
         );
       } else {
-        // Criação
         await ProjectService.getInstance().updateDataInfoItem(
           projectId,
           currentKey,
@@ -101,13 +96,15 @@ export default function ModalObject({
   };
 
   const handleDelete = async () => {
-    if (!projectId || !currentKey) return;
+    if (!projectId) return;
+    const keyToDelete = objectId || currentKey;
+    if (!keyToDelete) return;
 
     try {
       setIsLoading(true);
       await ProjectService.getInstance().deleteDataInfoItem(
         projectId,
-        currentKey
+        keyToDelete
       );
       onClose(true);
     } catch (err) {
@@ -117,9 +114,50 @@ export default function ModalObject({
     }
   };
 
-  const handleNameChange = (newName: string) => {
-    setCurrentKey(newName);
+  const handleObjectNameChange = (newName: string) => {
+    setObjectName(newName);
   };
+
+  const handleObjectUpdate = (updatedData: Record<string, any>) => {
+    const id = objectId || currentKey;
+    const newData = updatedData[id];
+    if (newData) {
+      console.log("newData", newData);
+      setCurrentData(newData);
+    }
+  };
+
+  // const handleCreateSimpleObject = () => {
+  //   setCurrentData((prev) => ({
+  //     " ": "valueExample", // Novo item primeiro
+  //     ...prev, // Demais itens depois
+  //   }));
+  // };
+
+  const handleCreateSimpleObject = () => {
+    const timestamp = Date.now().toString();
+    setCurrentData((prev) => ({
+      [`simple_${timestamp}`]: "valueExample", // Novo simples com chave única
+      ...prev,
+    }));
+  };
+
+  const handleCreateApiIntegration = () => {
+    const newApiObject = {
+      apiUrl: "",
+      JSONPath: "",
+      x_api_key: "",
+      dataReturn: "",
+    };
+
+    setCurrentData((prev) => ({
+      "": newApiObject,
+      ...prev,
+    }));
+  };
+
+  console.log("currentData", currentData);
+  console.log("dataForProperties", dataForProperties);
 
   return (
     <Modal isOpen={isVisible} onClose={() => onClose(false)}>
@@ -128,17 +166,18 @@ export default function ModalObject({
 
       <div className="relative w-full max-w-[1000px] mx-auto max-h-[100vh] rounded-lg h-auto px-0">
         <ObjectHeader
-          name={currentKey}
+          name={objectName}
           userPlan={userPlan}
-          isEditable={!initialData}
-          onNameChange={handleNameChange}
+          sortAscending={false}
+          setSortAscending={() => {}}
+          onApiIntegrationCreate={handleCreateApiIntegration}
+          onSimpleObjectCreate={handleCreateSimpleObject}
+          onNameChange={handleObjectNameChange}
         />
 
         <ObjectProperties
-          data={currentData}
-          onUpdate={(updated) =>
-            setCurrentData((prev) => ({ ...prev, ...updated }))
-          }
+          data={dataForProperties}
+          onUpdate={handleObjectUpdate}
           isApiEditable={userPlan === "premium" || userPlan === "admin"}
         />
 

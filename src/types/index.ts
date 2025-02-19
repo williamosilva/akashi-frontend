@@ -58,20 +58,19 @@ export interface ApiIntegrationItemProps {
   onValueChange: (key: string, value: ApiIntegrationValue) => void;
   onKeyChange: (oldKey: string, newKey: string) => void;
   onDeleteKey: (key: string) => void;
-  expanded: boolean;
-  loading: boolean;
-  apiResponse: ApiResponse | null;
-  setExpanded: (expanded: boolean) => void;
-  setLoading: (loading: boolean) => void;
-  setApiResponse: (response: ApiResponse | null) => void;
+  editable?: boolean;
+  error?: string;
 }
 
 export interface PropertyItemProps {
   propertyKey: string;
+  displayKey?: string; // Nova propriedade opcional
   value: SimplePropertyValue;
   onValueChange: (key: string, value: PropertyValue) => void;
   onKeyChange: (oldKey: string, newKey: string) => void;
   onDeleteKey: (key: string) => void;
+  error?: string; // Nova propriedade opcional
+  isNew?: boolean;
 }
 
 export interface ObjectPropertiesProps {
@@ -85,8 +84,11 @@ export interface ObjectActionsProps {
 }
 
 export interface ObjectHeaderProps {
-  name: string; // Changed to required string
+  name: string;
+  userPlan: SubscriptionPlan;
   sortAscending: boolean;
   setSortAscending: (value: boolean) => void;
-  userPlan: SubscriptionPlan;
+  onApiIntegrationCreate: () => void;
+  onSimpleObjectCreate: () => void;
+  onNameChange?: (name: string) => void; // Nova prop
 }

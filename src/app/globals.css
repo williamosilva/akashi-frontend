@@ -46,6 +46,23 @@ body {
   scrollbar-color: rgba(52, 211, 153, 0.2) rgba(24, 24, 27, 0.02);
 }
 
+@keyframes pulse-border {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+.highlight {
+  animation: pulse-border 1.5s ease-out;
+  position: relative;
+  overflow: hidden;
+}
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
