@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { JSONPath } from "jsonpath-plus";
 import {
   ChevronDown,
@@ -8,7 +8,8 @@ import {
   EyeOffIcon,
   Trash,
 } from "lucide-react";
-import type { ApiIntegrationValue, ApiIntegrationItemProps } from "@/types";
+import type { ApiIntegrationItemProps } from "@/types";
+import { useMediaQuery } from "react-responsive";
 
 export function ApiIntegrationItem({
   propertyKey,
@@ -29,7 +30,9 @@ export function ApiIntegrationItem({
   const [localError, setLocalError] = useState<string | undefined>(error);
 
   const prevPropertyKeyRef = useRef(propertyKey);
-
+  const isDesktopOrLaptop = useMediaQuery({
+    query: "(max-width: 395px)",
+  });
   useEffect(() => {
     if (prevPropertyKeyRef.current !== propertyKey) {
       setDraftKey(propertyKey || "");
@@ -81,6 +84,10 @@ export function ApiIntegrationItem({
       onKeyChange(propertyKey, newKey);
     }
   };
+
+  useEffect(() => {
+    console.log(isDesktopOrLaptop);
+  }, [isDesktopOrLaptop]);
 
   const handleTryApi = async () => {
     setApiResponse(null);
@@ -147,21 +154,25 @@ export function ApiIntegrationItem({
   };
 
   return (
-    <div className="flex flex-col p-3 rounded-lg border border-emerald-500/10 hover:border-emerald-500/50 hover:shadow-[0_0px_10px_rgba(0,0,0,0.25)] hover:shadow-emerald-500/10 transition-all group bg-zinc-800 col-span-full">
-      <div className="flex items-center sm:w-full w-auto flex-1 sm:flex-0">
-        <div className="flex-1 flex md:flex-row flex-col items-center md:gap-0 gap-2 md:space-x-10 space-x-0">
-          <div className="w-full">
-            <span className="text-xs text-emerald-500 mb-2">
+    <div className="flex flex-col p-3 rounded-lg flex-1 border relative border-emerald-500/10 hover:border-emerald-500/50 hover:shadow-[0_0px_10px_rgba(0,0,0,0.25)] hover:shadow-emerald-500/10 transition-all group bg-zinc-800 col-span-full">
+      <div className="flex items-center w-full relative ">
+        <div className="flex md:flex-row flex-col items-center md:gap-0 gap-2 md:space-x-10 space-x-0 w-full">
+          <div className="w-full flex sm:flex-col flex-row items-center sm:items-start sm:gap-0 gap-2">
+            <span className="text-xs  text-emerald-500 sm:mb-2 mb-0">
               API Integration
             </span>
 
             <input
               type="text"
               id="integrationName"
+              style={{
+                width: isDesktopOrLaptop ? "5rem" : "auto",
+              }}
               value={draftKey}
-              className={`flex- w-auto sm:w-full sm:flex-1 text-emerald-300 text-sm font-medium bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1 ${
+              className={`flex-1 mr-8  w-fit flex sm:w-full sm:flex-1 text-emerald-300 text-sm font-medium bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1 ${
                 localError ? "border border-red-500" : ""
-              }`}
+              }
+            `}
               onBlur={handleKeyChange}
               onChange={handleKeyInput}
               disabled={!editable}
@@ -206,7 +217,7 @@ export function ApiIntegrationItem({
               />
             </div>
             <div className="flex items-center space-x-2">
-              <div className="relative w-[38%]">
+              <div className="relative md:w-[38%] w-28">
                 <input
                   type="text"
                   id="apiKey"
@@ -215,7 +226,7 @@ export function ApiIntegrationItem({
                       (k) => k !== "apiUrl" && k !== "JSONPath"
                     ) || "x-api-key"
                   }
-                  className="w-full text-emerald-300 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
+                  className="md:w-full w-20 text-emerald-300 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
                   onChange={(e) => {
                     const oldHeaderKey = Object.keys(value).find(
                       (k) => k !== "apiUrl" && k !== "JSONPath"
@@ -244,7 +255,7 @@ export function ApiIntegrationItem({
                         Object.keys(value)[i] !== "JSONPath"
                     ) || ""
                   }
-                  className="flex-1 text-zinc-400 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
+                  className="w-full text-zinc-400 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
                   onChange={(e) => {
                     const headerKey =
                       Object.keys(value).find(
@@ -278,7 +289,14 @@ export function ApiIntegrationItem({
         </div>
         <button
           onClick={() => onDeleteKey(propertyKey || "")}
-          className="ml-2 text-zinc-400 opacity-100 hover:text-red-400 transition-all"
+          className="ml-2 sm:block hidden text-zinc-400 opacity-100 hover:text-red-400 transition-all"
+          disabled={!editable}
+        >
+          <Trash size={14} />
+        </button>
+        <button
+          onClick={() => onDeleteKey(propertyKey || "")}
+          className="ml-2 sm:hidden absolute top-1 right-2 translate-[-50%, -50%] text-zinc-400 opacity-100 hover:text-red-400 transition-all"
           disabled={!editable}
         >
           <Trash size={14} />

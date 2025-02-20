@@ -12,7 +12,7 @@ export function ObjectActions({ onSave, onDelete, empty }: ObjectActionsProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
       className={cn(
-        "flex flex-col w-1/2 ml-auto sm:flex-row justify-end items-center gap-4 pt-4",
+        "flex flex-col md:w-1/2 w-full ml-auto sm:flex-row justify-end items-center gap-4 pt-4 ",
         !empty && "mt-auto"
       )}
     >

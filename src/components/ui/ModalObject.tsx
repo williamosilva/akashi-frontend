@@ -14,7 +14,6 @@ import type {
 
 const DEFAULT_DATA: ProjectDataItem = {};
 
-// Define os possíveis estados de ordenação
 type SortOrder = "none" | "asc" | "desc";
 
 export default function ModalObject({
@@ -144,6 +143,8 @@ export default function ModalObject({
     setObjectName(newName);
   };
 
+  console.log("newName", objectName);
+
   const handleObjectUpdate = (updatedData: Record<string, any>) => {
     const id = objectId || currentKey;
     const newData = updatedData[id];
@@ -201,13 +202,12 @@ export default function ModalObject({
       {isLoading && <div className="loading-indicator">Loading...</div>}
       {error && <div className="error-message">{error}</div>}
 
-      <div className="relative w-full max-w-[1000px] mx-auto max-h-[100vh] min-h-80 flex flex-col rounded-lg h-auto px-0">
+      <div className="relative w-full  max-w-[1000px] mx-auto max-h-[100vh] min-h-80 flex flex-col rounded-lg h-auto px-0">
         <ObjectHeader
           name={objectName}
           userPlan={userPlan}
           sortAscending={sortAscending}
           setSortAscending={toggleSorting}
-          sortOrder={sortOrder} // Passando o estado atual da ordenação
           onApiIntegrationCreate={handleCreateApiIntegration}
           onSimpleObjectCreate={handleCreateSimpleObject}
           onNameChange={handleObjectNameChange}
