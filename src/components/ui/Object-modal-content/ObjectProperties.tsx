@@ -3,16 +3,19 @@ import { useState } from "react";
 import { PropertyItem } from "./PropertyItem";
 import { ApiIntegrationItem } from "./ApiIntegrationItem";
 import type { ApiIntegrationValue, SimplePropertyValue } from "@/types";
+import { cn } from "@/lib/utils";
 
 interface ObjectPropertiesProps {
   data: Record<string, Record<string, any>>;
   onUpdate: (data: Record<string, Record<string, any>>) => void;
   isApiEditable: boolean;
+  empty?: boolean;
 }
 
 export function ObjectProperties({
   data,
   onUpdate,
+  empty,
   isApiEditable,
 }: ObjectPropertiesProps) {
   // Local state to track key errors
@@ -97,7 +100,12 @@ export function ObjectProperties({
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-1 max-h-[55vh] overflow-y-auto">
+    <div
+      className={cn(
+        "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-1 max-h-[55vh] overflow-y-auto",
+        empty && "hidden"
+      )}
+    >
       {getPropertyEntries().map(({ key, value, type }) => (
         <div
           key={`${objectId}-${key}`}
