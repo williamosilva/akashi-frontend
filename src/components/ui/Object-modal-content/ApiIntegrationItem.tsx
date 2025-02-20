@@ -65,17 +65,20 @@ export function ApiIntegrationItem({
     }
   };
 
-  const handleKeyBlur = () => {
+  // Corrigido para espelhar a lógica do PropertyItem
+  const handleKeyChange = (e: React.FocusEvent<HTMLInputElement>) => {
+    const newKey = e.target.value;
+
     // Se a validação falhar, restaurar o valor anterior
-    if (!validateKey(draftKey)) {
-      // Deixamos o erro visível, mas restauramos o valor original
+    if (!validateKey(newKey)) {
+      // Deixamos o erro visível, mas restauramos o valor original no estado local
       setDraftKey(propertyKey || "");
       return;
     }
 
-    // Se passar na validação e for diferente, prosseguir com a alteração
-    if (draftKey !== propertyKey && propertyKey) {
-      onKeyChange(propertyKey, draftKey);
+    // Se passar na validação, prosseguir com a alteração
+    if (newKey !== propertyKey && propertyKey) {
+      onKeyChange(propertyKey, newKey);
     }
   };
 
@@ -91,7 +94,7 @@ export function ApiIntegrationItem({
 
       const headers: Record<string, string> = {};
       const apiKeyField = Object.keys(value).find(
-        (k) => k !== "apiUrl" && k !== "JSONPath" && k !== "dataReturn"
+        (k) => k !== "apiUrl" && k !== "JSONPath"
       );
 
       if (apiKeyField && value[apiKeyField]) {
@@ -131,20 +134,13 @@ export function ApiIntegrationItem({
         setApiResponse({ data: responseData });
       }
 
-      if (propertyKey) {
-        onValueChange(propertyKey, { ...value, dataReturn: responseData });
-      }
+      // Removido a parte onde armazenava o responseData em value.dataReturn
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Erro desconhecido";
       setApiResponse({ error: "Erro na requisição", details: errorMessage });
 
-      if (propertyKey) {
-        onValueChange(propertyKey, {
-          ...value,
-          dataReturn: `Error: ${errorMessage}`,
-        });
-      }
+      // Removido a parte onde armazenava o erro em value.dataReturn
     } finally {
       setLoading(false);
     }
@@ -166,8 +162,8 @@ export function ApiIntegrationItem({
               className={`flex- w-auto sm:w-full sm:flex-1 text-emerald-300 text-sm font-medium bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1 ${
                 localError ? "border border-red-500" : ""
               }`}
+              onBlur={handleKeyChange}
               onChange={handleKeyInput}
-              onBlur={handleKeyBlur}
               disabled={!editable}
             />
             {localError && (
@@ -216,15 +212,13 @@ export function ApiIntegrationItem({
                   id="apiKey"
                   value={
                     Object.keys(value).find(
-                      (k) =>
-                        k !== "apiUrl" && k !== "JSONPath" && k !== "dataReturn"
-                    ) || "x_api_key"
+                      (k) => k !== "apiUrl" && k !== "JSONPath"
+                    ) || "x-api-key"
                   }
                   className="w-full text-emerald-300 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
                   onChange={(e) => {
                     const oldHeaderKey = Object.keys(value).find(
-                      (k) =>
-                        k !== "apiUrl" && k !== "JSONPath" && k !== "dataReturn"
+                      (k) => k !== "apiUrl" && k !== "JSONPath"
                     );
                     const newHeaderKey = e.target.value;
 
@@ -247,19 +241,15 @@ export function ApiIntegrationItem({
                     Object.values(value).find(
                       (_, i) =>
                         Object.keys(value)[i] !== "apiUrl" &&
-                        Object.keys(value)[i] !== "JSONPath" &&
-                        Object.keys(value)[i] !== "dataReturn"
+                        Object.keys(value)[i] !== "JSONPath"
                     ) || ""
                   }
                   className="flex-1 text-zinc-400 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
                   onChange={(e) => {
                     const headerKey =
                       Object.keys(value).find(
-                        (k) =>
-                          k !== "apiUrl" &&
-                          k !== "JSONPath" &&
-                          k !== "dataReturn"
-                      ) || "x_api_key";
+                        (k) => k !== "apiUrl" && k !== "JSONPath"
+                      ) || "x-api-key";
                     onValueChange(propertyKey || "", {
                       ...value,
                       [headerKey]: e.target.value,
@@ -322,12 +312,6 @@ export function ApiIntegrationItem({
                     </code>
                   )}
                 </>
-              ) : value.dataReturn ? (
-                <code className="block w-full whitespace-pre-wrap break-all">
-                  {typeof value.dataReturn === "string"
-                    ? value.dataReturn
-                    : JSON.stringify(value.dataReturn, null, 2)}
-                </code>
               ) : (
                 <span className="text-zinc-500">Nenhum dado recebido</span>
               )}

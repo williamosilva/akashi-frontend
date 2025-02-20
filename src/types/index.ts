@@ -82,6 +82,7 @@ export interface ObjectPropertiesProps {
 export interface ObjectActionsProps {
   onSave: () => void;
   onDelete: () => void;
+  empty?: boolean;
 }
 
 export interface ObjectHeaderProps {
@@ -91,5 +92,6 @@ export interface ObjectHeaderProps {
   setSortAscending: (value: boolean) => void;
   onApiIntegrationCreate: () => void;
   onSimpleObjectCreate: () => void;
-  onNameChange?: (name: string) => void; // Nova prop
+  onNameChange?: (name: string) => void;
+  empty?: boolean;
 }

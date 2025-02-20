@@ -63,8 +63,11 @@ export default function ModalObject({
     ? { [objectId]: currentData }
     : { [currentKey]: currentData };
 
+  console.log("projectId objectId data", projectId, objectId, currentData);
   const handleSave = async () => {
     if (!projectId) return;
+
+    console.log("projectId objectId data", projectId, objectId, currentData);
 
     try {
       setIsLoading(true);
@@ -73,42 +76,19 @@ export default function ModalObject({
         akashiObjectName: objectName,
       };
 
-      if (objectId) {
-        await ProjectService.getInstance().updateDataInfoItem(
-          projectId,
-          objectId,
-          payload
-        );
-      } else {
-        await ProjectService.getInstance().updateDataInfoItem(
-          projectId,
-          currentKey,
-          payload
-        );
-      }
+      // Determina qual ID usar como entryId (objectId ou currentKey)
+      const entryId = objectId || currentKey;
+
+      await ProjectService.getInstance().updateDataInfoItem(
+        projectId,
+        entryId,
+        payload
+      );
 
       onClose(true);
     } catch (err) {
       setError("Failed to save changes");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleDelete = async () => {
-    if (!projectId) return;
-    const keyToDelete = objectId || currentKey;
-    if (!keyToDelete) return;
-
-    try {
-      setIsLoading(true);
-      await ProjectService.getInstance().deleteDataInfoItem(
-        projectId,
-        keyToDelete
-      );
-      onClose(true);
-    } catch (err) {
-      setError("Failed to delete item");
+      console.error(err);
     } finally {
       setIsLoading(false);
     }
@@ -135,9 +115,8 @@ export default function ModalObject({
   // };
 
   const handleCreateSimpleObject = () => {
-    const timestamp = Date.now().toString();
     setCurrentData((prev) => ({
-      [`simple_${timestamp}`]: "valueExample", // Novo simples com chave única
+      simpleKeyExample: "valueExample", // Novo simples com chave única
       ...prev,
     }));
   };
@@ -146,12 +125,11 @@ export default function ModalObject({
     const newApiObject = {
       apiUrl: "",
       JSONPath: "",
-      x_api_key: "",
-      dataReturn: "",
+      "x-api-key": "",
     };
 
     setCurrentData((prev) => ({
-      "": newApiObject,
+      apiKeyExample: newApiObject,
       ...prev,
     }));
   };
@@ -164,7 +142,7 @@ export default function ModalObject({
       {isLoading && <div className="loading-indicator">Loading...</div>}
       {error && <div className="error-message">{error}</div>}
 
-      <div className="relative w-full max-w-[1000px] mx-auto max-h-[100vh] rounded-lg h-auto px-0">
+      <div className="relative w-full max-w-[1000px] mx-auto max-h-[100vh] min-h-80 flex flex-col rounded-lg h-auto px-0">
         <ObjectHeader
           name={objectName}
           userPlan={userPlan}
@@ -173,6 +151,7 @@ export default function ModalObject({
           onApiIntegrationCreate={handleCreateApiIntegration}
           onSimpleObjectCreate={handleCreateSimpleObject}
           onNameChange={handleObjectNameChange}
+          empty={Object.keys(currentData).length === 0}
         />
 
         <ObjectProperties
@@ -183,8 +162,9 @@ export default function ModalObject({
 
         <ObjectActions
           onSave={handleSave}
-          onDelete={initialData ? handleDelete : undefined}
+          // onDelete={handleDelete : undefined}
           isSaving={isLoading}
+          empty={Object.keys(currentData).length === 0}
         />
       </div>
     </Modal>

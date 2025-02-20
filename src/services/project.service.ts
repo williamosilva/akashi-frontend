@@ -60,22 +60,20 @@ export class ProjectService extends ApiService {
 
   public async updateDataInfoItem(
     projectId: string,
-    itemKey: string,
-    itemData: ProjectDataItem
+    entryId: string,
+    itemData: Record<string, any>
   ): Promise<Project> {
-    return this.request<Project>(`/projects/${projectId}/datainfo`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        dataInfo: {
-          [itemKey]: itemData,
+    return this.request<Project>(
+      `/projects/${projectId}/datainfo/entry/${entryId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
         },
-      }),
-    });
+        body: JSON.stringify(itemData),
+      }
+    );
   }
-
   public async deleteDataInfoItem(
     projectId: string,
     itemKey: string

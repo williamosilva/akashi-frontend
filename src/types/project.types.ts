@@ -28,7 +28,7 @@ export interface ProjectDataItem {
   objectId?: string;
   apiUrl?: string;
   JSONPath?: string;
-  x_api_key?: string;
-  dataReturn?: any;
+  "x-api-key"?: string;
+
   [key: string]: any;
 }

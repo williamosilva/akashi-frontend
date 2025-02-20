@@ -1,16 +1,9 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { Lock, Star, Plus, ChevronDown } from "lucide-react"
-
-type SubscriptionPlan = "free" | "basic" | "premium"
-
-interface PremiumButtonProps {
-  userPlan: SubscriptionPlan
-  onSimpleObjectCreate: () => void
-  onApiIntegrationCreate: () => void
-}
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Lock, Star, Plus, ChevronDown } from "lucide-react";
+import { PremiumButtonProps } from "@/types/user.types";
 
 const SparkleEffect = () => {
   return (
@@ -39,13 +32,18 @@ const SparkleEffect = () => {
         ))}
       </AnimatePresence>
     </div>
-  )
-}
+  );
+};
 
-export default function PremiumButton({ userPlan, onSimpleObjectCreate, onApiIntegrationCreate }: PremiumButtonProps) {
-  const [dropdownOpen, setDropdownOpen] = useState(false)
+export default function PremiumButton({
+  userPlan,
+  onSimpleObjectCreate,
+  onApiIntegrationCreate,
+}: PremiumButtonProps) {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const canAccessApiIntegration = userPlan === "premium"
+  const canAccessApiIntegration =
+    userPlan === "premium" || userPlan === "admin";
 
   return (
     <div className="relative font-sans">
@@ -57,7 +55,9 @@ export default function PremiumButton({ userPlan, onSimpleObjectCreate, onApiInt
         Create Object
         <ChevronDown
           size={14}
-          className={`ml-1 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`}
+          className={`ml-1 transition-transform duration-200 ${
+            dropdownOpen ? "rotate-180" : ""
+          }`}
         />
       </button>
 
@@ -73,8 +73,8 @@ export default function PremiumButton({ userPlan, onSimpleObjectCreate, onApiInt
             <button
               className="w-full px-4 py-2 text-left text-sm text-zinc-300 hover:bg-zinc-700 transition-colors"
               onClick={() => {
-                onSimpleObjectCreate()
-                setDropdownOpen(false)
+                onSimpleObjectCreate();
+                setDropdownOpen(false);
               }}
             >
               Create Simple Object
@@ -82,12 +82,14 @@ export default function PremiumButton({ userPlan, onSimpleObjectCreate, onApiInt
             <div className="relative">
               <button
                 className={`w-full px-4 py-2 text-left text-sm ${
-                  canAccessApiIntegration ? "text-zinc-300 hover:bg-zinc-700" : "text-zinc-600 cursor-not-allowed"
+                  canAccessApiIntegration
+                    ? "text-zinc-300 hover:bg-zinc-700"
+                    : "text-zinc-600 cursor-not-allowed"
                 } transition-colors`}
                 onClick={() => {
                   if (canAccessApiIntegration) {
-                    onApiIntegrationCreate()
-                    setDropdownOpen(false)
+                    onApiIntegrationCreate();
+                    setDropdownOpen(false);
                   }
                 }}
                 disabled={!canAccessApiIntegration}
@@ -100,8 +102,13 @@ export default function PremiumButton({ userPlan, onSimpleObjectCreate, onApiInt
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <Lock size={8} className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400" />
-                    <span className="text-[10px] font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 tracking-wide">PREMIUM</span>
+                    <Lock
+                      size={8}
+                      className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400"
+                    />
+                    <span className="text-[10px] font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 tracking-wide">
+                      PREMIUM
+                    </span>
                   </motion.span>
                 )}
               </button>
@@ -111,5 +118,5 @@ export default function PremiumButton({ userPlan, onSimpleObjectCreate, onApiInt
         )}
       </AnimatePresence>
     </div>
-  )
+  );
 }
