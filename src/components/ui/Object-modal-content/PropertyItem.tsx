@@ -16,6 +16,7 @@ export function PropertyItem({
   existingKeys?: string[];
 }) {
   const [draftKey, setDraftKey] = useState(propertyKey);
+  const [localError, setLocalError] = useState<string | undefined>(error);
   const prevPropertyKeyRef = useRef(propertyKey);
 
   useEffect(() => {
@@ -24,13 +25,51 @@ export function PropertyItem({
       prevPropertyKeyRef.current = propertyKey;
     }
   }, [propertyKey]);
+
+  useEffect(() => {
+    setLocalError(error);
+  }, [error]);
+
   const displayValue =
     value === null || value === undefined ? "" : String(value);
 
-  const handleKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const validateKey = (newKey: string): boolean => {
+    if (newKey === propertyKey) return true;
+
+    if (existingKeys.includes(newKey)) {
+      setLocalError(`A chave "${newKey}" já existe`);
+      return false;
+    }
+
+    setLocalError(undefined);
+    return true;
+  };
+
+  const handleKeyChange = (e: React.FocusEvent<HTMLInputElement>) => {
+    const newKey = e.target.value;
+
+    // Se a validação falhar, restaurar o valor anterior
+    if (!validateKey(newKey)) {
+      // Deixamos o erro visível, mas restauramos o valor original no estado local
+      // para que o usuário possa ver qual era o valor anterior
+      setDraftKey(propertyKey);
+      return;
+    }
+
+    // Se passar na validação, prosseguir com a alteração
+    onKeyChange(propertyKey, newKey);
+  };
+
+  const handleKeyInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newKey = e.target.value;
     setDraftKey(newKey);
-    onKeyChange(propertyKey, newKey);
+
+    // Validar enquanto o usuário digita para feedback imediato
+    if (newKey !== propertyKey && existingKeys.includes(newKey)) {
+      setLocalError(`A chave "${newKey}" já existe`);
+    } else {
+      setLocalError(undefined);
+    }
   };
 
   return (
@@ -43,9 +82,11 @@ export function PropertyItem({
               id="property-key"
               value={draftKey}
               className={`flex- w-auto sm:w-full sm:flex-1 text-emerald-300 text-sm font-medium bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1 ${
-                error ? "border border-red-500" : ""
+                localError ? "border border-red-500" : ""
               }`}
-              onChange={handleKeyChange}
+              onBlur={handleKeyChange}
+              onChange={handleKeyInput}
+              disabled={!editable}
             />
           </div>
           <span className="text-emerald-300 md:block hidden">|</span>
@@ -54,16 +95,20 @@ export function PropertyItem({
             value={displayValue}
             className="md:flex-1 md:w-auto w-full text-zinc-400 text-sm bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1"
             onChange={(e) => onValueChange(propertyKey, e.target.value)}
+            disabled={!editable}
           />
         </div>
         <button
           onClick={() => onDeleteKey(propertyKey)}
           className="ml-2 text-zinc-400 opacity-100 hover:text-red-400 transition-all"
+          disabled={!editable}
         >
           <Trash size={14} />
         </button>
       </div>
-      {error && <div className="text-red-500 text-xs mt-1">{error}</div>}
+      {localError && (
+        <div className="text-red-500 text-xs mt-1">{localError}</div>
+      )}
     </div>
   );
 }

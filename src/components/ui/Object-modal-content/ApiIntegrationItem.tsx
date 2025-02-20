@@ -18,6 +18,7 @@ export function ApiIntegrationItem({
   onDeleteKey,
   editable,
   error,
+  existingKeys = [],
 }: ApiIntegrationItemProps) {
   // Estados internos
   const [showApiKey, setShowApiKey] = useState(false);
@@ -25,6 +26,7 @@ export function ApiIntegrationItem({
   const [expanded, setExpanded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [apiResponse, setApiResponse] = useState<any>(null);
+  const [localError, setLocalError] = useState<string | undefined>(error);
 
   const prevPropertyKeyRef = useRef(propertyKey);
 
@@ -34,6 +36,48 @@ export function ApiIntegrationItem({
       prevPropertyKeyRef.current = propertyKey;
     }
   }, [propertyKey]);
+
+  useEffect(() => {
+    setLocalError(error);
+  }, [error]);
+
+  const validateKey = (newKey: string): boolean => {
+    if (newKey === propertyKey) return true;
+
+    if (existingKeys?.includes(newKey)) {
+      setLocalError(`A chave "${newKey}" já existe`);
+      return false;
+    }
+
+    setLocalError(undefined);
+    return true;
+  };
+
+  const handleKeyInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newKey = e.target.value;
+    setDraftKey(newKey);
+
+    // Validar enquanto o usuário digita para feedback imediato
+    if (newKey !== propertyKey && existingKeys?.includes(newKey)) {
+      setLocalError(`A chave "${newKey}" já existe`);
+    } else {
+      setLocalError(undefined);
+    }
+  };
+
+  const handleKeyBlur = () => {
+    // Se a validação falhar, restaurar o valor anterior
+    if (!validateKey(draftKey)) {
+      // Deixamos o erro visível, mas restauramos o valor original
+      setDraftKey(propertyKey || "");
+      return;
+    }
+
+    // Se passar na validação e for diferente, prosseguir com a alteração
+    if (draftKey !== propertyKey && propertyKey) {
+      onKeyChange(propertyKey, draftKey);
+    }
+  };
 
   const handleTryApi = async () => {
     setApiResponse(null);
@@ -106,12 +150,6 @@ export function ApiIntegrationItem({
     }
   };
 
-  const handleKeyBlur = () => {
-    if (draftKey !== propertyKey && propertyKey) {
-      onKeyChange(propertyKey, draftKey);
-    }
-  };
-
   return (
     <div className="flex flex-col p-3 rounded-lg border border-emerald-500/10 hover:border-emerald-500/50 hover:shadow-[0_0px_10px_rgba(0,0,0,0.25)] hover:shadow-emerald-500/10 transition-all group bg-zinc-800 col-span-full">
       <div className="flex items-center sm:w-full w-auto flex-1 sm:flex-0">
@@ -126,13 +164,15 @@ export function ApiIntegrationItem({
               id="integrationName"
               value={draftKey}
               className={`flex- w-auto sm:w-full sm:flex-1 text-emerald-300 text-sm font-medium bg-zinc-900 bg-opacity-30 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 rounded px-2 py-1 ${
-                error ? "border border-red-500" : ""
+                localError ? "border border-red-500" : ""
               }`}
-              onChange={(e) => setDraftKey(e.target.value)} // Atualiza apenas o draftKey local
-              onBlur={handleKeyBlur} // Chama onKeyChange apenas quando o input perde o foco
+              onChange={handleKeyInput}
+              onBlur={handleKeyBlur}
               disabled={!editable}
             />
-            {error && <div className="text-red-500 text-xs mt-1">{error}</div>}
+            {localError && (
+              <div className="text-red-500 text-xs mt-1">{localError}</div>
+            )}
           </div>
           <div className="md:w-[91%] w-full flex flex-col space-y-2">
             <div className="flex items-center space-x-2">

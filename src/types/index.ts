@@ -60,6 +60,7 @@ export interface ApiIntegrationItemProps {
   onDeleteKey: (key: string) => void;
   editable?: boolean;
   error?: string;
+  existingKeys?: string[];
 }
 
 export interface PropertyItemProps {

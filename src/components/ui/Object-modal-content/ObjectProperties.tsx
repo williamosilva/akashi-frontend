@@ -15,6 +15,9 @@ export function ObjectProperties({
   onUpdate,
   isApiEditable,
 }: ObjectPropertiesProps) {
+  // Local state to track key errors
+  const [keyErrors, setKeyErrors] = useState<Record<string, string>>({});
+
   // Dados do objeto principal
   const objectId = Object.keys(data || {})[0] || "";
   const objectData = objectId ? data[objectId] : {};
@@ -29,6 +32,9 @@ export function ObjectProperties({
         type: isApiIntegration(value) ? "api" : "simple",
       }));
   };
+
+  // Get all existing keys for validation
+  const getAllKeys = () => Object.keys(objectData);
 
   // Verifica se é uma integração API
   const isApiIntegration = (value: any): value is ApiIntegrationValue => {
@@ -52,6 +58,22 @@ export function ObjectProperties({
   };
 
   const handleRenameProperty = (oldKey: string, newKey: string) => {
+    // Validar se a nova chave já existe
+    if (newKey !== oldKey && Object.keys(objectData).includes(newKey)) {
+      // Atualizar estado de erro
+      setKeyErrors({
+        ...keyErrors,
+        [oldKey]: `A chave "${newKey}" já existe`,
+      });
+      return; // Não prosseguir com a renomeação
+    }
+
+    // Limpar erro se existia
+    if (keyErrors[oldKey]) {
+      const { [oldKey]: _, ...remainingErrors } = keyErrors;
+      setKeyErrors(remainingErrors);
+    }
+
     const entries = Object.entries(objectData);
     const newEntries = entries.map(([key, value]) =>
       key === oldKey ? [newKey, value] : [key, value]
@@ -64,6 +86,12 @@ export function ObjectProperties({
   };
 
   const handleDeleteProperty = (keyToDelete: string) => {
+    // Limpar erro relacionado à chave se existir
+    if (keyErrors[keyToDelete]) {
+      const { [keyToDelete]: _, ...remainingErrors } = keyErrors;
+      setKeyErrors(remainingErrors);
+    }
+
     const { [keyToDelete]: _, ...rest } = objectData;
     onUpdate({ ...data, [objectId]: rest });
   };
@@ -83,6 +111,8 @@ export function ObjectProperties({
               onKeyChange={handleRenameProperty}
               onDeleteKey={handleDeleteProperty}
               editable={isApiEditable}
+              existingKeys={getAllKeys().filter((k) => k !== key)}
+              error={keyErrors[key]}
             />
           ) : (
             <PropertyItem
@@ -91,6 +121,8 @@ export function ObjectProperties({
               onKeyChange={handleRenameProperty}
               onValueChange={handlePropertyChange}
               onDeleteKey={handleDeleteProperty}
+              existingKeys={getAllKeys().filter((k) => k !== key)}
+              error={keyErrors[key]}
             />
           )}
         </div>
