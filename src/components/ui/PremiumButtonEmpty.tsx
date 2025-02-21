@@ -43,16 +43,16 @@ export default function PremiumButtonEmpty({
     userPlan === "premium" || userPlan === "admin";
 
   return (
-    <div className="flex gap-4 font-sans h-full w-full flex-grow">
+    <div className="flex gap-4 font-sans h-full w-full flex-grow sm:flex-row flex-col">
       <button
         onClick={onSimpleObjectCreate}
-        className="flex-1 px-4 py-3 rounded-lg bg-zinc-800 border border-emerald-500/20 text-emerald-300 text-sm font-medium hover:bg-zinc-700 transition-all flex items-center justify-center"
+        className=" w-full relative px-4 py-3 rounded-lg bg-zinc-800 border border-emerald-500/20 text-emerald-300 text-sm font-medium hover:bg-zinc-700 transition-all flex items-center justify-center"
       >
-        <Plus size={16} className="mr-2" />
+        <Plus size={16} className="sm:mr-2 mr-0" />
         Create Simple Object
       </button>
 
-      <div className="relative flex-1">
+      <div className="relative  w-full h-auto ">
         <button
           onClick={() => {
             if (canAccessApiIntegration) {
@@ -60,13 +60,13 @@ export default function PremiumButtonEmpty({
             }
           }}
           disabled={!canAccessApiIntegration}
-          className={`w-full px-4 py-3 rounded-lg border h-full text-sm font-medium transition-all  flex items-center justify-center ${
+          className={`w-full relative flex-grow px-4 py-3 rounded-lg border h-[54px] sm:h-full text-sm font-medium transition-all flex items-center justify-center ${
             canAccessApiIntegration
               ? "bg-gradient-to-r from-emerald-500 to-green-500 text-white hover:from-emerald-600 hover:to-green-600"
               : "bg-zinc-800 border-zinc-700 text-zinc-500 "
           }`}
         >
-          <Plus size={16} className="mr-2" />
+          <Plus size={16} className="sm:mr-2 mr-0" />
           Create API Integration
           {!canAccessApiIntegration && (
             <div className="absolute inset-0 rounded-lg bg-zinc-800 bg-opacity-80 flex flex-col items-center justify-center gap-10 p-4">

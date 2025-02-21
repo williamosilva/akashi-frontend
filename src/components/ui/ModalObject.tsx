@@ -108,7 +108,37 @@ export default function ModalObject({
     return result;
   })();
 
-  console.log("projectId objectId data", projectId, objectId, currentData);
+  const handleDelete = async () => {
+    console.log("projectId objectId", projectId, objectId);
+    if (!projectId || !objectId) return;
+
+    console.log(
+      "Deleting entry with projectId:",
+      projectId,
+      "entryId:",
+      objectId
+    );
+
+    try {
+      setIsLoading(true);
+
+      // Usa o serviço para deletar o entry
+      await ProjectService.getInstance().deleteDataInfoItem(
+        projectId,
+        objectId
+      );
+
+      console.log(`Entry com ID ${objectId} deletado com sucesso`);
+      onClose(true); // Fecha o modal e indica sucesso para atualizar a lista
+    } catch (err) {
+      setError("Falha ao deletar o item");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // console.log("projectId objectId data", projectId, objectId, currentData);
   const handleSave = async () => {
     if (!projectId) return;
 
@@ -122,13 +152,28 @@ export default function ModalObject({
       };
 
       // Determina qual ID usar como entryId (objectId ou currentKey)
-      const entryId = objectId || currentKey;
+      const entryId = objectId;
 
-      await ProjectService.getInstance().updateDataInfoItem(
-        projectId,
-        entryId,
-        payload
-      );
+      // Verifica se está criando um novo entry ou atualizando um existente
+      if (!entryId) {
+        // Criando novo entry - usa addDataInfoItem
+        const result = await ProjectService.getInstance().addDataInfoItem(
+          projectId,
+          payload
+        );
+
+        // Pode ser útil para atualizar o estado local com o novo ID gerado
+        const newEntryId = result.entryId;
+        console.log(`Novo entry criado com ID: ${newEntryId}`);
+      } else {
+        // Atualizando entry existente - usa updateDataInfoItem
+        console.log("caiu no else", entryId);
+        await ProjectService.getInstance().updateDataInfoItem(
+          projectId,
+          entryId,
+          payload
+        );
+      }
 
       onClose(true);
     } catch (err) {
@@ -223,8 +268,9 @@ export default function ModalObject({
 
         <ObjectActions
           onSave={handleSave}
-          // onDelete={handleDelete : undefined}
+          onDelete={handleDelete}
           isSaving={isLoading}
+          hasId={!!objectId}
           empty={Object.keys(currentData).length === 0}
         />
       </div>

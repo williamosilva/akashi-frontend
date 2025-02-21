@@ -58,6 +58,47 @@ export class ProjectService extends ApiService {
     });
   }
 
+  public async deleteDataInfoItem(
+    projectId: string,
+    entryId: string
+  ): Promise<{
+    message: string;
+    entryId: string;
+    project: Project;
+  }> {
+    return this.request<{
+      message: string;
+      entryId: string;
+      project: Project;
+    }>(`/projects/${projectId}/dataentry/${entryId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+
+  public async addDataInfoItem(
+    projectId: string,
+    itemData: Record<string, any>
+  ): Promise<{
+    entryId: string;
+    entry: Record<string, any>;
+    project: Project;
+  }> {
+    return this.request<{
+      entryId: string;
+      entry: Record<string, any>;
+      project: Project;
+    }>(`/projects/${projectId}/dataentry`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(itemData),
+    });
+  }
+
   public async updateDataInfoItem(
     projectId: string,
     entryId: string,
@@ -73,20 +114,6 @@ export class ProjectService extends ApiService {
         body: JSON.stringify(itemData),
       }
     );
-  }
-  public async deleteDataInfoItem(
-    projectId: string,
-    itemKey: string
-  ): Promise<Project> {
-    return this.request<Project>(`/projects/${projectId}/datainfo`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        deleteKeys: [itemKey],
-      }),
-    });
   }
 
   // Busca um projeto específico

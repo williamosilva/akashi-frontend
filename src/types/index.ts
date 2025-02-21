@@ -83,6 +83,7 @@ export interface ObjectActionsProps {
   onSave: () => void;
   onDelete: () => void;
   empty?: boolean;
+  hasId?: boolean;
 }
 
 export interface ObjectHeaderProps {

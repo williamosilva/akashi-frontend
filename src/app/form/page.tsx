@@ -5,7 +5,14 @@ import { AuroraBackground } from "@/components/ui/Aurora-background";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { montserrat, jetbrainsMono } from "@/styles/fonts";
-import { ArrowUpDown, Plus, LogOut, FolderPlus, FileText } from "lucide-react";
+import {
+  ArrowUpDown,
+  Plus,
+  LogOut,
+  FolderPlus,
+  FileText,
+  Folder,
+} from "lucide-react";
 import { AuthService } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
 import { useProject } from "@/components/ui/ConditionalLayout";
@@ -172,7 +179,7 @@ export default function FormPage() {
                   </motion.div>
 
                   <motion.div
-                    className="flex-grow flex items-center justify-center"
+                    className=" flex items-start justify-start h-fit w-full"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5, delay: 0.4 }}
@@ -196,21 +203,23 @@ export default function FormPage() {
                     ) : projectData?.dataInfo &&
                       Object.keys(projectData.dataInfo).length > 0 ? (
                       <motion.div
-                        className="w-full max-w-3xl"
+                        className="w-full h-fit flex-1"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                       >
-                        <div className="grid grid-cols-1 gap-3">
+                        <div className="grid grid-cols-7 gap-4">
                           {Object.entries(projectData.dataInfo).map(
                             ([key, value], index) => (
                               <motion.div
                                 key={key}
-                                className="p-4 bg-zinc-800/50 rounded-lg border border-emerald-500/20 hover:border-emerald-500/40 transition-colors cursor-pointer"
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.1 }}
+                                className="w-full aspect-square bg-zinc-800/50 rounded-lg border border-emerald-500/20 hover:border-emerald-500/60 transition-all cursor-pointer hover:bg-zinc-700/50 group overflow-hidden"
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{
+                                  delay: index * 0.05,
+                                  duration: 0.2,
+                                }}
                                 onClick={() => {
-                                  // Cria um objeto com o ID como chave e o valor como conteúdo
                                   const objectWithIdAsKey = {
                                     [key]: value,
                                   };
@@ -220,12 +229,23 @@ export default function FormPage() {
                                   });
                                 }}
                               >
-                                <h3 className="text-emerald-300 font-medium mb-2">
-                                  {key}
-                                </h3>
-                                <p className="text-zinc-400 text-sm">
-                                  {JSON.stringify(value)}
-                                </p>
+                                <div className="h-full w-full p-2 flex flex-col items-center justify-center">
+                                  <motion.div
+                                    className="text-emerald-400 mb-2"
+                                    initial={{ scale: 1 }}
+                                    whileHover={{ scale: 1.1 }}
+                                    transition={{
+                                      type: "spring",
+                                      stiffness: 400,
+                                      damping: 10,
+                                    }}
+                                  >
+                                    <Folder size={24} />
+                                  </motion.div>
+                                  <h3 className="text-emerald-300 font-medium text-center text-xs group-hover:text-emerald-200 transition-colors line-clamp-2">
+                                    {value.akashiObjectName}
+                                  </h3>
+                                </div>
                               </motion.div>
                             )
                           )}
