@@ -105,7 +105,7 @@ export default function QuoteCard() {
   return (
     <div
       className={cn(
-        "xl:w-[50%] w-full h-full flex items-center justify-center bg-zinc-900 relative overflow-hidden",
+        "xl:w-[80%] w-full h-full flex items-center justify-center bg-zinc-900 relative overflow-hidden",
         montserrat.variable,
         jetbrainsMono.variable
       )}
@@ -123,7 +123,7 @@ export default function QuoteCard() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative flex flex-col justify-between overflow-hidden backdrop-blur-sm bg-zinc-800/30 rounded-lg border border-emerald-500/20 sm:p-8 p-6 shadow-2xl h-full"
+          className="relative flex flex-col justify-between overflow-hidden backdrop-blur-sm bg-zinc-800/30 rounded-lg border border-emerald-500/20 md:p-4 sm:p-3 p-6 shadow-2xl h-full"
         >
           {/* Dynamic Galaxy background inside the card */}
           <div className="absolute inset-0">
@@ -134,10 +134,10 @@ export default function QuoteCard() {
             <div className="absolute inset-0 starfield starfield-large" />
           </div>
 
-          <div className="space-y-6 relative z-10 min-h-[130px]">
+          <div className="gap-2 mb-2 relative z-10 h-auto flex flex-col">
             <blockquote
               className={cn(
-                "lg:text-base xl:text-lg 2xl:text-2xl md:text-lg font-bold mb-4 tracking-tight",
+                "lg:text-base xl:text-base 2xl:text-2xl md:text-base font-bold 2xl:mb-4 mb-0 tracking-tight",
                 montserrat.className
               )}
             >
