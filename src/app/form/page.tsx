@@ -19,6 +19,49 @@ import { useProject } from "@/components/ui/ConditionalLayout";
 import { ProjectService } from "@/services/project.service";
 import { Project, PartialProjectData } from "@/types/project.types";
 import ModalObject from "@/components/ui/ModalObject";
+import JsonVisualizer from "@/components/ui/JsonVisualizer";
+import QuoteCard from "@/components/ui/QuoteCard";
+
+const mockData = {
+  user: {
+    id: 12345,
+    name: "John Doe",
+    email:
+      "johndoe@example.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcom",
+    isActive: true,
+    profile: {
+      age: 30,
+      location: {
+        city: "São Paulo",
+        country: "Brasil",
+      },
+      preferences: ["dark mode", "notifications", "beta features"],
+    },
+  },
+  products: [
+    {
+      id: 1,
+      name: "Laptop Gamer",
+      price: 7599.99,
+      stock: 12,
+    },
+    {
+      id: 2,
+      name: "Monitor UltraWide",
+      price: 1899.99,
+      stock: 5,
+    },
+  ],
+  settings: {
+    theme: "dark",
+    language: "pt-BR",
+    notifications: {
+      email: true,
+      sms: false,
+      push: true,
+    },
+  },
+};
 
 export default function FormPage() {
   const [sortOrder] = useState<"asc" | "desc">("asc");
@@ -179,7 +222,7 @@ export default function FormPage() {
                   </motion.div>
 
                   <motion.div
-                    className=" flex items-start justify-start h-fit w-full"
+                    className=" flex items-start justify-start h-full w-full"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5, delay: 0.4 }}
@@ -203,11 +246,11 @@ export default function FormPage() {
                     ) : projectData?.dataInfo &&
                       Object.keys(projectData.dataInfo).length > 0 ? (
                       <motion.div
-                        className="w-full h-fit flex-1"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
+                        className="w-full h-full flex-1"
+                        initial={{ opacity: 0, y: -200 }}
+                        animate={{ opacity: 1, y: 0 }}
                       >
-                        <div className="grid grid-cols-7 gap-4">
+                        <div className="grid grid-cols-8 gap-4">
                           {Object.entries(projectData.dataInfo).map(
                             ([key, value], index) => (
                               <motion.div
@@ -326,6 +369,12 @@ export default function FormPage() {
                     </p>
                   </motion.div>
                 </motion.div>
+              )}
+              {selectedProjectId && (
+                <div className="flex lg:h-[30%] h-[50%] w-full gap-4 lg:flex-row flex-col">
+                  <JsonVisualizer data={mockData} />
+                  <QuoteCard />
+                </div>
               )}
             </div>
           </div>
