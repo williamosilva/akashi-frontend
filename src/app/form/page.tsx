@@ -11,6 +11,7 @@ import {
   LogOut,
   FolderPlus,
   FileText,
+  Trash,
   Folder,
 } from "lucide-react";
 import { AuthService } from "@/services/auth.service";
@@ -73,7 +74,8 @@ export default function FormPage() {
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
-  const { selectedProjectId } = useProject();
+  const { selectedProjectId, triggerReload, setSelectedProjectId } =
+    useProject();
 
   // Estado para controle do modal
   const [selectedObject, setSelectedObject] = useState<{
@@ -117,6 +119,19 @@ export default function FormPage() {
     router.push("/");
   }
 
+  function handleDeleteProject() {
+    ProjectService.getInstance()
+      .deleteProject(selectedProjectId)
+      .then(() => {
+        setSelectedProject(null);
+        triggerReload();
+        setSelectedProjectId(null);
+      })
+      .catch((err) => {
+        console.error("Error deleting project:", err);
+        setError("Failed to delete project");
+      });
+  }
   const handleRefreshData = async () => {
     if (selectedProjectId) {
       try {
@@ -146,7 +161,7 @@ export default function FormPage() {
               jetbrainsMono.variable
             )}
           >
-            <div className="container mx-auto px-4 py-8 flex flex-col h-screen">
+            <div className="container mx-auto px-4 pb-8 md:pt-8 pt-20  flex flex-col h-screen  ">
               {selectedProjectId ? (
                 <>
                   <motion.div
@@ -172,6 +187,13 @@ export default function FormPage() {
                     >
                       <LogOut className="h-5 w-5" />
                     </button>
+                    <button
+                      onClick={handleDeleteProject}
+                      className="p-2 rounded-full text-emerald-300 hover:text-emerald-400 hover:bg-emerald-400/10 transition-colors"
+                      aria-label="Logout"
+                    >
+                      <Trash className="h-5 w-5" />
+                    </button>
                   </motion.div>
 
                   {error && (
@@ -187,7 +209,7 @@ export default function FormPage() {
                   )}
 
                   <motion.div
-                    className="flex justify-between items-center mb-6"
+                    className="flex justify-between items-start md:gap-0 gap-2 md:items-center mb-6 md:flex-row flex-col"
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.3 }}
@@ -200,9 +222,9 @@ export default function FormPage() {
                     >
                       Objects
                     </motion.h2>
-                    <div className="flex space-x-4">
+                    <div className="flex space-x-4 md:w-auto w-full">
                       <motion.button
-                        className="px-3 py-1 rounded-md bg-zinc-800 text-emerald-300 text-sm font-medium border border-emerald-500/20 hover:bg-zinc-700 transition-colors flex items-center"
+                        className="px-3 md:py-1 py-3 rounded-md md:w-auto w-full bg-zinc-800 text-emerald-300 text-sm font-medium border border-emerald-500/20 hover:bg-zinc-700 transition-colors flex items-center"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
@@ -211,7 +233,7 @@ export default function FormPage() {
                       </motion.button>
                       <motion.button
                         onClick={() => setIsModalOpen(true)}
-                        className="px-3 py-1 rounded-md bg-emerald-500 text-zinc-900 text-sm font-medium hover:bg-emerald-400 transition-colors flex items-center"
+                        className="px-3 md:py-1 py-3  rounded-md bg-emerald-500 text-zinc-900 text-sm font-medium md:w-auto w-full hover:bg-emerald-400 transition-colors flex items-center"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
@@ -220,119 +242,100 @@ export default function FormPage() {
                       </motion.button>
                     </div>
                   </motion.div>
+                  <div className="overflow-y-auto h-full flex-col justify-between flex gap-4">
+                    {/* Primeira div com altura dinâmica e scroll quando necessário */}
+                    <motion.div
+                      className="flex-1 overflow-y-auto min-h-0 w-full"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.5, delay: 0.4 }}
+                    >
+                      {/* Resto do conteúdo permanece o mesmo */}
+                      {isLoading ? (
+                        <motion.div
+                          className="text-center"
+                          initial={{ y: 20, opacity: 0 }}
+                          animate={{ y: 0, opacity: 1 }}
+                        >
+                          <div className="w-12 h-12 border-4 border-emerald-300 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                          <p
+                            className={cn(
+                              "text-zinc-400",
+                              jetbrainsMono.className
+                            )}
+                          >
+                            Loading project data...
+                          </p>
+                        </motion.div>
+                      ) : projectData?.dataInfo &&
+                        Object.keys(projectData.dataInfo).length > 0 ? (
+                        <motion.div
+                          className="w-full"
+                          initial={{ opacity: 0, y: -200 }}
+                          animate={{ opacity: 1, y: 0 }}
+                        >
+                          <div className="grid xl:grid-cols-8 lg:grid-cols-6 md:grid-cols-5 sm:grid-cols-4 grid-cols-3 gap-4">
+                            {Object.entries(projectData.dataInfo).map(
+                              ([key, value], index) => (
+                                <motion.div
+                                  key={key}
+                                  className="w-full aspect-square bg-zinc-800/50 rounded-lg border border-emerald-500/20 hover:border-emerald-500/60 transition-all cursor-pointer hover:bg-zinc-700/50 group overflow-hidden"
+                                  initial={{ opacity: 0, scale: 0.9 }}
+                                  animate={{ opacity: 1, scale: 1 }}
+                                  transition={{
+                                    delay: index * 0.05,
+                                    duration: 0.2,
+                                  }}
+                                  onClick={() => {
+                                    const objectWithIdAsKey = {
+                                      [key]: value,
+                                    };
+                                    setSelectedObject({
+                                      key,
+                                      data: objectWithIdAsKey,
+                                    });
+                                  }}
+                                >
+                                  <div className="h-full w-full p-2 flex flex-col items-center justify-center">
+                                    <motion.div
+                                      className="text-emerald-400 mb-2"
+                                      initial={{ scale: 1 }}
+                                      whileHover={{ scale: 1.1 }}
+                                      transition={{
+                                        type: "spring",
+                                        stiffness: 400,
+                                        damping: 10,
+                                      }}
+                                    >
+                                      <Folder size={24} />
+                                    </motion.div>
+                                    <h3 className="text-emerald-300 font-medium text-center text-xs group-hover:text-emerald-200 transition-colors line-clamp-2">
+                                      {value.akashiObjectName}
+                                    </h3>
+                                  </div>
+                                </motion.div>
+                              )
+                            )}
+                          </div>
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          className="text-center"
+                          initial={{ y: 20, opacity: 0 }}
+                          animate={{ y: 0, opacity: 1 }}
+                          transition={{ duration: 0.5, delay: 0.6 }}
+                        >
+                          {/* ... Conteúdo de estado vazio ... */}
+                        </motion.div>
+                      )}
+                    </motion.div>
 
-                  <motion.div
-                    className=" flex items-start justify-start h-full w-full"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5, delay: 0.4 }}
-                  >
-                    {isLoading ? (
-                      <motion.div
-                        className="text-center"
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                      >
-                        <div className="w-12 h-12 border-4 border-emerald-300 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                        <p
-                          className={cn(
-                            "text-zinc-400",
-                            jetbrainsMono.className
-                          )}
-                        >
-                          Loading project data...
-                        </p>
-                      </motion.div>
-                    ) : projectData?.dataInfo &&
-                      Object.keys(projectData.dataInfo).length > 0 ? (
-                      <motion.div
-                        className="w-full h-full flex-1"
-                        initial={{ opacity: 0, y: -200 }}
-                        animate={{ opacity: 1, y: 0 }}
-                      >
-                        <div className="grid grid-cols-8 gap-4">
-                          {Object.entries(projectData.dataInfo).map(
-                            ([key, value], index) => (
-                              <motion.div
-                                key={key}
-                                className="w-full aspect-square bg-zinc-800/50 rounded-lg border border-emerald-500/20 hover:border-emerald-500/60 transition-all cursor-pointer hover:bg-zinc-700/50 group overflow-hidden"
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{
-                                  delay: index * 0.05,
-                                  duration: 0.2,
-                                }}
-                                onClick={() => {
-                                  const objectWithIdAsKey = {
-                                    [key]: value,
-                                  };
-                                  setSelectedObject({
-                                    key,
-                                    data: objectWithIdAsKey,
-                                  });
-                                }}
-                              >
-                                <div className="h-full w-full p-2 flex flex-col items-center justify-center">
-                                  <motion.div
-                                    className="text-emerald-400 mb-2"
-                                    initial={{ scale: 1 }}
-                                    whileHover={{ scale: 1.1 }}
-                                    transition={{
-                                      type: "spring",
-                                      stiffness: 400,
-                                      damping: 10,
-                                    }}
-                                  >
-                                    <Folder size={24} />
-                                  </motion.div>
-                                  <h3 className="text-emerald-300 font-medium text-center text-xs group-hover:text-emerald-200 transition-colors line-clamp-2">
-                                    {value.akashiObjectName}
-                                  </h3>
-                                </div>
-                              </motion.div>
-                            )
-                          )}
-                        </div>
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        className="text-center"
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ duration: 0.5, delay: 0.6 }}
-                      >
-                        <FolderPlus
-                          className="mx-auto text-emerald-400 mb-4"
-                          size={48}
-                        />
-                        <h3
-                          className={cn(
-                            "text-2xl font-semibold mb-2 text-emerald-300",
-                            montserrat.className
-                          )}
-                        >
-                          No Objects Yet
-                        </h3>
-                        <p
-                          className={cn(
-                            "text-zinc-400 mb-4",
-                            jetbrainsMono.className
-                          )}
-                        >
-                          Start by adding your first object
-                        </p>
-                        <motion.button
-                          onClick={() => setIsModalOpen(true)}
-                          className="px-4 py-2 rounded-md bg-emerald-500 text-zinc-900 text-sm font-medium hover:bg-emerald-400 transition-colors flex items-center mx-auto"
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <Plus className="mr-2" size={16} />
-                          Add Object
-                        </motion.button>
-                      </motion.div>
-                    )}
-                  </motion.div>
+                    {/* Segunda div com altura fixa */}
+                    <div className="flex lg:h-[30%] h-[50%] w-full gap-4 lg:flex-row flex-col shrink-0">
+                      <JsonVisualizer data={mockData} />
+                      <QuoteCard />
+                    </div>
+                  </div>
                 </>
               ) : (
                 <motion.div
@@ -369,12 +372,6 @@ export default function FormPage() {
                     </p>
                   </motion.div>
                 </motion.div>
-              )}
-              {selectedProjectId && (
-                <div className="flex lg:h-[30%] h-[50%] w-full gap-4 lg:flex-row flex-col">
-                  <JsonVisualizer data={mockData} />
-                  <QuoteCard />
-                </div>
               )}
             </div>
           </div>

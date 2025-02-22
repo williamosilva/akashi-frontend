@@ -55,19 +55,19 @@ export function CreateProjectModal({
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        className="w-full max-w-lg mx-auto px-4 sm:px-0 lg:px-0"
+        className="w-full  mx-auto px-4 sm:px-0 lg:px-0"
       >
-        <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-emerald-400 text-center">
+        <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-emerald-400 text-start">
           Create New Project
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
           <div>
-            <label
+            {/* <label
               htmlFor="projectName"
               className="block text-sm font-medium text-emerald-300 mb-2"
             >
               Project Name
-            </label>
+            </label> */}
             <Input
               id="projectName"
               type="text"

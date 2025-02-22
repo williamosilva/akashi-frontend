@@ -23,11 +23,13 @@ const Sidebar = ({
   isCreateDisabled = false,
   selectedProjectId: propSelectedProjectId,
   onProjectSelect,
+  signal,
 }: {
   className?: string;
   isCreateDisabled?: boolean;
   selectedProjectId?: string | null;
   onProjectSelect?: (projectId: string) => void;
+  signal?: number;
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
@@ -61,11 +63,6 @@ const Sidebar = ({
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const createObject = () => {
-    // Implement your createObject logic here
-    console.log("Create Object clicked");
-  };
-
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
@@ -80,30 +77,34 @@ const Sidebar = ({
   }, []);
 
   useEffect(() => {
+    console.log("Atualizando lista de projetos...");
+    // setSelectedProjectId(null);
     const loadProjects = async () => {
       try {
         const userId = localStorage.getItem("userId");
-        if (!userId) {
-          console.error("User ID not found");
-          return;
-        }
+        if (!userId) return console.error("User ID not found");
 
         const projects = await ProjectService.getInstance().getProjectsByUser(
           userId
         );
+
         setProjects(projects);
       } catch (error) {
-        console.error("Error loading projects:", error);
+        console.error("Erro ao carregar projetos:", error);
       }
     };
 
     loadProjects();
-  }, []);
+  }, [signal]);
+
+  console.log("Projetos:", projects);
 
   const handleCreateProject = async (projectName: string) => {
     try {
       const newProject = await ProjectService.getInstance().createProject({
         name: projectName,
+        userId: localStorage.getItem("userId"),
+        dataInfo: {},
       } as CreateProjectDto);
 
       setProjects((prevProjects) => [...prevProjects, newProject]);
@@ -321,16 +322,40 @@ const Sidebar = ({
       </div>
     </motion.div>
   );
+
   return (
     <>
       {isMobile ? (
         <>
-          <button
-            className="fixed top-4 right-4 z-50 p-2 bg-zinc-800 rounded-md"
-            onClick={toggleMobileMenu}
-          >
-            <Menu className="h-6 w-6 text-emerald-400" />
-          </button>
+          {/* Animated Toggle Button that moves from left to right */}
+          <AnimatePresence mode="wait">
+            {isMobileMenuOpen ? (
+              <motion.button
+                key="close-button"
+                className="fixed top-4 right-4 z-50 p-2 bg-zinc-800 rounded-md shadow-md"
+                onClick={toggleMobileMenu}
+                initial={{ x: -20, opacity: 0, left: "1rem", right: "auto" }}
+                animate={{ x: 0, opacity: 1, left: "auto", right: "1rem" }}
+                exit={{ x: 20, opacity: 0 }}
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              >
+                <X className="h-6 w-6 text-emerald-400" />
+              </motion.button>
+            ) : (
+              <motion.button
+                key="open-button"
+                className="fixed top-4 left-4 z-50 p-2 bg-zinc-800 rounded-md shadow-md"
+                onClick={toggleMobileMenu}
+                initial={{ x: 20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -20, opacity: 0 }}
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              >
+                <Menu className="h-6 w-6 text-emerald-400" />
+              </motion.button>
+            )}
+          </AnimatePresence>
+
           <AnimatePresence>
             {isMobileMenuOpen && (
               <motion.div
@@ -340,19 +365,13 @@ const Sidebar = ({
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 className="fixed inset-y-0 left-0 z-40 w-4/5 max-w-sm bg-zinc-900 shadow-lg"
               >
-                <button
-                  className="absolute top-4 right-4 p-2 text-emerald-400"
-                  onClick={toggleMobileMenu}
-                >
-                  <X className="h-6 w-6" />
-                </button>
                 <SidebarContent />
               </motion.div>
             )}
           </AnimatePresence>
           {isMobileMenuOpen && (
             <div
-              className="fixed inset-0  z-30 bg-black/50"
+              className="fixed inset-0 z-30 bg-black/50"
               onClick={toggleMobileMenu}
             />
           )}

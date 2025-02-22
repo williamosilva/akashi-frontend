@@ -47,7 +47,7 @@ export function Modal({ isOpen, onClose, children }: ModalProps) {
           <motion.div
             ref={modalRef}
             className={cn(
-              "bg-zinc-900 rounded-lg sm:p-8 p-4 w-full max-w-[960px] min-w-[320px] relative h-fit",
+              "bg-zinc-900 rounded-lg sm:p-8 p-4 md:w-auto w-full max-w-[960px] min-w-[200px]  relative h-fit",
               montserrat.variable,
               jetbrainsMono.variable
             )}

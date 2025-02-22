@@ -78,6 +78,15 @@ export class ProjectService extends ApiService {
     });
   }
 
+  public async deleteProject(projectId: string): Promise<{ message: string }> {
+    return this.request<{ message: string }>(`/projects/${projectId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+
   public async addDataInfoItem(
     projectId: string,
     itemData: Record<string, any>

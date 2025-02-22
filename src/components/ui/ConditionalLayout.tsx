@@ -13,11 +13,13 @@ const VALID_ROUTES = ["/", "/form", "/success"];
 interface ProjectContextType {
   selectedProjectId: string | null;
   setSelectedProjectId: (id: string) => void;
+  triggerReload: () => void;
 }
 
 export const ProjectContext = createContext<ProjectContextType>({
   selectedProjectId: null,
   setSelectedProjectId: () => {},
+  triggerReload: () => {},
 });
 
 export const useProject = () => useContext(ProjectContext);
@@ -37,6 +39,7 @@ export default function ConditionalLayout({
   const isFormRoute = pathname.startsWith("/form");
   const isHome = pathname === "/";
   const isValidRoute = VALID_ROUTES.includes(pathname);
+  const [sidebarSignal, setSidebarSignal] = useState(0);
 
   useEffect(() => {
     const validate = async () => {
@@ -97,6 +100,7 @@ export default function ConditionalLayout({
   const projectContextValue = {
     selectedProjectId,
     setSelectedProjectId,
+    triggerReload: () => setSidebarSignal((prev) => prev + 1),
   };
 
   if (isFormRoute) {
@@ -106,6 +110,7 @@ export default function ConditionalLayout({
           <Sidebar
             selectedProjectId={selectedProjectId}
             onProjectSelect={setSelectedProjectId}
+            signal={sidebarSignal}
           />
           <main className="flex-1 overflow-auto">{children}</main>
         </div>
