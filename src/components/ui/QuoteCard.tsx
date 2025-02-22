@@ -137,7 +137,7 @@ export default function QuoteCard() {
           <div className="gap-2 mb-2 relative z-10 h-auto flex flex-col">
             <blockquote
               className={cn(
-                "lg:text-base xl:text-base 2xl:text-2xl md:text-base font-bold 2xl:mb-4 mb-0 tracking-tight",
+                "lg:text-base xl:text-base 2xl:text-xl md:text-base font-bold 2xl:mb-4 mb-0 tracking-tight",
                 montserrat.className
               )}
             >
