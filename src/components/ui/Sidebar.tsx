@@ -81,6 +81,7 @@ const Sidebar = ({
     // setSelectedProjectId(null);
     const loadProjects = async () => {
       try {
+        console.log("primeiro teste", userId);
         if (!userId) return console.error("User ID not found");
 
         const projects = await ProjectService.getInstance().getProjectsByUser(
@@ -464,7 +465,9 @@ const Sidebar = ({
                         <h2 className="text-sm font-medium text-zinc-100">
                           {fullName}
                         </h2>
-                        <p className="text-xs text-emerald-400/80">{email}</p>
+                        <p className="text-[0.6vw] text-emerald-400/80">
+                          {email}
+                        </p>
                       </motion.div>
                     )}
                   </AnimatePresence>{" "}

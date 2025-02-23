@@ -1,5 +1,10 @@
 import { ApiService } from "./api.service";
-import { AuthResponse, LoginDto, RegisterDto } from "@/types/auth.types";
+import {
+  AuthResponse,
+  LoginDto,
+  RegisterDto,
+  UserData,
+} from "@/types/auth.types";
 
 /**
  * Serviço de autenticação que gerencia operações relacionadas a login,
@@ -51,6 +56,14 @@ export class AuthService extends ApiService {
     return response;
   }
 
+  public async getMe(token: string): Promise<UserData> {
+    return this.request<UserData>("/auth/me", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
   /**
    * Realiza login do usuário
    * @param data Dados de login (email, senha)

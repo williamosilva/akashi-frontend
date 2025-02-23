@@ -171,6 +171,9 @@ export function AuthModal({
 
       if (response?.id) {
         setUserId(response.id);
+        setEmail(response.email);
+        setFullName(response.fullName);
+        setPhoto(response.photo);
       }
 
       onClose();

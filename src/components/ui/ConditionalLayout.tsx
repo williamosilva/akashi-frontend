@@ -71,7 +71,7 @@ export default function ConditionalLayout({
   const isValidRoute = VALID_ROUTES.includes(pathname);
 
   useEffect(() => {
-    const validate = async () => {
+    const validateAndLoadUser = async () => {
       try {
         if (isHome || !isValidRoute) {
           setIsValidating(false);
@@ -85,34 +85,47 @@ export default function ConditionalLayout({
           throw new Error("Autenticação necessária");
         }
 
-        let isValid = await authService.validateToken(accessToken);
+        // Validação e renovação do token
+        let validToken = await authService.validateToken(accessToken);
+        let newAccessToken = accessToken;
 
-        if (!isValid) {
+        if (!validToken) {
           const newTokens = await authService.refreshToken();
           if (!newTokens) throw new Error("Falha na renovação do token");
 
-          AuthService.saveTokensAndUserData(
-            newTokens.accessToken,
-            newTokens.refreshToken
-          );
+          AuthService.saveTokens(newTokens.accessToken, newTokens.refreshToken);
 
-          isValid = await authService.validateToken(newTokens.accessToken);
-          if (!isValid) throw new Error("Token renovado inválido");
+          newAccessToken = newTokens.accessToken;
+          validToken = await authService.validateToken(newAccessToken);
+          if (!validToken) throw new Error("Token renovado inválido");
         }
+
+        // Busca os dados do usuário após validação do token
+        const userData = await authService.getMe(newAccessToken);
+
+        // Atualiza os estados do usuário
+        setUserId(userData.id);
+        setEmail(userData.email);
+        setFullName(userData.fullName);
+        setPhoto(userData.photo || null);
       } catch (error) {
         console.error("Erro de autenticação:", error);
-        setUserId(null);
-        setFullName(null);
-        setPhoto(null);
-        setEmail(null);
-        authService.logout();
-        router.push("/");
+        handleLogout();
       } finally {
         setIsValidating(false);
       }
     };
 
-    validate();
+    const handleLogout = () => {
+      setUserId(null);
+      setFullName(null);
+      setPhoto(null);
+      setEmail(null);
+      AuthService.clearAuthData();
+      router.push("/");
+    };
+
+    validateAndLoadUser();
   }, [pathname, router, authService, isHome, isValidRoute]);
 
   if (isValidating) {

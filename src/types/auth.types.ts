@@ -17,3 +17,15 @@ export interface AuthResponse {
   photo: string;
   email: string;
 }
+
+export interface UserData {
+  id: string;
+  email: string;
+  fullName: string;
+  photo?: string;
+}
+
+export interface TokenResponse {
+  accessToken: string;
+  refreshToken: string;
+}
