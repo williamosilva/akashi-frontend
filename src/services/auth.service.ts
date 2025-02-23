@@ -6,6 +6,8 @@ import {
   UserData,
 } from "@/types/auth.types";
 
+import { API_CONFIG } from "@/config/api.config";
+
 /**
  * Serviço de autenticação que gerencia operações relacionadas a login,
  * registro e gerenciamento de tokens.
@@ -45,12 +47,30 @@ export class AuthService extends ApiService {
     console.log("[AuthService] Register response:", response);
 
     if (response.accessToken) {
-      AuthService.saveTokensAndUserData(
-        response.accessToken,
-        response.refreshToken
-      );
+      AuthService.saveTokens(response.accessToken, response.refreshToken);
     } else {
       console.warn("[AuthService] No access token in register response");
+    }
+
+    return response;
+  }
+  public async login(data: LoginDto): Promise<AuthResponse> {
+    console.log("[AuthService] Login request:", data);
+
+    const response = await this.request<AuthResponse>("/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    console.log("[AuthService] Login response:", response);
+
+    if (response.accessToken) {
+      AuthService.saveTokens(response.accessToken, response.refreshToken);
+    } else {
+      console.warn("[AuthService] No access token in login response");
     }
 
     return response;
@@ -68,30 +88,6 @@ export class AuthService extends ApiService {
    * Realiza login do usuário
    * @param data Dados de login (email, senha)
    */
-  public async login(data: LoginDto): Promise<AuthResponse> {
-    console.log("[AuthService] Login request:", data);
-
-    const response = await this.request<AuthResponse>("/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    console.log("[AuthService] Login response:", response);
-
-    if (response.accessToken) {
-      AuthService.saveTokensAndUserData(
-        response.accessToken,
-        response.refreshToken
-      );
-    } else {
-      console.warn("[AuthService] No access token in login response");
-    }
-
-    return response;
-  }
 
   /**
    * Valida se um token é válido
@@ -113,40 +109,37 @@ export class AuthService extends ApiService {
   /**
    * Atualiza o token de acesso usando o refresh token
    */
-  public async refreshToken(): Promise<{
+  static async refreshToken(): Promise<{
     accessToken: string;
     refreshToken: string;
   } | null> {
     try {
-      const userId = AuthService.getUserId();
-      const email = AuthService.getEmail();
+      const refreshToken = this.getRefreshToken();
+      if (!refreshToken) return null;
 
-      if (!userId || !email) {
-        throw new Error("Dados do usuário não encontrados");
-      }
-
-      const response = await this.request<AuthResponse>("/auth/refresh", {
+      const response = await fetch(`${API_CONFIG.baseURL}/auth/refresh`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId, email }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refreshToken }),
       });
 
-      console.log("[AuthService] Refresh token response:", response);
-      if (response.accessToken && response.refreshToken) {
-        AuthService.setAccessToken(response.accessToken);
-        AuthService.setRefreshToken(response.refreshToken);
+      if (!response.ok) return null;
 
-        return {
-          accessToken: response.accessToken,
-          refreshToken: response.refreshToken,
-        };
-      } else {
-        throw new Error("Tokens não recebidos na resposta");
+      const data = await response.json();
+      console.log("data locao ", data);
+      if (data.accessToken && refreshToken) {
+        console.log("Salvando novos tokens...", data);
+        this.saveTokens(data.accessToken, refreshToken);
+        console.log(
+          "Novo accessToken no localStorage:",
+          localStorage.getItem("accessToken")
+        );
+        return data;
       }
+
+      return null;
     } catch (error) {
-      console.error("Falha ao renovar tokens:", error);
+      console.error("Erro ao renovar token:", error);
       return null;
     }
   }
@@ -163,14 +156,9 @@ export class AuthService extends ApiService {
   /**
    * Salva tokens e dados do usuário no localStorage
    */
-  public static saveTokensAndUserData(
-    accessToken: string,
-    refreshToken: string
-  ): void {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
-    }
+  static saveTokens(accessToken: string, refreshToken: string) {
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
   }
 
   /**

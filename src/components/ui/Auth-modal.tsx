@@ -70,7 +70,7 @@ export function AuthModal({
           AuthService.setRefreshToken(refreshToken);
 
           if (user && user.id && user.email) {
-            AuthService.saveTokensAndUserData(accessToken, refreshToken);
+            AuthService.saveTokens(accessToken, refreshToken);
             setUserId(user.id);
             setEmail(user.email);
             setFullName(user.fullName);
