@@ -13,5 +13,7 @@ export interface AuthResponse {
   id: string;
   accessToken: string;
   refreshToken: string;
+  fullName: string;
+  photo: string;
   email: string;
 }

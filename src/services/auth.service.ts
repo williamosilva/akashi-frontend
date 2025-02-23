@@ -42,9 +42,7 @@ export class AuthService extends ApiService {
     if (response.accessToken) {
       AuthService.saveTokensAndUserData(
         response.accessToken,
-        response.refreshToken,
-        response.id,
-        response.email
+        response.refreshToken
       );
     } else {
       console.warn("[AuthService] No access token in register response");
@@ -73,9 +71,7 @@ export class AuthService extends ApiService {
     if (response.accessToken) {
       AuthService.saveTokensAndUserData(
         response.accessToken,
-        response.refreshToken,
-        response.id,
-        response.email
+        response.refreshToken
       );
     } else {
       console.warn("[AuthService] No access token in login response");
@@ -124,6 +120,7 @@ export class AuthService extends ApiService {
         body: JSON.stringify({ userId, email }),
       });
 
+      console.log("[AuthService] Refresh token response:", response);
       if (response.accessToken && response.refreshToken) {
         AuthService.setAccessToken(response.accessToken);
         AuthService.setRefreshToken(response.refreshToken);
@@ -155,15 +152,11 @@ export class AuthService extends ApiService {
    */
   public static saveTokensAndUserData(
     accessToken: string,
-    refreshToken: string,
-    userId: string,
-    email: string
+    refreshToken: string
   ): void {
     if (typeof window !== "undefined") {
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
-      localStorage.setItem("userId", userId);
-      localStorage.setItem("email", email);
     }
   }
 
@@ -225,6 +218,20 @@ export class AuthService extends ApiService {
     return null;
   }
 
+  public static getFullName(): string | null {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("fullName");
+    }
+    return null;
+  }
+
+  public static getPhoto(): string | null {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("photo");
+    }
+    return null;
+  }
+
   /**
    * Limpa todos os dados de autenticação do localStorage
    */
@@ -234,6 +241,8 @@ export class AuthService extends ApiService {
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("userId");
       localStorage.removeItem("email");
+      localStorage.removeItem("fullName");
+      localStorage.removeItem("photo");
       localStorage.removeItem("user");
     }
   }

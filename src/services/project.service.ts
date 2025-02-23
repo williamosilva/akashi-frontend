@@ -28,8 +28,6 @@ export class ProjectService extends ApiService {
 
   // Busca projetos de um usuário
   public async getProjectsByUser(userId: string): Promise<Project[]> {
-    console.log("[ProjectService] Fetching user projects:", userId);
-
     return this.request<Project[]>(`/projects/user/${userId}`);
   }
 

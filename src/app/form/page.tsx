@@ -22,6 +22,7 @@ import { Project, PartialProjectData } from "@/types/project.types";
 import ModalObject from "@/components/ui/ModalObject";
 import JsonVisualizer from "@/components/ui/JsonVisualizer";
 import QuoteCard from "@/components/ui/QuoteCard";
+import { Tooltip, TooltipProvider } from "@/components/ui/Tooltip";
 
 const mockData = {
   user: {
@@ -114,11 +115,6 @@ export default function FormPage() {
 
   console.log("teste", projectData);
 
-  function handleLogout() {
-    AuthService.getInstance().logout();
-    router.push("/");
-  }
-
   function handleDeleteProject() {
     ProjectService.getInstance()
       .deleteProject(selectedProjectId)
@@ -180,20 +176,17 @@ export default function FormPage() {
                         ? "Loading..."
                         : projectData?.name || "Project"}
                     </motion.h1>
-                    <button
-                      onClick={handleLogout}
-                      className="p-2 rounded-full text-emerald-300 hover:text-emerald-400 hover:bg-emerald-400/10 transition-colors"
-                      aria-label="Logout"
-                    >
-                      <LogOut className="h-5 w-5" />
-                    </button>
-                    <button
-                      onClick={handleDeleteProject}
-                      className="p-2 rounded-full text-emerald-300 hover:text-emerald-400 hover:bg-emerald-400/10 transition-colors"
-                      aria-label="Logout"
-                    >
-                      <Trash className="h-5 w-5" />
-                    </button>
+                    <TooltipProvider>
+                      <Tooltip content="Delete project" position="left">
+                        <button
+                          onClick={handleDeleteProject}
+                          className="p-2 rounded-full text-emerald-300 hover:text-emerald-400 hover:bg-emerald-400/10 transition-colors"
+                          aria-label="Logout"
+                        >
+                          <Trash className="h-5 w-5" />
+                        </button>
+                      </Tooltip>
+                    </TooltipProvider>
                   </motion.div>
 
                   {error && (

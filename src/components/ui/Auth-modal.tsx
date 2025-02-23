@@ -9,6 +9,7 @@ import { authService } from "@/services";
 import { useRouter } from "next/navigation";
 import { API_CONFIG } from "@/config/api.config";
 import { AuthService } from "@/services/auth.service";
+import { useUser } from "./ConditionalLayout";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -26,6 +27,8 @@ export function AuthModal({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const modalRef = useRef<HTMLDivElement>(null);
+
+  const { setUserId, setEmail, setFullName, setPhoto } = useUser();
 
   // AuthModal.tsx - handleSocialLogin
   const handleSocialLogin = (provider: "google" | "github") => {
@@ -63,19 +66,15 @@ export function AuthModal({
         if (event.data.type === "oauth-success") {
           const { accessToken, refreshToken, user } = event.data.payload;
 
-          // Salvar tokens e dados do usuário
           AuthService.setAccessToken(accessToken);
           AuthService.setRefreshToken(refreshToken);
-          localStorage.setItem("user", JSON.stringify(user));
 
-          // Se quiser salvar também o ID e email do usuário
           if (user && user.id && user.email) {
-            AuthService.saveTokensAndUserData(
-              accessToken,
-              refreshToken,
-              user.id,
-              user.email
-            );
+            AuthService.saveTokensAndUserData(accessToken, refreshToken);
+            setUserId(user.id);
+            setEmail(user.email);
+            setFullName(user.fullName);
+            setPhoto(user.photo);
           }
 
           onClose();
@@ -155,17 +154,23 @@ export function AuthModal({
     setError("");
 
     try {
+      let response;
+
       if (view === "register") {
-        await authService.register({
+        response = await authService.register({
           email: formData.email,
           password: formData.password,
           fullName: formData.fullName,
         });
       } else {
-        await authService.login({
+        response = await authService.login({
           email: formData.email,
           password: formData.password,
         });
+      }
+
+      if (response?.id) {
+        setUserId(response.id);
       }
 
       onClose();

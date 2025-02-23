@@ -40,7 +40,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {showSearchIcon && (
           <Search
             className={cn(
-              "absolute left-[8%] top-1/2 -translate-x-1/2 -translate-y-1/2 h-4 w-4 text-emerald-500",
+              "absolute left-[7%] top-1/2 -translate-x-1/2 -translate-y-1/2 h-4 w-4 text-emerald-500",
               !isExpanded &&
                 "absolute left-[50%] top-1/2 -translate-x-1/2 -translate-y-1/2 h-4 w-4 text-emerald-500"
             )}
