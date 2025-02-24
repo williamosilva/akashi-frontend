@@ -6,6 +6,7 @@ import { Modal } from "./Modal";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { useUser } from "./ConditionalLayout";
 
 interface CreateProjectModalProps {
   isOpen: boolean;
@@ -23,6 +24,7 @@ export function CreateProjectModal({
   const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log("caiu aqui");
     e.preventDefault();
     if (!projectName.trim()) return;
 

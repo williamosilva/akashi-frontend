@@ -7,6 +7,7 @@ import {
 } from "@/types/auth.types";
 
 import { API_CONFIG } from "@/config/api.config";
+import { useRouter } from "next/navigation";
 
 /**
  * Serviço de autenticação que gerencia operações relacionadas a login,
@@ -34,8 +35,6 @@ export class AuthService extends ApiService {
    * @param data Dados de registro (nome, email, senha, etc)
    */
   public async register(data: RegisterDto): Promise<AuthResponse> {
-    console.log("[AuthService] Register request:", data);
-
     const response = await this.request<AuthResponse>("/auth/register", {
       method: "POST",
       headers: {
@@ -43,8 +42,6 @@ export class AuthService extends ApiService {
       },
       body: JSON.stringify(data),
     });
-
-    console.log("[AuthService] Register response:", response);
 
     if (response.accessToken) {
       AuthService.saveTokens(response.accessToken, response.refreshToken);
@@ -55,8 +52,6 @@ export class AuthService extends ApiService {
     return response;
   }
   public async login(data: LoginDto): Promise<AuthResponse> {
-    console.log("[AuthService] Login request:", data);
-
     const response = await this.request<AuthResponse>("/auth/login", {
       method: "POST",
       headers: {
@@ -64,8 +59,6 @@ export class AuthService extends ApiService {
       },
       body: JSON.stringify(data),
     });
-
-    console.log("[AuthService] Login response:", response);
 
     if (response.accessToken) {
       AuthService.saveTokens(response.accessToken, response.refreshToken);
@@ -109,10 +102,7 @@ export class AuthService extends ApiService {
   /**
    * Atualiza o token de acesso usando o refresh token
    */
-  static async refreshToken(): Promise<{
-    accessToken: string;
-    refreshToken: string;
-  } | null> {
+  static async refreshToken(): Promise<{ accessToken: string } | null> {
     try {
       const refreshToken = this.getRefreshToken();
       if (!refreshToken) return null;
@@ -126,14 +116,8 @@ export class AuthService extends ApiService {
       if (!response.ok) return null;
 
       const data = await response.json();
-      console.log("data locao ", data);
-      if (data.accessToken && refreshToken) {
-        console.log("Salvando novos tokens...", data);
+      if (data.accessToken) {
         this.saveTokens(data.accessToken, refreshToken);
-        console.log(
-          "Novo accessToken no localStorage:",
-          localStorage.getItem("accessToken")
-        );
         return data;
       }
 
@@ -147,9 +131,6 @@ export class AuthService extends ApiService {
   /**
    * Realiza logout do usuário removendo dados do localStorage
    */
-  public logout(): void {
-    AuthService.clearAuthData();
-  }
 
   // ===== MÉTODOS ESTÁTICOS PARA GERENCIAMENTO DE TOKENS E DADOS DO USUÁRIO =====
 
@@ -236,6 +217,11 @@ export class AuthService extends ApiService {
   /**
    * Limpa todos os dados de autenticação do localStorage
    */
+  public logout(): void {
+    AuthService.clearAuthData();
+    window.location.href = "/"; // Redireciona para a Home
+  }
+
   public static clearAuthData(): void {
     if (typeof window !== "undefined") {
       localStorage.removeItem("accessToken");

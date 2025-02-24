@@ -49,7 +49,6 @@ export function AuthModal({
 
     const messageListener = (event: MessageEvent) => {
       // Debug: Log all incoming messages
-      console.log("Received message:", event);
 
       // Verificar se a origem é confiável
       const allowedOrigins = [
@@ -102,7 +101,7 @@ export function AuthModal({
           setIsLoading(false);
         }
       } catch (error) {
-        console.log("Popup check security error", error);
+        console.error("Popup check security error", error);
       }
     };
 

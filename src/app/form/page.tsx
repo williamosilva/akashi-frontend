@@ -113,8 +113,6 @@ export default function FormPage() {
     fetchProjectData();
   }, [selectedProjectId]);
 
-  console.log("teste", projectData);
-
   function handleDeleteProject() {
     ProjectService.getInstance()
       .deleteProject(selectedProjectId)

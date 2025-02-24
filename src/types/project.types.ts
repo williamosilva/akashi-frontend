@@ -9,6 +9,7 @@ export type Project = {
 
 export type CreateProjectDto = {
   name: string;
+  userId: string;
   dataInfo?: Record<string, any>;
 };
 

@@ -33,15 +33,12 @@ export class ProjectService extends ApiService {
 
   // Busca informações de dados de um projeto (com atualização das APIs)
   public async getProjectDataInfo(projectId: string): Promise<ProjectDataInfo> {
-    console.log("[ProjectService] Fetching project data info:", projectId);
-
     return this.request<ProjectDataInfo>(`/projects/${projectId}/datainfo`);
   }
 
   public async createProject(data: CreateProjectDto): Promise<Project> {
-    const userId = this.getUserIdFromStorage();
-    if (!userId) {
-      throw new Error("User ID not found in storage");
+    if (!data.userId) {
+      throw new Error("User ID is required");
     }
 
     return this.request<Project>("/projects", {
@@ -49,10 +46,7 @@ export class ProjectService extends ApiService {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        ...data,
-        userId,
-      }),
+      body: JSON.stringify(data),
     });
   }
 
@@ -125,8 +119,6 @@ export class ProjectService extends ApiService {
 
   // Busca um projeto específico
   public async getProject(projectId: string): Promise<Project> {
-    console.log("[ProjectService] Fetching project:", projectId);
-
     return this.request<Project>(`/projects/${projectId}`);
   }
 }

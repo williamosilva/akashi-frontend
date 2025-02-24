@@ -32,8 +32,6 @@ export default function ModalObject({
   const [objectName, setObjectName] = useState<string>("New Object");
   const [sortOrder, setSortOrder] = useState<SortOrder>("none");
 
-  console.log("sortOrder", sortOrder);
-
   useEffect(() => {
     if (isVisible) {
       setError(null);
@@ -109,15 +107,7 @@ export default function ModalObject({
   })();
 
   const handleDelete = async () => {
-    console.log("projectId objectId", projectId, objectId);
     if (!projectId || !objectId) return;
-
-    console.log(
-      "Deleting entry with projectId:",
-      projectId,
-      "entryId:",
-      objectId
-    );
 
     try {
       setIsLoading(true);
@@ -128,7 +118,6 @@ export default function ModalObject({
         objectId
       );
 
-      console.log(`Entry com ID ${objectId} deletado com sucesso`);
       onClose(true); // Fecha o modal e indica sucesso para atualizar a lista
     } catch (err) {
       setError("Falha ao deletar o item");
@@ -138,11 +127,8 @@ export default function ModalObject({
     }
   };
 
-  // console.log("projectId objectId data", projectId, objectId, currentData);
   const handleSave = async () => {
     if (!projectId) return;
-
-    console.log("projectId objectId data", projectId, objectId, currentData);
 
     try {
       setIsLoading(true);
@@ -164,10 +150,9 @@ export default function ModalObject({
 
         // Pode ser útil para atualizar o estado local com o novo ID gerado
         const newEntryId = result.entryId;
-        console.log(`Novo entry criado com ID: ${newEntryId}`);
       } else {
         // Atualizando entry existente - usa updateDataInfoItem
-        console.log("caiu no else", entryId);
+
         await ProjectService.getInstance().updateDataInfoItem(
           projectId,
           entryId,
@@ -188,13 +173,10 @@ export default function ModalObject({
     setObjectName(newName);
   };
 
-  console.log("newName", objectName);
-
   const handleObjectUpdate = (updatedData: Record<string, any>) => {
     const id = objectId || currentKey;
     const newData = updatedData[id];
     if (newData) {
-      console.log("newData", newData);
       setCurrentData(newData);
     }
   };
@@ -238,16 +220,12 @@ export default function ModalObject({
   // Para compatibilidade com a interface existente do ObjectHeader
   const sortAscending = sortOrder === "asc";
 
-  console.log("currentData", currentData);
-  console.log("dataForProperties", dataForProperties);
-  console.log("sortOrder", sortOrder);
-
   return (
     <Modal isOpen={isVisible} onClose={() => onClose(false)}>
-      {isLoading && <div className="loading-indicator">Loading...</div>}
-      {error && <div className="error-message">{error}</div>}
+      {/* {isLoading && <div className="loading-indicator">Loading...</div>}
+      {error && <div className="error-message">{error}</div>} */}
 
-      <div className="relative w-full  max-w-[1000px] mx-auto max-h-[100vh] min-h-80 flex flex-col rounded-lg h-auto px-0">
+      <div className="relative w-full min-w-[580px] max-w-[1000px] mx-auto max-h-[100vh] min-h-80 flex flex-col rounded-lg h-auto px-0">
         <ObjectHeader
           name={objectName}
           userPlan={userPlan}
@@ -257,6 +235,7 @@ export default function ModalObject({
           onSimpleObjectCreate={handleCreateSimpleObject}
           onNameChange={handleObjectNameChange}
           empty={Object.keys(currentData).length === 0}
+          isLoading={isLoading}
         />
 
         <ObjectProperties
@@ -264,12 +243,13 @@ export default function ModalObject({
           onUpdate={handleObjectUpdate}
           isApiEditable={userPlan === "premium" || userPlan === "admin"}
           empty={Object.keys(currentData).length === 0}
+          isLoading={isLoading}
         />
 
         <ObjectActions
           onSave={handleSave}
           onDelete={handleDelete}
-          isSaving={isLoading}
+          isLoading={isLoading}
           hasId={!!objectId}
           empty={Object.keys(currentData).length === 0}
         />

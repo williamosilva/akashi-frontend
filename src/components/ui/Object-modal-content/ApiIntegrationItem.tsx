@@ -85,10 +85,6 @@ export function ApiIntegrationItem({
     }
   };
 
-  useEffect(() => {
-    console.log(isDesktopOrLaptop);
-  }, [isDesktopOrLaptop]);
-
   const handleTryApi = async () => {
     setApiResponse(null);
     setLoading(true);

@@ -84,6 +84,7 @@ export interface ObjectActionsProps {
   onDelete: () => void;
   empty?: boolean;
   hasId?: boolean;
+  isLoading?: boolean;
 }
 
 export interface ObjectHeaderProps {
@@ -95,4 +96,5 @@ export interface ObjectHeaderProps {
   onSimpleObjectCreate: () => void;
   onNameChange?: (name: string) => void;
   empty?: boolean;
+  isLoading?: boolean;
 }

@@ -10,12 +10,14 @@ interface ObjectPropertiesProps {
   onUpdate: (data: Record<string, Record<string, any>>) => void;
   isApiEditable: boolean;
   empty?: boolean;
+  isLoading?: boolean;
 }
 
 export function ObjectProperties({
   data,
   onUpdate,
   empty,
+  isLoading,
   isApiEditable,
 }: ObjectPropertiesProps) {
   // Local state to track key errors
@@ -102,8 +104,9 @@ export function ObjectProperties({
   return (
     <div
       className={cn(
-        "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-1 max-h-[55vh] overflow-y-auto",
-        empty && "hidden"
+        "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-1 max-h-[55vh] overflow-y-auto transition-all duration-300 ",
+        empty && "hidden",
+        isLoading && "opacity-50 pointer-events-none"
       )}
     >
       {getPropertyEntries().map(({ key, value, type }) => (

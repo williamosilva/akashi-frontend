@@ -77,11 +77,9 @@ const Sidebar = ({
   };
 
   useEffect(() => {
-    console.log("Atualizando lista de projetos...");
     // setSelectedProjectId(null);
     const loadProjects = async () => {
       try {
-        console.log("primeiro teste", userId);
         if (!userId) return console.error("User ID not found");
 
         const projects = await ProjectService.getInstance().getProjectsByUser(
@@ -98,6 +96,8 @@ const Sidebar = ({
   }, [signal]);
 
   const handleCreateProject = async (projectName: string) => {
+    console.log("caiu aqui2");
+    console.log("userid", userId);
     try {
       const newProject = await ProjectService.getInstance().createProject({
         name: projectName,

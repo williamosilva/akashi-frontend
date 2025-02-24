@@ -27,20 +27,27 @@ export class ApiService {
 
       const newTokens = await AuthService.refreshToken();
       if (!newTokens) {
-        throw new Error("Falha ao renovar o token.");
+        console.error("Falha ao renovar o token. Deslogando usuário...");
+        AuthService.getInstance().logout(); // Desloga o usuário
+        throw new Error("Sessão expirada. Faça login novamente.");
       }
 
-      console.log("Novos tokens:", newTokens);
-      // Salvar novos tokens antes de refazer a requisição
-      AuthService.saveTokens(newTokens.accessToken, newTokens.refreshToken);
+      const refreshToken = AuthService.getRefreshToken();
+      if (!refreshToken) {
+        console.error("Nenhum refreshToken disponível. Deslogando usuário...");
+        AuthService.getInstance().logout(); // Desloga o usuário
+        throw new Error(
+          "Nenhum refreshToken encontrado. Faça login novamente."
+        );
+      }
 
-      // Criar novos headers para evitar mutações inesperadas
+      AuthService.saveTokens(newTokens.accessToken, refreshToken);
+
       headers = {
         ...headers,
         Authorization: `Bearer ${newTokens.accessToken}`,
       };
 
-      // Refazer a requisição original com os novos headers
       response = await fetch(url, { ...options, headers });
 
       if (!response.ok) {

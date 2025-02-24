@@ -42,6 +42,8 @@ export default function PremiumButtonEmpty({
   const canAccessApiIntegration =
     userPlan === "premium" || userPlan === "admin";
 
+  console.log("PremiumButtonEmpty");
+
   return (
     <div className="flex gap-4 font-sans h-full w-full flex-grow sm:flex-row flex-col">
       <button
@@ -60,7 +62,7 @@ export default function PremiumButtonEmpty({
             }
           }}
           disabled={!canAccessApiIntegration}
-          className={`w-full relative flex-grow px-4 py-3 rounded-lg border h-[54px] sm:h-full text-sm font-medium transition-all flex items-center justify-center ${
+          className={`w-full whitespace-nowrap relative flex-grow px-4 py-3 rounded-lg border h-[54px] sm:h-full text-sm font-medium transition-all flex items-center justify-center ${
             canAccessApiIntegration
               ? "bg-gradient-to-r from-emerald-500 to-green-500 text-white hover:from-emerald-600 hover:to-green-600"
               : "bg-zinc-800 border-zinc-700 text-zinc-500 "
