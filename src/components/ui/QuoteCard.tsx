@@ -105,7 +105,7 @@ export default function QuoteCard({ link }: { link: string }) {
   return (
     <div
       className={cn(
-        "xl:w-[80%] w-full h-full flex items-center justify-center bg-zinc-900 relative overflow-hidden",
+        "xl:w-[80%] w-full h-[88%] flex items-center justify-center bg-zinc-900 relative overflow-hidden",
         montserrat.variable,
         jetbrainsMono.variable
       )}

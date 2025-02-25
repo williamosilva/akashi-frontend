@@ -34,9 +34,9 @@ export const JsonVisualizer: React.FC<JsonVisualizerProps> = ({
   const [activeView, setActiveView] = useState<ViewType>(initialView);
 
   const tabs = [
-    { id: "json", label: "Visualizador" },
-    { id: "types", label: "Tipos" },
-    { id: "usage", label: "Como Usar" },
+    { id: "json", label: "Json visualizer" },
+    { id: "types", label: "Types" },
+    { id: "usage", label: "How to use" },
   ];
 
   return (
@@ -46,7 +46,7 @@ export const JsonVisualizer: React.FC<JsonVisualizerProps> = ({
         tabs={tabs}
         activeTab={activeView}
         onTabChange={(tabId) => setActiveView(tabId as ViewType)}
-        className="mb-2"
+        className="mb-[5px] ml-2"
       />
 
       {/* Container principal com estilo comum */}

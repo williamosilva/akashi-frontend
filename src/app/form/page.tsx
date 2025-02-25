@@ -270,7 +270,7 @@ export default function FormPage() {
                             initial={{ opacity: 0, y: -200 }}
                             animate={{ opacity: 1, y: 0 }}
                           >
-                            <div className="grid xl:grid-cols-8 lg:grid-cols-6 md:grid-cols-5 sm:grid-cols-4 grid-cols-3 gap-4">
+                            <div className="grid xl:grid-cols-12 lg:grid-cols-6 md:grid-cols-5 sm:grid-cols-4 grid-cols-3 gap-4">
                               {(() => {
                                 let entries = Object.entries(
                                   projectData.dataInfo
@@ -346,7 +346,7 @@ export default function FormPage() {
                       </motion.div>
 
                       {/* Segunda div com altura fixa */}
-                      <div className="flex lg:h-[30%] h-[50%] w-full gap-4 lg:flex-row flex-col shrink-0">
+                      <div className="flex lg:h-[40%] h-[50%] w-full gap-4 lg:flex-row flex-col shrink-0 items-end">
                         <JsonVisualizer data={dataJson} apiUrl={apiUrl} />
 
                         <QuoteCard

@@ -1,6 +1,7 @@
 import React, { JSX, useState } from "react";
 import { Code } from "lucide-react";
 import Image from "next/image";
+import { jetbrainsMono } from "@/styles/fonts";
 
 type ProgrammingLanguage = "typescript" | "python" | "java";
 
@@ -418,15 +419,19 @@ export const TypeVisualizerContent: React.FC<{ data: any }> = ({ data }) => {
       </div>
 
       <div className="mb-6">
-        {activeLanguage === "typescript" && renderTypeScriptStructure(data)}
-        {activeLanguage === "python" && (
-          <div>
-            {renderPythonStructure(data).map((el, i) =>
-              React.cloneElement(el as React.ReactElement, { key: `py-${i}` })
-            )}
-          </div>
-        )}
-        {activeLanguage === "java" && renderJavaStructure(data)}
+        <div
+          className={`bg-zinc-800 rounded-lg p-6 border border-emerald-500/30 overflow-auto h-full text-sm ${jetbrainsMono.className} w-full`}
+        >
+          {activeLanguage === "typescript" && renderTypeScriptStructure(data)}
+          {activeLanguage === "python" && (
+            <div>
+              {renderPythonStructure(data).map((el, i) =>
+                React.cloneElement(el as React.ReactElement, { key: `py-${i}` })
+              )}
+            </div>
+          )}
+          {activeLanguage === "java" && renderJavaStructure(data)}
+        </div>
       </div>
     </div>
   );
