@@ -33,3 +33,17 @@ export interface ProjectDataItem {
 
   [key: string]: any;
 }
+
+export type FormattedProject = {
+  [projectName: string]: {
+    [akashiObjectName: string]: {
+      [key: string]: any;
+      apiKeyExample?: {
+        apiUrl: string;
+        JSONPath?: string;
+        "x-api-key"?: string;
+        dataReturn?: any;
+      };
+    };
+  };
+};

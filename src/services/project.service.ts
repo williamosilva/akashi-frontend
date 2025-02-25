@@ -5,6 +5,7 @@ import {
   UpdateProjectDto,
   ProjectDataItem,
   ProjectDataInfo,
+  FormattedProject,
 } from "@/types/project.types";
 
 export class ProjectService extends ApiService {
@@ -117,8 +118,13 @@ export class ProjectService extends ApiService {
     );
   }
 
-  // Busca um projeto específico
   public async getProject(projectId: string): Promise<Project> {
     return this.request<Project>(`/projects/${projectId}`);
+  }
+
+  public async getFormattedProject(
+    projectId: string
+  ): Promise<FormattedProject> {
+    return this.request<FormattedProject>(`/projects/${projectId}/formatted`);
   }
 }

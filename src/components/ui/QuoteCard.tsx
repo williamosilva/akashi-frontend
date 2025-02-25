@@ -22,7 +22,7 @@ const quotes = [
   },
 ];
 
-export default function QuoteCard() {
+export default function QuoteCard({ link }: { link: string }) {
   const [quote, setQuote] = useState(quotes[0]);
   const [typedQuote, setTypedQuote] = useState("");
   const [displayedQuote, setDisplayedQuote] = useState(quotes[0]);
@@ -31,7 +31,7 @@ export default function QuoteCard() {
   const typingSpeedRef = useRef(50); // milliseconds per character
 
   const copyToClipboard = async () => {
-    await navigator.clipboard.writeText(`${quote.text} - ${quote.author}`);
+    await navigator.clipboard.writeText(link);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -163,7 +163,7 @@ export default function QuoteCard() {
           <div className="flex flex-col sm:flex-row items-center gap-4 relative z-10 w-full max-w-3xl mx-auto px-0 sm:px-0">
             <input
               type="text"
-              value="https://akashi-0c8981b15750.herokuapp.com/api#/Projects/ProjectsController_addProjectDataEntry"
+              value={link}
               readOnly
               className="flex-1 px-4 py-3 rounded-md bg-zinc-900/70 border border-emerald-500/20 text-zinc-300 text-xs sm:text-sm focus:outline-none focus:border-emerald-500/50 font-mono w-full"
             />

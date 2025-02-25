@@ -118,7 +118,7 @@ export default function ModalObject({
         objectId
       );
 
-      onClose(true); // Fecha o modal e indica sucesso para atualizar a lista
+      onClose(true);
     } catch (err) {
       setError("Falha ao deletar o item");
       console.error(err);
