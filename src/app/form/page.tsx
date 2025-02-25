@@ -14,13 +14,14 @@ import {
   Trash,
   Folder,
 } from "lucide-react";
+import { JsonVisualizer } from "@/components/ui/JsonVisualizer/Main";
 import { AuthService } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
 import { useProject } from "@/components/ui/ConditionalLayout";
 import { ProjectService } from "@/services/project.service";
 import { Project, PartialProjectData } from "@/types/project.types";
 import ModalObject from "@/components/ui/ModalObject";
-import JsonVisualizer from "@/components/ui/JsonVisualizer";
+// import JsonVisualizer from "@/components/ui/JsonVisualizer";
 import QuoteCard from "@/components/ui/QuoteCard";
 import { Tooltip, TooltipProvider } from "@/components/ui/Tooltip";
 import LoadingComponent from "@/components/ui/LoadingComponent";
@@ -34,6 +35,7 @@ export default function FormPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [apiUrl, setApiUrl] = useState<string | null>(null);
   const router = useRouter();
   const { selectedProjectId, triggerReload, setSelectedProjectId } =
     useProject();
@@ -81,11 +83,15 @@ export default function FormPage() {
           selectedProjectId
         );
         setDataJson(jsonProject);
+        setApiUrl(
+          `https://akashi-backend.onrender.com/projects/${selectedProjectId}/formatted`
+        );
       } catch (err) {
         console.error("Error fetching project data:", err);
         setError("Failed to load project data. Please try again.");
         setProjectData(null);
         setDataJson(null);
+        setApiUrl(null);
       } finally {
         setIsLoading(false);
       }
@@ -122,6 +128,9 @@ export default function FormPage() {
           selectedProjectId
         );
         setDataJson(jsonProject);
+        setApiUrl(
+          `https://akashi-backend.onrender.com/projects/${selectedProjectId}/formatted`
+        );
       } catch (err) {
         console.error("Error refreshing data:", err);
         setError("Failed to refresh data");
@@ -338,7 +347,8 @@ export default function FormPage() {
 
                       {/* Segunda div com altura fixa */}
                       <div className="flex lg:h-[30%] h-[50%] w-full gap-4 lg:flex-row flex-col shrink-0">
-                        <JsonVisualizer data={dataJson} />
+                        <JsonVisualizer data={dataJson} apiUrl={apiUrl} />
+
                         <QuoteCard
                           link={`https://akashi-backend.onrender.com/projects/${selectedProjectId}/formatted`}
                         />

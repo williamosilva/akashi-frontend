@@ -1,33 +1,14 @@
-"use client";
-
-import type React from "react";
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, ChevronDown } from "lucide-react";
 import { jetbrainsMono } from "@/styles/fonts";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown, ChevronRight } from "lucide-react";
+import { useState } from "react";
 
-interface JsonVisualizerProps {
-  data: any;
-}
-
-const JsonVisualizer: React.FC<JsonVisualizerProps> = ({ data }) => {
+export const JsonVisualizerContent: React.FC<{ data: any }> = ({ data }) => {
   if (typeof data !== "object" || data === null) {
-    return (
-      <div
-        className={`bg-zinc-900 rounded-lg p-6 border border-emerald-500/30 overflow-auto max-h-full min-h-auto lg:min-h-full text-sm ${jetbrainsMono.className} w-full`}
-      >
-        <JsonValue value={data} />
-      </div>
-    );
+    return <JsonValue value={data} />;
   }
 
-  return (
-    <div
-      className={`bg-zinc-900 rounded-lg p-6 border border-emerald-500/30 overflow-auto max-h-full min-h-auto lg:min-h-full text-sm ${jetbrainsMono.className} w-full`}
-    >
-      <TopLevelContent data={data} />
-    </div>
-  );
+  return <TopLevelContent data={data} />;
 };
 
 const TopLevelContent: React.FC<{ data: object }> = ({ data }) => {
@@ -43,7 +24,7 @@ const TopLevelContent: React.FC<{ data: object }> = ({ data }) => {
         ) : (
           <ChevronRight size={16} className="inline mr-1" />
         )}
-        <span className="text-emerald-300">{`"${objectName}": `}</span>
+        <span className="text-emerald-300">{objectName}: </span>
         {!isOpen && <span className="text-emerald-300">{"{...}"}</span>}
       </span>
       <AnimatePresence initial={false}>
@@ -54,7 +35,7 @@ const TopLevelContent: React.FC<{ data: object }> = ({ data }) => {
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <JsonContent data={data[objectName]} />
+            <JsonNodeContent data={data[objectName]} depth={0} />
           </motion.div>
         )}
       </AnimatePresence>
@@ -62,11 +43,11 @@ const TopLevelContent: React.FC<{ data: object }> = ({ data }) => {
   );
 };
 
-const JsonContent: React.FC<{
+const JsonNodeContent: React.FC<{
   data: any;
-  depth?: number;
-}> = ({ data, depth = 0 }) => {
-  const [isOpen, setIsOpen] = useState(true);
+  depth: number;
+}> = ({ data, depth }) => {
+  const [isOpen, setIsOpen] = useState(depth === 0);
   const isObject = typeof data === "object" && data !== null;
   const isArray = Array.isArray(data);
 
@@ -98,9 +79,9 @@ const JsonContent: React.FC<{
             {Object.entries(data).map(([key, value], index, array) => (
               <div key={key} className="ml-4">
                 <span className="text-emerald-300">
-                  {isArray ? "" : `"${key}": `}
+                  {isArray ? "" : `${key}: `}
                 </span>
-                <JsonContent data={value} depth={depth + 1} />
+                <JsonNodeContent data={value} depth={depth + 1} />
                 {index < array.length - 1 && (
                   <span className="text-emerald-300">,</span>
                 )}
@@ -109,6 +90,7 @@ const JsonContent: React.FC<{
           </motion.div>
         )}
       </AnimatePresence>
+      {!isOpen && <span className="text-emerald-300">...</span>}
       <span className="text-emerald-300">{isArray ? "]" : "}"}</span>
     </span>
   );
@@ -128,7 +110,8 @@ const JsonValue: React.FC<{ value: any }> = ({ value }) => {
     }
   })();
 
-  const displayValue = JSON.stringify(value);
+  const displayValue =
+    typeof value === "string" ? `"${value}"` : JSON.stringify(value);
 
   return (
     <span
@@ -138,5 +121,3 @@ const JsonValue: React.FC<{ value: any }> = ({ value }) => {
     </span>
   );
 };
-
-export default JsonVisualizer;
