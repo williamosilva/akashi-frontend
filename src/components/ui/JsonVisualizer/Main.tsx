@@ -13,7 +13,7 @@ import {
 import { jetbrainsMono } from "@/styles/fonts";
 import { JsonVisualizerContent } from "./JsonVisualizerContent";
 import { TypeVisualizerContent } from "./TypeVisualizerContent";
-import UsageVisualizerContent from "./JsonVisualizer";
+import UsageVisualizerContent from "./UsageVisualizerContent";
 import { Tabs } from "@/components/ui/vercel-tabs";
 
 // Tipos compartilhados

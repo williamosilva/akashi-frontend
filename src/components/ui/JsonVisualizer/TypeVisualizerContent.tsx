@@ -352,7 +352,7 @@ export const TypeVisualizerContent: React.FC<{ data: any }> = ({ data }) => {
   };
 
   return (
-    <div className="mb-6">
+    <div className="mb-0">
       <div className="flex flex-wrap gap-3 pb-4">
         <div className="relative group">
           <button
@@ -418,9 +418,9 @@ export const TypeVisualizerContent: React.FC<{ data: any }> = ({ data }) => {
         </div>
       </div>
 
-      <div className="mb-6">
+      <div className="mb-0">
         <div
-          className={`bg-zinc-800 rounded-lg p-6 border border-emerald-500/30 overflow-auto h-full text-sm ${jetbrainsMono.className} w-full`}
+          className={`bg-zinc-800 rounded-lg p-6  overflow-auto h-full text-sm ${jetbrainsMono.className} w-full`}
         >
           {activeLanguage === "typescript" && renderTypeScriptStructure(data)}
           {activeLanguage === "python" && (
