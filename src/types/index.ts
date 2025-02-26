@@ -4,10 +4,9 @@ export interface ModalObjectProps {
   isVisible: boolean;
   projectId: string;
   itemKey: string;
-  initialData?: Record<string, any>;
+  initialData?: Record<string, unknown>;
   onClose: (refresh: boolean) => void;
 }
-
 export interface ApiIntegrationValue {
   apiUrl: string;
   ref: string;
