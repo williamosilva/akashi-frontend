@@ -11,10 +11,12 @@ import {
 import type { ApiIntegrationItemProps } from "@/types";
 import { useMediaQuery } from "react-responsive";
 
+type Serializable = string | number | boolean | null | object | Serializable[];
+
 interface ApiResponseProps {
   error?: string;
-  details?: any;
-  data?: any;
+  details?: Serializable;
+  data?: Serializable;
 }
 
 export function ApiIntegrationItem({
@@ -34,6 +36,16 @@ export function ApiIntegrationItem({
   const [loading, setLoading] = useState(false);
   const [apiResponse, setApiResponse] = useState<ApiResponseProps | null>(null);
   const [localError, setLocalError] = useState<string | undefined>(error);
+
+  const safeStringify = (value: Serializable, space?: number): string => {
+    try {
+      return typeof value === "string"
+        ? value
+        : JSON.stringify(value, null, space);
+    } catch {
+      return "Unable to serialize data";
+    }
+  };
 
   const prevPropertyKeyRef = useRef(propertyKey);
   const isDesktopOrLaptop = useMediaQuery({
@@ -319,10 +331,10 @@ export function ApiIntegrationItem({
                   {apiResponse.error && (
                     <div className="text-red-400">
                       <div>Erro: {apiResponse.error}</div>
+
                       {apiResponse.details && (
                         <div className="text-red-300">
-                          Detalhes:{" "}
-                          {JSON.stringify(apiResponse.details, null, 2)}
+                          Detalhes: {safeStringify(apiResponse.details, 2)}
                         </div>
                       )}
                     </div>
