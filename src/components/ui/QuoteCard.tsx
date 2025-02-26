@@ -6,6 +6,7 @@ import { Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { jetbrainsMono, montserrat } from "@/styles/fonts";
+import { useMediaQuery } from "react-responsive";
 
 const quotes = [
   {
@@ -29,7 +30,9 @@ export default function QuoteCard({ link }: { link: string }) {
   const [isTyping, setIsTyping] = useState(false);
   const [copied, setCopied] = useState(false);
   const typingSpeedRef = useRef(50); // milliseconds per character
-
+  const isDesktopOrLaptop = useMediaQuery({
+    query: "(max-width: 1280px)",
+  });
   const copyToClipboard = async () => {
     await navigator.clipboard.writeText(link);
     setCopied(true);
@@ -105,7 +108,7 @@ export default function QuoteCard({ link }: { link: string }) {
   return (
     <div
       className={cn(
-        "xl:w-[80%] w-full h-[88%] flex items-center justify-center bg-zinc-900 relative overflow-hidden",
+        "w-auto h-full flex items-center justify-center bg-zinc-900 relative overflow-hidden",
         montserrat.variable,
         jetbrainsMono.variable
       )}
@@ -137,13 +140,15 @@ export default function QuoteCard({ link }: { link: string }) {
           <div className="gap-2 mb-2 relative z-10 h-auto flex flex-col">
             <blockquote
               className={cn(
-                "lg:text-base xl:text-base 2xl:text-xl md:text-base font-bold 2xl:mb-4 mb-0 tracking-tight",
+                "lg:text-base xl:text-base 2xl:text-lg md:text-base font-bold 2xl:mb-4 mb-0 tracking-tight",
                 montserrat.className
               )}
             >
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-500">
-                "{typedQuote}"
-                {isTyping && <span className="typing-cursor">|</span>}
+              <span className="flex">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-500">
+                  "{typedQuote}"
+                </span>
+                {/* {isTyping && <span className="typing-cursor">|</span>} */}
               </span>
             </blockquote>
             <motion.p
@@ -160,7 +165,7 @@ export default function QuoteCard({ link }: { link: string }) {
             </motion.p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-4 relative z-10 w-full max-w-3xl mx-auto px-0 sm:px-0">
+          <div className="flex flex-row items-center gap-4 relative z-10 w-full max-w-3xl mx-auto px-0 sm:px-0">
             <input
               type="text"
               value={link}
@@ -171,7 +176,7 @@ export default function QuoteCard({ link }: { link: string }) {
               onClick={copyToClipboard}
               variant="outline"
               className={cn(
-                "w-full sm:w-auto flex px-6 py-3 border-emerald-500/20 bg-zinc-800/70 text-emerald-300 hover:bg-zinc-700/70 transition-colors",
+                "w-auto flex xl:px-6 xl:py-3 px-3 py-3 border-emerald-500/20 bg-zinc-800/70 text-emerald-300 hover:bg-zinc-700/70 transition-colors",
                 {
                   "bg-emerald-500/20 text-emerald-100": copied,
                 },
@@ -179,11 +184,11 @@ export default function QuoteCard({ link }: { link: string }) {
               )}
             >
               {copied ? (
-                <Check className="w-4 h-4 mr-2" />
+                <Check className="w-4 h-4 xl:mr-2 mr-0" />
               ) : (
-                <Copy className="w-4 h-4 mr-2" />
+                <Copy className="w-4 h-4 xl:mr-2 mr-0" />
               )}
-              {copied ? "Copied!" : "Copy"}
+              {isDesktopOrLaptop ? "" : copied ? "Copied!" : "Copy"}
             </Button>
           </div>
         </motion.div>

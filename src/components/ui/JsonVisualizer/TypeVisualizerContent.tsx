@@ -344,7 +344,7 @@ export const TypeVisualizerContent: React.FC<{ data: any }> = ({ data }) => {
     );
 
     return (
-      <div>
+      <div key={className}>
         {classes}
         {classContent}
       </div>

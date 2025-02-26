@@ -51,7 +51,7 @@ export const JsonVisualizer: React.FC<JsonVisualizerProps> = ({
 
       {/* Container principal com estilo comum */}
       <div
-        className={`bg-zinc-900 rounded-lg p-6 border border-emerald-500/30 overflow-auto h-full text-sm ${jetbrainsMono.className} w-full`}
+        className={`bg-zinc-900 h-auto rounded-lg p-6 border border-emerald-500/30 overflow-auto h-full text-sm ${jetbrainsMono.className} w-full`}
       >
         {/* Renderiza o componente adequado de acordo com a visualização ativa */}
         {activeView === "json" && <JsonVisualizerContent data={data} />}

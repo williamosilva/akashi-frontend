@@ -161,7 +161,7 @@ export default function ConditionalLayout({
     <UserContext.Provider value={userContextValue}>
       <ProjectContext.Provider value={projectContextValue}>
         {isFormRoute ? (
-          <div className="flex h-screen">
+          <div className="flex h-auto lg:h-screen">
             <Sidebar
               selectedProjectId={selectedProjectId}
               onProjectSelect={setSelectedProjectId}
