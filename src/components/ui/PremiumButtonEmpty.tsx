@@ -45,7 +45,7 @@ export default function PremiumButtonEmpty({
   console.log("PremiumButtonEmpty");
 
   return (
-    <div className="flex gap-4 font-sans h-full w-full flex-grow sm:flex-row flex-col">
+    <div className="flex gap-4 font-sans h-full md:w-[500px]  w-full flex-grow sm:flex-row flex-col">
       <button
         onClick={onSimpleObjectCreate}
         className=" w-full relative px-4 py-3 rounded-lg bg-zinc-800 border border-emerald-500/20 text-emerald-300 text-sm font-medium hover:bg-zinc-700 transition-all flex items-center justify-center"

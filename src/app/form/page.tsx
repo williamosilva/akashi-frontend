@@ -27,6 +27,7 @@ import QuoteCard from "@/components/ui/QuoteCard";
 import { Tooltip, TooltipProvider } from "@/components/ui/Tooltip";
 import LoadingComponent from "@/components/ui/LoadingComponent";
 import { Button } from "@/components/ui/button";
+import { MagicCard } from "@/components/ui/MagicCard";
 
 export default function FormPage() {
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
@@ -203,7 +204,7 @@ export default function FormPage() {
                         </p>
                       </motion.div>
                     )}
-                    {/* pinto */}
+
                     {projectData?.dataInfo &&
                     Object.keys(projectData.dataInfo).length > 0 ? (
                       <>
@@ -286,7 +287,6 @@ export default function FormPage() {
                                   return entries.map(([key, value], index) => (
                                     <motion.div
                                       key={key}
-                                      className="w-full aspect-square bg-zinc-800/50 rounded-lg border border-emerald-500/20 hover:border-emerald-500/60 transition-all cursor-pointer hover:bg-zinc-700/50 group overflow-hidden"
                                       initial={{ opacity: 0, scale: 0.9 }}
                                       animate={{ opacity: 1, scale: 1 }}
                                       transition={{
@@ -303,23 +303,30 @@ export default function FormPage() {
                                         });
                                       }}
                                     >
-                                      <div className="h-full w-full p-2 flex flex-col items-center justify-center">
-                                        <motion.div
-                                          className="text-emerald-400 mb-2"
-                                          initial={{ scale: 1 }}
-                                          whileHover={{ scale: 1.1 }}
-                                          transition={{
-                                            type: "spring",
-                                            stiffness: 400,
-                                            damping: 10,
-                                          }}
-                                        >
-                                          <Folder size={24} />
-                                        </motion.div>
-                                        <h3 className="text-emerald-300 font-medium text-center text-xs group-hover:text-emerald-200 transition-colors line-clamp-2">
-                                          {value.akashiObjectName}
-                                        </h3>
-                                      </div>
+                                      <MagicCard
+                                        gradientColor={"#1d2b2a"}
+                                        gradientOpacity={0.8}
+                                        gradientSize={100}
+                                        className="w-full flex  justify-center items-center aspect-square rounded-lg border border-emerald-500/20 hover:border-emerald-500/60 transition-all cursor-pointer group overflow-hidden"
+                                      >
+                                        <div className="h-full w-full p-2 flex flex-col items-center justify-center">
+                                          <motion.div
+                                            className="text-emerald-400 mb-2"
+                                            initial={{ scale: 1 }}
+                                            whileHover={{ scale: 1.1 }}
+                                            transition={{
+                                              type: "spring",
+                                              stiffness: 400,
+                                              damping: 10,
+                                            }}
+                                          >
+                                            <Folder size={24} />
+                                          </motion.div>
+                                          <h3 className="text-emerald-300 font-medium text-center text-xs group-hover:text-emerald-200 transition-colors line-clamp-2 select-none">
+                                            {value.akashiObjectName}
+                                          </h3>
+                                        </div>
+                                      </MagicCard>
                                     </motion.div>
                                   ));
                                 })()}

@@ -57,7 +57,7 @@ export function CreateProjectModal({
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        className="w-full  mx-auto px-4 sm:px-0 lg:px-0"
+        className="md:w-96 w-full mx-auto px-4 sm:px-0 lg:px-0"
       >
         <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-emerald-400 text-start">
           Create New Project
@@ -83,21 +83,26 @@ export function CreateProjectModal({
             {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
           </div>
           <div className="flex flex-col sm:flex-row justify-between space-y-3 sm:space-y-0 sm:space-x-3">
-            <Button
-              type="button"
+            <motion.button
+              whileTap={{ scale: 0.95 }}
               onClick={onClose}
               disabled={isLoading}
-              className="w-full sm:w-auto bg-zinc-800/50 hover:bg-zinc-700/50 text-zinc-300 border-zinc-600 hover:border-zinc-500 text-sm sm:text-base py-2 sm:py-3"
+              className="w-full flex-1 sm:w-auto px-4 py-2 rounded-lg bg-zinc-700 border border-zinc-500/40 text-zinc-300 text-sm font-medium transition-all duration-200 flex items-center justify-center shadow-lg"
             >
               Cancel
-            </Button>
-            <Button
-              type="submit"
+            </motion.button>
+
+            <motion.button
+              // whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               disabled={isLoading}
-              className="w-full sm:w-auto bg-emerald-500/10 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 hover:border-emerald-500/50 text-sm sm:text-base py-2 sm:py-3"
+              type="submit"
+              className={
+                "px-4 py-2 flex-1 rounded-lg bg-gradient-to-r from-emerald-500 to-green-500 text-white text-sm font-medium transition-all duration-200 flex items-center justify-center shadow-lg"
+              }
             >
-              {isLoading ? "Creating..." : "Create Project"}
-            </Button>
+              Create Project
+            </motion.button>
           </div>
         </form>
       </motion.div>

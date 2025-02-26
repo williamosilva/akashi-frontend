@@ -225,7 +225,7 @@ export default function ModalObject({
       {/* {isLoading && <div className="loading-indicator">Loading...</div>}
       {error && <div className="error-message">{error}</div>} */}
 
-      <div className="relative w-full min-w-[580px] max-w-[1000px] mx-auto max-h-[100vh] min-h-80 flex flex-col rounded-lg h-auto px-0">
+      <div className="relative w-full  mx-auto max-h-[100vh] min-h-80 flex flex-col rounded-lg h-auto px-0">
         <ObjectHeader
           name={objectName}
           userPlan={userPlan}
