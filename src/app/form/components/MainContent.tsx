@@ -93,7 +93,7 @@ export default function MainContent({
                 let entries = Object.entries(projectData.dataInfo ?? {});
 
                 if (sortOrder !== "none") {
-                  entries = entries.sort(([keyA, valueA], [keyB, valueB]) => {
+                  entries = entries.sort(([, valueA], [, valueB]) => {
                     const nameA = valueA.akashiObjectName.toLowerCase();
                     const nameB = valueB.akashiObjectName.toLowerCase();
 

@@ -46,7 +46,7 @@ export default function FormPage() {
 
   const [selectedObject, setSelectedObject] = useState<{
     key: string;
-    data: any;
+    data: Record<string, unknown>;
   } | null>(null);
 
   useEffect(() => {

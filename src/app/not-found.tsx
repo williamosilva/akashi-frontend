@@ -7,7 +7,7 @@ import { jetbrainsMono, montserrat } from "@/styles/fonts";
 import { fadeUpVariants } from "@/animations/variation";
 import Link from "next/link";
 import Background from "@/components/ui/Background";
-import { Rocket, SpaceIcon as Planet, Star } from "lucide-react";
+import { Rocket } from "lucide-react";
 
 export default function Custom404() {
   return (
