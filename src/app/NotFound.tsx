@@ -59,7 +59,7 @@ export default function Custom404() {
                   )}
                 >
                   <span className="bg-clip-text text-transparent bg-gradient-to-b from-zinc-100 to-zinc-400">
-                    Oops! Looks like you're
+                    Oops! Looks like you&apos;re
                   </span>
                   <br />
                   <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-500">
@@ -75,8 +75,9 @@ export default function Custom404() {
                 animate="visible"
               >
                 <p className="text-base sm:text-lg text-zinc-400 mb-8 leading-relaxed max-w-2xl mx-auto font-montserrat">
-                  The page you're looking for doesn't exist or has been moved.
-                  Don't worry, we'll help you find your way back to Earth.
+                  The page you&apos;re looking for doesn&apos;t exist or has
+                  been moved. Don&apos;t worry, we&apos;ll help you find your
+                  way back to Earth.
                 </p>
               </motion.div>
             </div>
