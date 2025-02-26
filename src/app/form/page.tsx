@@ -174,9 +174,10 @@ export default function FormPage() {
                     >
                       <motion.h1
                         className={cn(
-                          "text-4xl font-bold mb-2 text-start bg-clip-text text-transparent bg-gradient-to-r from-emerald-300 via-emerald-200 to-emerald-400",
+                          "md:text-4xl text-xl font-bold mb-2 text-start bg-clip-text text-transparent bg-gradient-to-r from-emerald-300 via-emerald-200 to-emerald-400 truncate max-w-[90%]",
                           montserrat.className
                         )}
+                        title={projectData?.name} // Mostra o nome completo ao passar o mouse
                       >
                         {projectData?.name}
                       </motion.h1>
@@ -184,7 +185,7 @@ export default function FormPage() {
                         <Tooltip content="Delete project" position="left">
                           <button
                             onClick={handleDeleteProject}
-                            className="p-2 rounded-full text-emerald-300 hover:text-emerald-400 hover:bg-emerald-400/10 transition-colors"
+                            className="p-2 rounded-full text-emerald-300 hover:text-emerald-400 hover:bg-emerald-400/10 transition-colors flex-shrink-0"
                             aria-label="Logout"
                           >
                             <Trash className="h-5 w-5" />

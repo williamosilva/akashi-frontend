@@ -4,9 +4,7 @@ import type React from "react";
 import { useState } from "react";
 import { Modal } from "./Modal";
 import { Input } from "@/components/ui/Input";
-import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { useUser } from "./ConditionalLayout";
 
 interface CreateProjectModalProps {
   isOpen: boolean;
@@ -23,8 +21,9 @@ export function CreateProjectModal({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const maxLength = 30;
+
   const handleSubmit = async (e: React.FormEvent) => {
-    console.log("caiu aqui");
     e.preventDefault();
     if (!projectName.trim()) return;
 
@@ -39,7 +38,6 @@ export function CreateProjectModal({
       let errorMessage = "Failed to create project";
       if (err instanceof Error) {
         errorMessage = err.message;
-        // Mensagem mais amigável para erro de userId
         if (err.message === "User ID not found in storage") {
           errorMessage = "Please login to create a project";
         }
@@ -50,6 +48,15 @@ export function CreateProjectModal({
       setIsLoading(false);
     }
   };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value.length <= maxLength) {
+      setProjectName(value);
+    }
+  };
+
+  const isOverLimit = projectName.length > maxLength;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -64,22 +71,25 @@ export function CreateProjectModal({
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
           <div>
-            {/* <label
-              htmlFor="projectName"
-              className="block text-sm font-medium text-emerald-300 mb-2"
-            >
-              Project Name
-            </label> */}
-            <Input
-              id="projectName"
-              type="text"
-              placeholder="Enter project name"
-              showSearchIcon={false}
-              value={projectName}
-              onChange={(e) => setProjectName(e.target.value)}
-              disabled={isLoading}
-              className="w-full py-2 sm:py-3 bg-zinc-800/50 border-emerald-500/30 focus:border-emerald-500 focus:ring focus:ring-emerald-500/20 text-zinc-100 placeholder-zinc-500 text-sm sm:text-base"
-            />
+            <div className="relative">
+              <Input
+                id="projectName"
+                type="text"
+                placeholder="Enter project name"
+                showSearchIcon={false}
+                value={projectName}
+                onChange={handleInputChange}
+                disabled={isLoading}
+                className="w-full py-2 sm:py-3 bg-zinc-800/50 border-emerald-500/30 focus:border-emerald-500 focus:ring focus:ring-emerald-500/20 text-zinc-100 placeholder-zinc-500 text-sm sm:text-base pr-16"
+              />
+              <span
+                className={`absolute right-2 top-1/2 -translate-y-1/2 text-sm ${
+                  isOverLimit ? "text-red-500" : "text-zinc-400"
+                }`}
+              >
+                {projectName.length}/{maxLength}
+              </span>
+            </div>
             {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
           </div>
           <div className="flex flex-col sm:flex-row justify-between space-y-3 sm:space-y-0 sm:space-x-3">
@@ -93,13 +103,12 @@ export function CreateProjectModal({
             </motion.button>
 
             <motion.button
-              // whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              disabled={isLoading}
+              disabled={isLoading || isOverLimit}
               type="submit"
-              className={
-                "px-4 py-2 flex-1 rounded-lg bg-gradient-to-r from-emerald-500 to-green-500 text-white text-sm font-medium transition-all duration-200 flex items-center justify-center shadow-lg"
-              }
+              className={`px-4 py-2 flex-1 rounded-lg bg-gradient-to-r from-emerald-500 to-green-500 text-white text-sm font-medium transition-all duration-200 flex items-center justify-center shadow-lg ${
+                isOverLimit ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
               Create Project
             </motion.button>
