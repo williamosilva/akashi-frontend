@@ -10,8 +10,8 @@ const loadingMessages = [
   "Bringing the latest updates...",
   "Optimizing your experience...",
   "Loading insights...",
-  "Hold tight! We’re gathering your data...",
-  "Just a moment, we’re preparing everything for you...",
+  "Hold tight! We're gathering your data...",
+  "Just a moment, we're preparing everything for you...",
   "Hang in there! Your data is on the way...",
 ];
 
@@ -21,7 +21,9 @@ const getRandomLoadingMessage = () => {
 
 const LoadingComponent = () => {
   const [loading, setLoading] = useState(true);
-  const [loadingMessage, setLoadingMessage] = useState(getRandomLoadingMessage);
+  const [loadingMessage, setLoadingMessage] = useState(
+    getRandomLoadingMessage()
+  );
 
   useEffect(() => {
     const timer = setTimeout(() => {

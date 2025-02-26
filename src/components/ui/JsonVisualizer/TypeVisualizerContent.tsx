@@ -290,7 +290,6 @@ export const TypeVisualizerContent: React.FC<{ data: DataObject }> = ({
 
     const dataObj = data as Record<string, unknown>;
     // Using the isArray variable in conditional below
-    const isArray = Array.isArray(data);
     const fields = Object.entries(dataObj);
     const classes: JSX.Element[] = [];
 

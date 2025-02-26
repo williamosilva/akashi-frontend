@@ -66,6 +66,7 @@ const NameEditor = memo(
     );
   }
 );
+NameEditor.displayName = "NameEditor";
 
 // Componente de título memoizado
 const MemoizedTitle = memo(
@@ -84,6 +85,7 @@ const MemoizedTitle = memo(
     </>
   )
 );
+MemoizedTitle.displayName = "MemoizedTitle";
 
 // Botões de controle memoizados
 const MemoizedControls = memo(
@@ -125,6 +127,7 @@ const MemoizedControls = memo(
     </div>
   )
 );
+MemoizedControls.displayName = "MemoizedControls";
 
 // Componente principal
 export function ObjectHeader({

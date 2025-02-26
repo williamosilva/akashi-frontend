@@ -27,6 +27,10 @@ interface CodeBlockProps {
   language: ProgrammingLanguage;
 }
 
+interface CopyButtonProps {
+  textToCopy: string;
+}
+
 const CodeToken = ({ type, children }: CodeTokenProps) => {
   const getTokenClass = () => {
     switch (type) {
@@ -52,7 +56,7 @@ const CodeToken = ({ type, children }: CodeTokenProps) => {
   return <span className={`${getTokenClass()} break-words`}>{children}</span>;
 };
 
-const CopyButton = ({ textToCopy }: any) => {
+const CopyButton = ({ textToCopy }: CopyButtonProps) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {

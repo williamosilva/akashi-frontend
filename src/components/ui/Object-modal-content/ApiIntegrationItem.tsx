@@ -1,5 +1,5 @@
 "use client";
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { JSONPath } from "jsonpath-plus";
 import {
   ChevronDown,
@@ -10,6 +10,12 @@ import {
 } from "lucide-react";
 import type { ApiIntegrationItemProps } from "@/types";
 import { useMediaQuery } from "react-responsive";
+
+interface ApiResponseProps {
+  error?: string;
+  details?: unknown;
+  data?: unknown;
+}
 
 export function ApiIntegrationItem({
   propertyKey,
@@ -26,7 +32,7 @@ export function ApiIntegrationItem({
   const [draftKey, setDraftKey] = useState(propertyKey || "");
   const [expanded, setExpanded] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [apiResponse, setApiResponse] = useState<any>(null);
+  const [apiResponse, setApiResponse] = useState<ApiResponseProps>({});
   const [localError, setLocalError] = useState<string | undefined>(error);
 
   const prevPropertyKeyRef = useRef(propertyKey);
@@ -86,7 +92,7 @@ export function ApiIntegrationItem({
   };
 
   const handleTryApi = async () => {
-    setApiResponse(null);
+    setApiResponse({});
     setLoading(true);
 
     try {
