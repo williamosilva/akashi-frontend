@@ -90,9 +90,9 @@ export default function ConditionalLayout({
           throw new Error("Autenticação necessária");
         }
 
-        let validToken = await authService.validateToken(accessToken);
+        const validToken = await authService.validateToken(accessToken);
         console.log("Token válido:", validToken);
-        let newAccessToken = accessToken;
+        const newAccessToken = accessToken;
 
         const userData = await authService.getMe(newAccessToken);
 

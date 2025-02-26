@@ -3,16 +3,21 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
-export const JsonVisualizerContent: React.FC<{ data: any }> = ({ data }) => {
+export const JsonVisualizerContent: React.FC<{ data: unknown }> = ({
+  data,
+}) => {
   console.log(data);
   if (typeof data !== "object" || data === null) {
     return <JsonValue value={data} />;
   }
 
-  return <TopLevelContent data={data} />;
+  const dataRecord = data as Record<string, unknown>;
+  return <TopLevelContent data={dataRecord} />;
 };
 
-const TopLevelContent: React.FC<{ data: Record<string, any> }> = ({ data }) => {
+const TopLevelContent: React.FC<{ data: Record<string, unknown> }> = ({
+  data,
+}) => {
   const [isOpen, setIsOpen] = useState(true);
   const toggleOpen = () => setIsOpen(!isOpen);
   const objectName = Object.keys(data)[0];
@@ -45,7 +50,7 @@ const TopLevelContent: React.FC<{ data: Record<string, any> }> = ({ data }) => {
 };
 
 const JsonNodeContent: React.FC<{
-  data: any;
+  data: unknown;
   depth: number;
 }> = ({ data, depth }) => {
   const [isOpen, setIsOpen] = useState(depth === 0);
@@ -97,7 +102,7 @@ const JsonNodeContent: React.FC<{
   );
 };
 
-const JsonValue: React.FC<{ value: any }> = ({ value }) => {
+const JsonValue: React.FC<{ value: unknown }> = ({ value }) => {
   const valueColor = (() => {
     switch (typeof value) {
       case "string":
