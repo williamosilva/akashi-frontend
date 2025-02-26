@@ -45,11 +45,10 @@ export const JsonVisualizer: React.FC<JsonVisualizerProps> = ({
     <div className="w-full h-full flex flex-col">
       <Tabs
         tabs={tabs}
-        activeTab={activeView}
+        {...({ activeTab: activeView } as any)}
         onTabChange={(tabId) => setActiveView(tabId as ViewType)}
         className="mb-[5px] ml-2"
       />
-
       <div
         className={`bg-zinc-900 rounded-lg p-6 border border-emerald-500/30 overflow-y-auto h-full text-sm ${jetbrainsMono.className} w-full`}
       >

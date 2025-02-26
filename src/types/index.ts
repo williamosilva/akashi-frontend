@@ -4,7 +4,7 @@ export interface ModalObjectProps {
   isVisible: boolean;
   projectId: string;
   itemKey: string;
-  initialData?: unknown;
+  initialData?: Record<string, any>;
   onClose: (refresh: boolean) => void;
 }
 

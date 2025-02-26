@@ -13,8 +13,8 @@ import { useMediaQuery } from "react-responsive";
 
 interface ApiResponseProps {
   error?: string;
-  details?: unknown;
-  data?: unknown;
+  details?: any;
+  data?: any;
 }
 
 export function ApiIntegrationItem({
@@ -32,7 +32,7 @@ export function ApiIntegrationItem({
   const [draftKey, setDraftKey] = useState(propertyKey || "");
   const [expanded, setExpanded] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [apiResponse, setApiResponse] = useState<ApiResponseProps>({});
+  const [apiResponse, setApiResponse] = useState<ApiResponseProps | null>(null);
   const [localError, setLocalError] = useState<string | undefined>(error);
 
   const prevPropertyKeyRef = useRef(propertyKey);
@@ -321,7 +321,8 @@ export function ApiIntegrationItem({
                       <div>Erro: {apiResponse.error}</div>
                       {apiResponse.details && (
                         <div className="text-red-300">
-                          Detalhes: {JSON.stringify(apiResponse.details)}
+                          Detalhes:{" "}
+                          {JSON.stringify(apiResponse.details, null, 2)}
                         </div>
                       )}
                     </div>
