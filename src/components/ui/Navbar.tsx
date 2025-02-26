@@ -7,21 +7,48 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { jetbrainsMono } from "@/styles/fonts";
 import { AuthModal } from "@/components/ui/Auth-modal";
+import { useUser } from "./ConditionalLayout";
+import { AuthService } from "@/services/auth.service";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [authView, setAuthView] = useState<"login" | "register">("login");
-
+  const {
+    userId,
+    setUserId,
+    email,
+    setEmail,
+    fullName,
+    setFullName,
+    photo,
+    setPhoto,
+  } = useUser();
+  const isAuthenticated = !!userId;
+  const router = useRouter();
+  console.log("isAuthenticated", isAuthenticated, userId);
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
+    if (isAuthenticated) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
   }, []);
 
   const handleAuthClick = (view: "login" | "register") => {
     setAuthView(view);
     setIsAuthOpen(true);
   };
+
+  function handleLogout() {
+    AuthService.getInstance().logout();
+    setUserId(null);
+    setEmail(null);
+    setFullName(null);
+    setPhoto(null);
+    router.push("/");
+  }
 
   return (
     <>
@@ -49,16 +76,13 @@ export default function Navbar() {
               {isLoggedIn ? (
                 <>
                   <Link
-                    href="/projects"
+                    href="/form"
                     className="px-3 py-1.5 text-sm rounded-md bg-zinc-800 text-emerald-300 border border-emerald-500/20 hover:bg-zinc-700 transition-colors"
                   >
                     Projects
                   </Link>
                   <button
-                    onClick={() => {
-                      localStorage.removeItem("token");
-                      setIsLoggedIn(false);
-                    }}
+                    onClick={handleLogout}
                     className="px-3 py-1.5 text-sm rounded-md bg-zinc-800 text-emerald-300 border border-emerald-500/20 hover:bg-zinc-700 transition-colors"
                   >
                     Logout

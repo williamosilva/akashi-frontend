@@ -77,12 +77,8 @@ export default function ConditionalLayout({
 
   useEffect(() => {
     const validateAndLoadUser = async () => {
+      console.log("caiu aqui");
       try {
-        if (isHome || !isValidRoute) {
-          setIsValidating(false);
-          return;
-        }
-
         const accessToken = AuthService.getAccessToken();
         const refreshToken = AuthService.getRefreshToken();
 
@@ -95,7 +91,7 @@ export default function ConditionalLayout({
         const newAccessToken = accessToken;
 
         const userData = await authService.getMe(newAccessToken);
-
+        console.log("userData", userData);
         setUserId(userData.id);
         setEmail(userData.email);
         setFullName(userData.fullName);

@@ -1,3 +1,5 @@
+"use client";
+
 import HeroGeometric from "@/components/sections/Hero";
 import MindMapSection from "@/components/sections/MentalMapSection";
 import Features from "@/components/sections/Features";
@@ -5,6 +7,7 @@ import DynamicVSCodeSection from "@/components/sections/Dynamic-vscode-section";
 import Background from "@/components/ui/Background";
 import Footer from "@/components/ui/Footer";
 import PriceSection from "@/components/sections/Price";
+import { useUser } from "@/components/ui/ConditionalLayout";
 
 export default function Home() {
   return (
