@@ -90,25 +90,12 @@ export default function ConditionalLayout({
           throw new Error("Autenticação necessária");
         }
 
-        // Validação e renovação do token
         let validToken = await authService.validateToken(accessToken);
+        console.log("Token válido:", validToken);
         let newAccessToken = accessToken;
 
-        // if (!validToken) {
-        //   const newTokens = await authService.refreshToken();
-        //   if (!newTokens) throw new Error("Falha na renovação do token");
-
-        //   AuthService.saveTokens(newTokens.accessToken, newTokens.refreshToken);
-
-        //   newAccessToken = newTokens.accessToken;
-        //   validToken = await authService.validateToken(newAccessToken);
-        //   if (!validToken) throw new Error("Token renovado inválido");
-        // }
-
-        // Busca os dados do usuário após validação do token
         const userData = await authService.getMe(newAccessToken);
 
-        // Atualiza os estados do usuário
         setUserId(userData.id);
         setEmail(userData.email);
         setFullName(userData.fullName);
