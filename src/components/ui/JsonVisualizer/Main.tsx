@@ -45,7 +45,7 @@ export const JsonVisualizer: React.FC<JsonVisualizerProps> = ({
     <div className="w-full h-full flex flex-col">
       <Tabs
         tabs={tabs}
-        {...({ activeTab: activeView } as any)}
+        {...({ activeTab: activeView } as { activeTab: string })}
         onTabChange={(tabId) => setActiveView(tabId as ViewType)}
         className="mb-[5px] ml-2"
       />
