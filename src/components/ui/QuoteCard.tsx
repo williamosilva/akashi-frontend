@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { jetbrainsMono, montserrat } from "@/styles/fonts";
 import { useMediaQuery } from "react-responsive";
+import { Tooltip, TooltipProvider } from "./Tooltip";
 
 const quotes = [
   {
@@ -170,26 +171,43 @@ export default function QuoteCard({ link }: { link: string }) {
               type="text"
               value={link}
               readOnly
-              className="flex-1 px-4 py-3 rounded-md bg-zinc-900/70 border border-emerald-500/20 text-zinc-300 text-xs sm:text-sm focus:outline-none focus:border-emerald-500/50 font-mono w-full"
+              className="flex-1 px-4 py-2 rounded-md bg-zinc-900 border border-emerald-500/20 text-zinc-300 text-xs sm:text-sm focus:outline-none focus:border-emerald-500/50 font-mono w-full"
             />
-            <Button
-              onClick={copyToClipboard}
-              variant="outline"
-              className={cn(
-                "w-auto flex xl:px-6 xl:py-3 px-3 py-3 border-emerald-500/20 bg-zinc-800/70 text-emerald-300 hover:bg-zinc-700/70 transition-colors",
-                {
-                  "bg-emerald-500/20 text-emerald-100": copied,
-                },
-                "font-medium text-sm"
-              )}
-            >
-              {copied ? (
-                <Check className="w-4 h-4 xl:mr-2 mr-0" />
-              ) : (
-                <Copy className="w-4 h-4 xl:mr-2 mr-0" />
-              )}
-              {isDesktopOrLaptop ? "" : copied ? "Copied!" : "Copy"}
-            </Button>
+
+            <TooltipProvider>
+              <Tooltip content="Click to copy" position="top">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="disabled:opacity-100"
+                  onClick={copyToClipboard}
+                  aria-label={copied ? "Copied" : "Copy to clipboard"}
+                  disabled={copied}
+                >
+                  <div
+                    className={cn(
+                      "transition-all",
+                      copied ? "scale-100 opacity-100" : "scale-0 opacity-0"
+                    )}
+                  >
+                    <Check
+                      className="stroke-emerald-500"
+                      size={16}
+                      strokeWidth={2}
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <div
+                    className={cn(
+                      "absolute transition-all",
+                      copied ? "scale-0 opacity-0" : "scale-100 opacity-100"
+                    )}
+                  >
+                    <Copy size={16} strokeWidth={2} aria-hidden="true" />
+                  </div>
+                </Button>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </motion.div>
       </div>
