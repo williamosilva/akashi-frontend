@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Spinner } from "./Spinner";
 import { cn } from "@/lib/utils";
-import { jetbrainsMono, montserrat } from "@/styles/fonts";
+import { jetbrainsMono } from "@/styles/fonts";
 
 const loadingMessages = [
   "Bringing the latest updates...",
@@ -20,10 +20,8 @@ const getRandomLoadingMessage = () => {
 };
 
 const LoadingComponent = () => {
-  const [loading, setLoading] = useState(true);
-  const [loadingMessage, setLoadingMessage] = useState(
-    getRandomLoadingMessage()
-  );
+  const [, setLoading] = useState(true);
+  const [loadingMessage] = useState(getRandomLoadingMessage());
 
   useEffect(() => {
     const timer = setTimeout(() => {
