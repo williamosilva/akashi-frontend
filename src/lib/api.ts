@@ -14,7 +14,7 @@ const getBearerToken = () => {
 const apiRequest = async (
   endpoint: string,
   method: string = "GET",
-  body?: any
+  body?: unknown
 ) => {
   try {
     const res = await fetch(`${API_BASE_URL}${endpoint}`, {

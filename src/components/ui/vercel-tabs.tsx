@@ -11,12 +11,11 @@ interface Tab {
 
 interface TabsProps extends React.HTMLAttributes<HTMLDivElement> {
   tabs: Tab[];
-  activeTab?: string;
   onTabChange?: (tabId: string) => void;
 }
 
 const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
-  ({ className, tabs, activeTab, onTabChange, ...props }, ref) => {
+  ({ className, tabs, onTabChange, ...props }, ref) => {
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const [hoverStyle, setHoverStyle] = useState({});

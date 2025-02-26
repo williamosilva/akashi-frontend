@@ -2,8 +2,6 @@ import { ApiService } from "./api.service";
 import {
   Project,
   CreateProjectDto,
-  UpdateProjectDto,
-  ProjectDataItem,
   ProjectDataInfo,
   FormattedProject,
 } from "@/types/project.types";
@@ -82,15 +80,15 @@ export class ProjectService extends ApiService {
 
   public async addDataInfoItem(
     projectId: string,
-    itemData: Record<string, any>
+    itemData: Record<string, unknown>
   ): Promise<{
     entryId: string;
-    entry: Record<string, any>;
+    entry: Record<string, unknown>;
     project: Project;
   }> {
     return this.request<{
       entryId: string;
-      entry: Record<string, any>;
+      entry: Record<string, unknown>;
       project: Project;
     }>(`/projects/${projectId}/dataentry`, {
       method: "POST",
@@ -104,7 +102,7 @@ export class ProjectService extends ApiService {
   public async updateDataInfoItem(
     projectId: string,
     entryId: string,
-    itemData: Record<string, any>
+    itemData: Record<string, unknown>
   ): Promise<Project> {
     return this.request<Project>(
       `/projects/${projectId}/datainfo/entry/${entryId}`,

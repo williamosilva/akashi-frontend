@@ -4,7 +4,7 @@ export interface ModalObjectProps {
   isVisible: boolean;
   projectId: string;
   itemKey: string;
-  initialData?: any;
+  initialData?: unknown;
   onClose: (refresh: boolean) => void;
 }
 
@@ -79,8 +79,8 @@ export interface PropertyItemProps {
 }
 
 export interface ObjectPropertiesProps {
-  data: Record<string, any>;
-  onUpdate: (updatedData: Record<string, any>) => void;
+  data: Record<string, unknown>;
+  onUpdate: (updatedData: Record<string, unknown>) => void;
   isApiEditable?: boolean;
 }
 

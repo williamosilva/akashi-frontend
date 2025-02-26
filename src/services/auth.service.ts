@@ -7,7 +7,6 @@ import {
 } from "@/types/auth.types";
 
 import { API_CONFIG } from "@/config/api.config";
-import { useRouter } from "next/navigation";
 
 /**
  * Serviço de autenticação que gerencia operações relacionadas a login,
@@ -95,6 +94,7 @@ export class AuthService extends ApiService {
       });
       return response.ok;
     } catch (error) {
+      console.error("Erro ao validar token:", error);
       return false;
     }
   }
