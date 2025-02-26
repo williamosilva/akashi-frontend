@@ -6,8 +6,8 @@ import type { ApiIntegrationValue, SimplePropertyValue } from "@/types";
 import { cn } from "@/lib/utils";
 
 interface ObjectPropertiesProps {
-  data: Record<string, Record<string, any>>;
-  onUpdate: (data: Record<string, Record<string, any>>) => void;
+  data: Record<string, Record<string, unknown>>;
+  onUpdate: (data: Record<string, Record<string, unknown>>) => void;
   isApiEditable: boolean;
   empty?: boolean;
   isLoading?: boolean;
@@ -30,7 +30,7 @@ export function ObjectProperties({
   // Classifica as propriedades mantendo a ordem original
   const getPropertyEntries = () => {
     return Object.entries(objectData)
-      .filter(([_, value]) => value !== null && value !== "")
+      .filter(([, value]) => value !== null && value !== "")
       .map(([key, value]) => ({
         key,
         value,
@@ -42,7 +42,7 @@ export function ObjectProperties({
   const getAllKeys = () => Object.keys(objectData);
 
   // Verifica se é uma integração API
-  const isApiIntegration = (value: any): value is ApiIntegrationValue => {
+  const isApiIntegration = (value: unknown): value is ApiIntegrationValue => {
     return (
       typeof value === "object" &&
       value !== null &&
@@ -75,8 +75,9 @@ export function ObjectProperties({
 
     // Limpar erro se existia
     if (keyErrors[oldKey]) {
-      const { [oldKey]: _, ...remainingErrors } = keyErrors;
-      setKeyErrors(remainingErrors);
+      const updatedErrors = { ...keyErrors };
+      delete updatedErrors[oldKey];
+      setKeyErrors(updatedErrors);
     }
 
     const entries = Object.entries(objectData);
@@ -93,12 +94,14 @@ export function ObjectProperties({
   const handleDeleteProperty = (keyToDelete: string) => {
     // Limpar erro relacionado à chave se existir
     if (keyErrors[keyToDelete]) {
-      const { [keyToDelete]: _, ...remainingErrors } = keyErrors;
-      setKeyErrors(remainingErrors);
+      const updatedErrors = { ...keyErrors };
+      delete updatedErrors[keyToDelete];
+      setKeyErrors(updatedErrors);
     }
 
-    const { [keyToDelete]: _, ...rest } = objectData;
-    onUpdate({ ...data, [objectId]: rest });
+    const newObjectData = { ...objectData };
+    delete newObjectData[keyToDelete];
+    onUpdate({ ...data, [objectId]: newObjectData });
   };
 
   return (

@@ -1,6 +1,6 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock, Star, Plus, Heart, Sparkles } from "lucide-react";
+import { Star, Plus, Sparkles } from "lucide-react";
 import { PremiumButtonProps } from "@/types/user.types";
 
 const SparkleEffect = () => {

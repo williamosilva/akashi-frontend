@@ -6,7 +6,7 @@ import { Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { jetbrainsMono, montserrat } from "@/styles/fonts";
-import { useMediaQuery } from "react-responsive";
+
 import { Tooltip, TooltipProvider } from "./Tooltip";
 const quotes = [
   {
@@ -57,10 +57,8 @@ export default function QuoteCard({ link }: { link: string | null }) {
   const [displayedQuote, setDisplayedQuote] = useState(quotes[0]);
   const [isTyping, setIsTyping] = useState(false);
   const [copied, setCopied] = useState(false);
-  const typingSpeedRef = useRef(50); // milliseconds per character
-  const isDesktopOrLaptop = useMediaQuery({
-    query: "(max-width: 1280px)",
-  });
+  const typingSpeedRef = useRef(50);
+
   const copyToClipboard = async () => {
     await navigator.clipboard.writeText(link || "");
     setCopied(true);
@@ -132,7 +130,7 @@ export default function QuoteCard({ link }: { link: string | null }) {
         clearInterval(eraseInterval);
       };
     }
-  }, [quote, displayedQuote]);
+  }, [quote, displayedQuote, quote.text, typedQuote]);
 
   // Initialize typing animation
   useEffect(() => {
@@ -194,14 +192,14 @@ export default function QuoteCard({ link }: { link: string | null }) {
             >
               <div className="inline-flex items-center">
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-500">
-                  "{typedQuote}"
+                  &ldquo;{typedQuote}&rdquo;
                 </span>
                 {isTyping && <TypingCursor />}
               </div>
             </blockquote>
             <motion.p
               key={displayedQuote.author}
-              layout // Habilita animações de layout automáticas
+              layout
               initial={{ opacity: 0, y: 10 }}
               animate={{
                 opacity: isTyping ? 0.5 : 1,
