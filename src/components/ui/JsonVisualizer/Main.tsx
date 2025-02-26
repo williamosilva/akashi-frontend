@@ -3,24 +3,16 @@
 import type React from "react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  ChevronRight,
-  ChevronDown,
-  Code,
-  FileJson,
-  BookOpen,
-} from "lucide-react";
 import { jetbrainsMono } from "@/styles/fonts";
 import { JsonVisualizerContent } from "./JsonVisualizerContent";
 import { TypeVisualizerContent } from "./TypeVisualizerContent";
 import UsageVisualizerContent from "./UsageVisualizerContent";
 import { Tabs } from "@/components/ui/vercel-tabs";
 
-// Tipos compartilhados
 export type ViewType = "json" | "types" | "usage";
 
 interface JsonVisualizerProps {
-  data: any;
+  data: unknown;
   initialView?: ViewType;
   apiUrl: string | null;
 }
