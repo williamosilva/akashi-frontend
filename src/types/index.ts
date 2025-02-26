@@ -2,6 +2,10 @@ import { ReactNode } from "react";
 
 export interface ModalObjectProps {
   isVisible: boolean;
+  projectId: string;
+  itemKey: string;
+  initialData?: any;
+  onClose: (refresh: boolean) => void;
 }
 
 export interface ApiIntegrationValue {

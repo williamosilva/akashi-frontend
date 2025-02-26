@@ -23,8 +23,10 @@ export type PartialProjectData = {
   dataInfo?: Record<string, any>;
 };
 
-export type ProjectDataInfo = Record<string, any>;
-
+export type ProjectDataInfo = {
+  name: string;
+  [key: string]: any;
+};
 export interface ProjectDataItem {
   objectId?: string;
   apiUrl?: string;
