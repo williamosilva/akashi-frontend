@@ -4,6 +4,7 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
 export const JsonVisualizerContent: React.FC<{ data: any }> = ({ data }) => {
+  console.log(data);
   if (typeof data !== "object" || data === null) {
     return <JsonValue value={data} />;
   }
@@ -11,7 +12,7 @@ export const JsonVisualizerContent: React.FC<{ data: any }> = ({ data }) => {
   return <TopLevelContent data={data} />;
 };
 
-const TopLevelContent: React.FC<{ data: object }> = ({ data }) => {
+const TopLevelContent: React.FC<{ data: Record<string, any> }> = ({ data }) => {
   const [isOpen, setIsOpen] = useState(true);
   const toggleOpen = () => setIsOpen(!isOpen);
   const objectName = Object.keys(data)[0];

@@ -22,7 +22,7 @@ export type ViewType = "json" | "types" | "usage";
 interface JsonVisualizerProps {
   data: any;
   initialView?: ViewType;
-  apiUrl: string;
+  apiUrl: string | null;
 }
 
 export const JsonVisualizer: React.FC<JsonVisualizerProps> = ({

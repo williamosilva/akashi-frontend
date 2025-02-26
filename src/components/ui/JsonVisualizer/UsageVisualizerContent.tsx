@@ -9,29 +9,43 @@ import { cn } from "@/lib/utils";
 type ProgrammingLanguage = "typescript" | "python" | "java";
 
 interface Props {
-  apiUrl: string;
+  apiUrl: string | null;
 }
 
-// Componente para um token de código individual
-const CodeToken = ({ type, children }) => {
+interface CodeTokenProps {
+  type: string;
+  children: string;
+}
+
+interface CodeLineProps {
+  line: string;
+  language: ProgrammingLanguage;
+}
+
+interface CodeBlockProps {
+  code: string;
+  language: ProgrammingLanguage;
+}
+
+const CodeToken = ({ type, children }: CodeTokenProps) => {
   const getTokenClass = () => {
     switch (type) {
       case "keyword":
-        return "text-emerald-300 "; // palavras-chave
+        return "text-emerald-300 ";
       case "function":
-        return "text-emerald-200"; // funções
+        return "text-emerald-200";
       case "string":
-        return "text-emerald-300 italic"; // strings
+        return "text-emerald-300 italic";
       case "comment":
-        return "text-emerald-200/70 italic"; // comentários
+        return "text-emerald-200/70 italic";
       case "type":
-        return "text-emerald-300 font-medium"; // tipos
+        return "text-emerald-300 font-medium";
       case "variable":
-        return "text-emerald-200 font-light"; // variáveis
+        return "text-emerald-200 font-light";
       case "constant":
-        return "text-emerald-300 font-medium"; // constantes
+        return "text-emerald-300 font-medium";
       default:
-        return "text-emerald-200/90"; // texto padrão
+        return "text-emerald-200/90";
     }
   };
 
@@ -93,13 +107,8 @@ const CopyButton = ({ textToCopy }: any) => {
   );
 };
 
-const CodeLine = ({ line, language }) => {
+const CodeLine = ({ line, language }: CodeLineProps) => {
   if (language === "typescript") {
-    // Tokenização para TypeScript
-    const tokens = [];
-    let index = 0;
-
-    // Array de padrões e seus tipos correspondentes
     const patterns = [
       {
         regex:
@@ -119,13 +128,11 @@ const CodeLine = ({ line, language }) => {
       },
     ];
 
-    // Dividir a linha em palavras para análise
     const words = line.split(/(\s+|[(){};,.])/);
 
     return (
       <div className="leading-relaxed break-words w-full">
         {words.map((word, idx) => {
-          // Verificar cada padrão
           for (const { regex, type } of patterns) {
             if (word.match(regex)) {
               return (
@@ -135,7 +142,7 @@ const CodeLine = ({ line, language }) => {
               );
             }
           }
-          // Se não corresponder a nenhum padrão, retornar o texto como está
+
           return (
             <span key={idx} className="text-emerald-200/90 break-words">
               {word}
@@ -145,7 +152,6 @@ const CodeLine = ({ line, language }) => {
       </div>
     );
   } else if (language === "python") {
-    // Tokenização para Python (abordagem similar ao TypeScript)
     const words = line.split(/(\s+|[(){};,.])/);
 
     return (
@@ -197,7 +203,6 @@ const CodeLine = ({ line, language }) => {
       </div>
     );
   } else if (language === "java") {
-    // Tokenização para Java (abordagem similar)
     const words = line.split(/(\s+|[(){};,.])/);
 
     return (
@@ -258,12 +263,10 @@ const CodeLine = ({ line, language }) => {
     );
   }
 
-  // Se nenhuma linguagem for reconhecida, retornar a linha como está
   return <div className="text-emerald-200">{line}</div>;
 };
 
-// Componente principal para syntax highlighting
-const CodeBlock = ({ code, language }) => {
+const CodeBlock = ({ code, language }: CodeBlockProps) => {
   const lines = code.split("\n");
 
   return (
@@ -413,7 +416,6 @@ public class ApiClient {
         </div>
       </div>
 
-      {/* Container de código com o syntax highlighter */}
       <div className="bg-zinc-800 p-6 rounded-lg w-full overflow-x-auto relative">
         <CopyButton textToCopy={codeExamples[activeLanguage]} />
         <CodeBlock

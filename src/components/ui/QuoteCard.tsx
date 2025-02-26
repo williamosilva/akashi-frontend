@@ -51,7 +51,7 @@ const quotes = [
   },
 ];
 
-export default function QuoteCard({ link }: { link: string }) {
+export default function QuoteCard({ link }: { link: string | null }) {
   const [quote, setQuote] = useState(quotes[0]);
   const [typedQuote, setTypedQuote] = useState("");
   const [displayedQuote, setDisplayedQuote] = useState(quotes[0]);
@@ -62,7 +62,7 @@ export default function QuoteCard({ link }: { link: string }) {
     query: "(max-width: 1280px)",
   });
   const copyToClipboard = async () => {
-    await navigator.clipboard.writeText(link);
+    await navigator.clipboard.writeText(link || "");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -225,7 +225,7 @@ export default function QuoteCard({ link }: { link: string }) {
           <div className="flex flex-row items-center gap-2 relative z-10 w-full max-w-3xl mx-auto px-0 sm:px-0">
             <input
               type="text"
-              value={link}
+              value={link || ""}
               readOnly
               className="flex-1 px-4 py-2 rounded-md bg-zinc-900 border border-emerald-500/20 text-zinc-300 text-xs sm:text-sm focus:outline-none focus:border-emerald-500/50 font-mono w-full"
             />

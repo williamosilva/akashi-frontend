@@ -49,7 +49,7 @@ export interface ApiItem {
   [key: string]: string | undefined;
 }
 
-export type SubscriptionPlan = "free" | "basic" | "premium";
+export type SubscriptionPlan = "free" | "basic" | "premium" | "admin";
 
 export interface ApiResponse {
   error?: string;
@@ -83,6 +83,7 @@ export interface ObjectPropertiesProps {
   onUpdate: (updatedData: Record<string, any>) => void;
   isApiEditable?: boolean;
 }
+
 export interface ObjectActionsProps {
   onSave: () => void;
   onDelete: () => void;
@@ -101,4 +102,16 @@ export interface ObjectHeaderProps {
   onNameChange?: (name: string) => void;
   empty?: boolean;
   isLoading?: boolean;
+}
+
+// Novo tipo para objetos dinâmicos com dois formatos
+export interface DynamicIntegrationObject {
+  [key: string]: SimplePropertyValue | ApiIntegrationObject;
+}
+
+// Interface para objetos de API com campos obrigatórios e dinâmicos
+export interface ApiIntegrationObject {
+  apiUrl: string;
+  JSONPath: string;
+  [key: string]: string; // Para campos dinâmicos como x-api-key
 }

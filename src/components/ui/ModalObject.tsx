@@ -8,11 +8,11 @@ import { ObjectActions } from "./Object-modal-content/ObjectActions";
 import { ProjectService } from "@/services/project.service";
 import type {
   ModalObjectProps,
-  ProjectDataItem,
+  DynamicIntegrationObject,
   SubscriptionPlan,
 } from "@/types";
 
-const DEFAULT_DATA: ProjectDataItem = {};
+const DEFAULT_DATA: DynamicIntegrationObject = {};
 
 type SortOrder = "none" | "asc" | "desc";
 
@@ -23,7 +23,8 @@ export default function ModalObject({
   initialData,
   onClose,
 }: ModalObjectProps) {
-  const [currentData, setCurrentData] = useState<ProjectDataItem>(DEFAULT_DATA);
+  const [currentData, setCurrentData] =
+    useState<DynamicIntegrationObject>(DEFAULT_DATA);
   const [userPlan] = useState<SubscriptionPlan>("premium");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,6 +32,7 @@ export default function ModalObject({
   const [objectId, setObjectId] = useState<string | null>(null);
   const [objectName, setObjectName] = useState<string>("New Object");
   const [sortOrder, setSortOrder] = useState<SortOrder>("none");
+  console.log("joseph", currentData);
 
   useEffect(() => {
     if (isVisible) {
@@ -93,7 +95,8 @@ export default function ModalObject({
         });
 
         // Criar um novo objeto ordenado
-        const sortedObj = {};
+
+        const sortedObj: Record<string, any> = {};
         sortedKeys.forEach((propKey) => {
           sortedObj[propKey] = result[key][propKey];
         });
