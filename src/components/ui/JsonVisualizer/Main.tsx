@@ -59,7 +59,7 @@ export const JsonVisualizer: React.FC<JsonVisualizerProps> = ({
       />
 
       <div
-        className={`bg-zinc-900 rounded-lg p-6 border border-emerald-500/30 overflow-hidden h-full text-sm ${jetbrainsMono.className} w-full`}
+        className={`bg-zinc-900 rounded-lg p-6 border border-emerald-500/30 overflow-y-auto h-full text-sm ${jetbrainsMono.className} w-full`}
       >
         <AnimatePresence mode="wait">
           {activeView === "json" && (

@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { jetbrainsMono } from "@/styles/fonts";
+import { Tooltip, TooltipProvider } from "../Tooltip";
+import { Button } from "../button";
+import { Check, Copy } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type ProgrammingLanguage = "typescript" | "python" | "java";
 
@@ -34,7 +38,61 @@ const CodeToken = ({ type, children }) => {
   return <span className={`${getTokenClass()} break-words`}>{children}</span>;
 };
 
-// Componente para renderizar uma linha de código com tokens
+const CopyButton = ({ textToCopy }: any) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000); // Reset após 2 segundos
+    } catch (err) {
+      console.error("Falha ao copiar: ", err);
+    }
+  };
+
+  return (
+    <TooltipProvider>
+      <Tooltip
+        content="Click to copy"
+        position="top"
+        className="absolute right-4 top-4"
+      >
+        <Button
+          variant="outline"
+          size="icon"
+          className="disabled:opacity-100 bg-[#1c1c1d9f]"
+          onClick={handleCopy}
+          aria-label={copied ? "Copied" : "Copy to clipboard"}
+          disabled={copied}
+        >
+          <div
+            className={cn(
+              "transition-all",
+              copied ? "scale-100 opacity-100" : "scale-0 opacity-0"
+            )}
+          >
+            <Check
+              className="stroke-emerald-500"
+              size={16}
+              strokeWidth={2}
+              aria-hidden="true"
+            />
+          </div>
+          <div
+            className={cn(
+              "absolute transition-all",
+              copied ? "scale-0 opacity-0" : "scale-100 opacity-100"
+            )}
+          >
+            <Copy size={16} strokeWidth={2} aria-hidden="true" />
+          </div>
+        </Button>
+      </Tooltip>
+    </TooltipProvider>
+  );
+};
+
 const CodeLine = ({ line, language }) => {
   if (language === "typescript") {
     // Tokenização para TypeScript
@@ -356,7 +414,8 @@ public class ApiClient {
       </div>
 
       {/* Container de código com o syntax highlighter */}
-      <div className="bg-zinc-800 p-6 rounded-lg w-full overflow-x-auto">
+      <div className="bg-zinc-800 p-6 rounded-lg w-full overflow-x-auto relative">
+        <CopyButton textToCopy={codeExamples[activeLanguage]} />
         <CodeBlock
           code={codeExamples[activeLanguage]}
           language={activeLanguage}

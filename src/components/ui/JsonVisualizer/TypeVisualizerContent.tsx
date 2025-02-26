@@ -1,7 +1,10 @@
 import React, { JSX, useState } from "react";
-import { Code } from "lucide-react";
+import { Check, Code, Copy } from "lucide-react";
 import Image from "next/image";
 import { jetbrainsMono } from "@/styles/fonts";
+import { Tooltip, TooltipProvider } from "../Tooltip";
+import { Button } from "../button";
+import { cn } from "@/lib/utils";
 
 type ProgrammingLanguage = "typescript" | "python" | "java";
 
@@ -351,6 +354,200 @@ export const TypeVisualizerContent: React.FC<{ data: any }> = ({ data }) => {
     );
   };
 
+  const CopyButton = ({ textToCopy }: { textToCopy: string }) => {
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = async () => {
+      try {
+        await navigator.clipboard.writeText(textToCopy);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch (err) {
+        console.error("Falha ao copiar: ", err);
+      }
+    };
+
+    return (
+      <TooltipProvider>
+        <Tooltip
+          content="Click to copy"
+          position="top"
+          className="absolute right-4 top-4"
+        >
+          <Button
+            variant="outline"
+            size="icon"
+            className="disabled:opacity-100 bg-[#1c1c1d9f]"
+            onClick={handleCopy}
+            aria-label={copied ? "Copied" : "Copy to clipboard"}
+            disabled={copied}
+          >
+            <div
+              className={cn(
+                "transition-all",
+                copied ? "scale-100 opacity-100" : "scale-0 opacity-0"
+              )}
+            >
+              <Check
+                className="stroke-emerald-500"
+                size={16}
+                strokeWidth={2}
+                aria-hidden="true"
+              />
+            </div>
+            <div
+              className={cn(
+                "absolute transition-all",
+                copied ? "scale-0 opacity-0" : "scale-100 opacity-100"
+              )}
+            >
+              <Copy size={16} strokeWidth={2} aria-hidden="true" />
+            </div>
+          </Button>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  };
+
+  const generateTypeScriptCode = (
+    data: any,
+    rootName: string = "Root",
+    indent: number = 0
+  ): string => {
+    let code = "";
+    const indentStr = "  ".repeat(indent);
+
+    if (typeof data !== "object" || data === null) {
+      return `${indentStr}${getTypeInfoTypeScript(data)}\n`;
+    }
+
+    if (Array.isArray(data)) {
+      const itemType = data.length > 0 ? getTypeInfoTypeScript(data[0]) : "any";
+      return `${indentStr}${itemType}[]\n`;
+    }
+
+    code += `${indentStr}export interface ${rootName} {\n`;
+    Object.entries(data).forEach(([key, value]) => {
+      const propName =
+        key.includes(" ") || key.includes("-") ? `"${key}"` : key;
+      let propType = getTypeInfoTypeScript(value);
+
+      if (
+        typeof value === "object" &&
+        value !== null &&
+        !Array.isArray(value)
+      ) {
+        const nestedName = generateInterfaceName(key);
+        code += generateTypeScriptCode(value, nestedName, indent);
+        propType = nestedName;
+      }
+
+      code += `${indentStr}  ${propName}: ${propType};\n`;
+    });
+    code += `${indentStr}}\n\n`;
+
+    return code;
+  };
+
+  const generatePythonCode = (
+    data: any,
+    className: string = "Root"
+  ): string => {
+    let code = "";
+    const indent = (level: number) => "    ".repeat(level);
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (
+        typeof value === "object" &&
+        value !== null &&
+        !Array.isArray(value)
+      ) {
+        const nestedName = toPythonClassName(key);
+        code += generatePythonCode(value, nestedName);
+      }
+    });
+
+    code += `class ${className}(TypedDict):\n`;
+    if (Object.entries(data).length === 0) {
+      code += indent(1) + "pass\n";
+    } else {
+      Object.entries(data).forEach(([key, value]) => {
+        const attrName = toPythonAttributeName(key);
+        let type = getTypeInfoPython(value);
+        if (typeof value === "object" && !Array.isArray(value)) {
+          type = toPythonClassName(key);
+        }
+        code += indent(1) + `${attrName}: ${type}\n`;
+      });
+    }
+    code += "\n";
+
+    if (className === "Root") {
+      code = "from typing import TypedDict\n\n" + code;
+    }
+
+    return code;
+  };
+
+  const generateJavaCode = (
+    data: any,
+    className: string = "RootModel",
+    indentLevel: number = 0
+  ): string => {
+    let code = "";
+    const indent = (level: number) => "    ".repeat(level);
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (
+        typeof value === "object" &&
+        value !== null &&
+        !Array.isArray(value)
+      ) {
+        const nestedName = generateInterfaceName(key);
+        code += generateJavaCode(value, nestedName, indentLevel + 1);
+      }
+    });
+
+    code += indent(indentLevel) + `public class ${className} {\n`;
+    Object.entries(data).forEach(([key, value]) => {
+      const fieldName = toJavaFieldName(key);
+      const type = getTypeInfoJava(value, key);
+      code += indent(indentLevel + 1) + `private ${type} ${fieldName};\n`;
+    });
+
+    Object.entries(data).forEach(([key, value]) => {
+      const fieldName = toJavaFieldName(key);
+      const type = getTypeInfoJava(value, key);
+      const CapName = fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
+
+      code += indent(indentLevel + 1) + `public ${type} get${CapName}() {\n`;
+      code += indent(indentLevel + 2) + `return this.${fieldName};\n`;
+      code += indent(indentLevel + 1) + "}\n";
+
+      code +=
+        indent(indentLevel + 1) +
+        `public void set${CapName}(${type} ${fieldName}) {\n`;
+      code += indent(indentLevel + 2) + `this.${fieldName} = ${fieldName};\n`;
+      code += indent(indentLevel + 1) + "}\n";
+    });
+
+    code += indent(indentLevel) + "}\n\n";
+    return code;
+  };
+
+  const codeToCopy = React.useMemo(() => {
+    switch (activeLanguage) {
+      case "typescript":
+        return generateTypeScriptCode(data);
+      case "python":
+        return generatePythonCode(data);
+      case "java":
+        return generateJavaCode(data);
+      default:
+        return "";
+    }
+  }, [activeLanguage, data]);
+
   return (
     <div className="mb-0">
       <div className="flex flex-wrap gap-3 pb-4">
@@ -420,8 +617,10 @@ export const TypeVisualizerContent: React.FC<{ data: any }> = ({ data }) => {
 
       <div className="mb-0">
         <div
-          className={`bg-zinc-800 rounded-lg p-6  overflow-auto h-full text-sm ${jetbrainsMono.className} w-full`}
+          className={`bg-zinc-800 rounded-lg p-6 overflow-auto h-full text-sm ${jetbrainsMono.className} w-full relative`}
         >
+          <CopyButton textToCopy={codeToCopy} />
+
           {activeLanguage === "typescript" && renderTypeScriptStructure(data)}
           {activeLanguage === "python" && (
             <div>
