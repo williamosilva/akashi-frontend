@@ -209,10 +209,19 @@ const Sidebar = ({
                         }}
                       >
                         <Avatar className="h-10 w-10 ring-2 ring-emerald-500/30 shadow-lg shadow-emerald-500/20">
-                          <AvatarImage src="/placeholder.svg" />
-                          <AvatarFallback className="bg-emerald-500/10 text-emerald-400">
-                            JD
-                          </AvatarFallback>
+                          {photo ? (
+                            <AvatarImage src={photo} />
+                          ) : (
+                            <AvatarFallback className="bg-emerald-500/10 text-emerald-400">
+                              {fullName &&
+                                fullName
+                                  .split(" ")
+                                  .map((word) => word[0])
+                                  .join("")
+                                  .substring(0, 2)
+                                  .toUpperCase()}
+                            </AvatarFallback>
+                          )}
                         </Avatar>
                         <AnimatePresence>
                           {(isExpanded || isMobile) && (
@@ -223,10 +232,10 @@ const Sidebar = ({
                               exit={{ opacity: 0, x: -20 }}
                             >
                               <h2 className="text-sm font-medium text-zinc-100">
-                                John Doe
+                                {fullName}
                               </h2>
                               <p className="text-xs text-emerald-400/80">
-                                john@example.com
+                                {email}
                               </p>
                             </motion.div>
                           )}
@@ -250,7 +259,7 @@ const Sidebar = ({
                     </div>
                     <div className="p-4">
                       <div className="relative">
-                        <Search className="absolute left-2 top-2.5 h-4 w-4 text-emerald-400/70" />
+                        {/* <Search className="absolute left-2 mr-4 top-2.5 h-4 w-4 text-emerald-400/70" /> */}
                         <Input
                           ref={inputRef}
                           value={searchQuery}
@@ -260,7 +269,7 @@ const Sidebar = ({
                             isExpanded || isMobile ? "Search projects..." : ""
                           }
                           className={cn(
-                            "pl-8",
+                            "pl-10",
                             !(isExpanded || isMobile) &&
                               "w-full px-0 pointer-events-none border-none"
                           )}
@@ -439,7 +448,7 @@ const Sidebar = ({
                   }}
                 >
                   <Avatar className="h-10 w-10 ring-2 ring-emerald-500/30 shadow-lg shadow-emerald-500/20">
-                    <AvatarImage src="/placeholder.svg" />
+                    {/* <AvatarImage src="/placeholder.svg" /> */}
                     {photo ? (
                       <AvatarImage src={photo} />
                     ) : (
@@ -465,9 +474,7 @@ const Sidebar = ({
                         <h2 className="text-sm font-medium text-zinc-100">
                           {fullName}
                         </h2>
-                        <p className="text-[0.6vw] text-emerald-400/80">
-                          {email}
-                        </p>
+                        <p className="text-xs text-emerald-400/80">{email}</p>
                       </motion.div>
                     )}
                   </AnimatePresence>{" "}
