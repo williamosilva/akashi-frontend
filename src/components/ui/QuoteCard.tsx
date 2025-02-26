@@ -8,7 +8,6 @@ import { cn } from "@/lib/utils";
 import { jetbrainsMono, montserrat } from "@/styles/fonts";
 import { useMediaQuery } from "react-responsive";
 import { Tooltip, TooltipProvider } from "./Tooltip";
-
 const quotes = [
   {
     text: "The only way to do great work is to love what you do.",
@@ -21,6 +20,34 @@ const quotes = [
   {
     text: "Believe you can and you're halfway there.",
     author: "Theodore Roosevelt",
+  },
+  {
+    text: "Act as if what you do makes a difference. It does.",
+    author: "William James",
+  },
+  {
+    text: "I have no idols. I admire work, dedication and competence.",
+    author: "Ayrton Senna",
+  },
+  {
+    text: "It always seems impossible until it's done.",
+    author: "Nelson Mandela",
+  },
+  {
+    text: "Keep your face always toward the sunshine, and shadows will fall behind you.",
+    author: "Walt Whitman",
+  },
+  {
+    text: "You are never too old to set another goal or to dream a new dream.",
+    author: "C.S. Lewis",
+  },
+  {
+    text: "Good things will come to those who know how to wait.",
+    author: "William Silva",
+  },
+  {
+    text: "Opportunities don't happen. You create them.",
+    author: "Chris Grosser",
   },
 ];
 
@@ -52,6 +79,26 @@ export default function QuoteCard({ link }: { link: string }) {
     }, 24000);
     return () => clearInterval(interval);
   }, [quote]);
+
+  const TypingCursor = () => {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{
+          opacity: [0, 1, 0],
+        }}
+        transition={{
+          repeat: Infinity,
+          duration: 0.8,
+          ease: "easeInOut",
+          times: [0, 0.5, 1],
+        }}
+        className="relative inline-block"
+      >
+        <div className="ml-[2px] w-[2px] bg-gradient-to-b from-emerald-400 to-emerald-500 h-6 rounded-full" />
+      </motion.div>
+    );
+  };
 
   // Handle typing animation when quote changes
   useEffect(() => {
@@ -109,13 +156,13 @@ export default function QuoteCard({ link }: { link: string }) {
   return (
     <div
       className={cn(
-        "w-auto h-full flex items-center justify-center bg-zinc-900 relative overflow-hidden",
+        "w-auto h-full flex items-center justify-center  relative overflow-hidden",
         montserrat.variable,
         jetbrainsMono.variable
       )}
     >
       {/* Original background */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 opacity-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(52,211,153,0.04),transparent_70%)]" />
         <div className="absolute inset-0 liquid-effect" />
         <div className="absolute inset-0 liquid-effect-secondary" />
@@ -130,7 +177,7 @@ export default function QuoteCard({ link }: { link: string }) {
           className="relative flex flex-col justify-between overflow-hidden backdrop-blur-sm bg-zinc-800/30 rounded-lg border border-emerald-500/20 md:p-4 sm:p-3 p-4 shadow-2xl h-full"
         >
           {/* Dynamic Galaxy background inside the card */}
-          <div className="absolute inset-0">
+          <div className="absolute inset-0 opacity-30">
             <div className="absolute inset-0 galaxy-effect" />
             <div className="absolute inset-0 galaxy-effect-secondary" />
             <div className="absolute inset-0 starfield starfield-small" />
@@ -145,18 +192,27 @@ export default function QuoteCard({ link }: { link: string }) {
                 montserrat.className
               )}
             >
-              <span className="flex">
+              <div className="inline-flex items-center">
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-500">
                   "{typedQuote}"
                 </span>
-                {/* {isTyping && <span className="typing-cursor">|</span>} */}
-              </span>
+                {isTyping && <TypingCursor />}
+              </div>
             </blockquote>
             <motion.p
               key={displayedQuote.author}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: isTyping ? 0.5 : 1 }}
-              transition={{ duration: 0.3 }}
+              layout // Habilita animações de layout automáticas
+              initial={{ opacity: 0, y: 10 }}
+              animate={{
+                opacity: isTyping ? 0.5 : 1,
+                y: 0,
+              }}
+              transition={{
+                type: "spring",
+                damping: 20,
+                stiffness: 200,
+                duration: 0.3,
+              }}
               className={cn(
                 "text-right text-zinc-400 lg:text-sm 2xl:text-base md:text-sm text-xs",
                 jetbrainsMono.className

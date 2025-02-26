@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+}
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -152,8 +157,6 @@ body {
     @apply bg-background text-foreground;
   }
 }
-
-
 
 @layer base {
   * {

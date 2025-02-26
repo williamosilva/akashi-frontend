@@ -222,10 +222,10 @@ export default function FormPage() {
                           >
                             Your objects
                           </motion.h2>
-                          <div className="flex space-x-4 md:w-auto w-full">
+                          <div className="flex space-x-2 md:w-auto w-full">
                             <motion.button
-                              className="px-3 md:py-1 py-3 rounded-md md:w-auto w-full bg-zinc-800 text-emerald-300 text-sm font-medium border border-emerald-500/20 hover:bg-zinc-700 transition-colors flex items-center"
-                              whileHover={{ scale: 1.05 }}
+                              className="px-3 md:py-1 py-3 rounded-3xl md:w-auto w-full bg-zinc-800 text-emerald-300 text-sm font-medium border border-emerald-500/20 hover:bg-zinc-700 transition-colors flex items-center"
+                              // whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
                               onClick={toggleSortOrder}
                             >
@@ -240,11 +240,11 @@ export default function FormPage() {
                             </motion.button>
                             <motion.button
                               onClick={() => setIsModalOpen(true)}
-                              className="px-3 md:py-1 py-3  rounded-md bg-emerald-500 text-zinc-900 text-sm font-medium md:w-auto w-full hover:bg-emerald-400 transition-colors flex items-center"
-                              whileHover={{ scale: 1.05 }}
+                              className="px-4 py-2 rounded-full bg-gradient-to-r from-emerald-600 to-emerald-500 text-white text-sm font-medium w-full md:w-auto hover:from-emerald-500 hover:to-emerald-400 transition-all duration-300 ease-in-out shadow-md hover:shadow-lg flex items-center justify-center"
+                              // whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
                             >
-                              <Plus className="mr-1" size={14} />
+                              <Plus className="mr-2" size={16} />
                               Add
                             </motion.button>
                           </div>
@@ -262,7 +262,7 @@ export default function FormPage() {
                               initial={{ opacity: 0, y: -200 }}
                               animate={{ opacity: 1, y: 0 }}
                             >
-                              <div className="grid xl:grid-cols-12 lg:grid-cols-6 md:grid-cols-5 sm:grid-cols-4 grid-cols-3 gap-4">
+                              <div className="grid xl:grid-cols-10 lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-4 grid-cols-3 gap-4">
                                 {(() => {
                                   let entries = Object.entries(
                                     projectData.dataInfo

@@ -25,7 +25,6 @@ interface JsonVisualizerProps {
   apiUrl: string;
 }
 
-// Componente principal que gerencia as tabs
 export const JsonVisualizer: React.FC<JsonVisualizerProps> = ({
   data,
   initialView = "json",
@@ -39,9 +38,19 @@ export const JsonVisualizer: React.FC<JsonVisualizerProps> = ({
     { id: "usage", label: "How to use" },
   ];
 
+  const springAnimation = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -20 },
+    transition: {
+      type: "spring",
+      stiffness: 300,
+      damping: 30,
+    },
+  };
+
   return (
     <div className="w-full h-full flex flex-col">
-      {/* Componente de Tabs */}
       <Tabs
         tabs={tabs}
         activeTab={activeView}
@@ -49,14 +58,26 @@ export const JsonVisualizer: React.FC<JsonVisualizerProps> = ({
         className="mb-[5px] ml-2"
       />
 
-      {/* Container principal com estilo comum */}
       <div
-        className={`bg-zinc-900 h-auto rounded-lg p-6 border border-emerald-500/30 overflow-auto h-full text-sm ${jetbrainsMono.className} w-full`}
+        className={`bg-zinc-900 rounded-lg p-6 border border-emerald-500/30 overflow-hidden h-full text-sm ${jetbrainsMono.className} w-full`}
       >
-        {/* Renderiza o componente adequado de acordo com a visualização ativa */}
-        {activeView === "json" && <JsonVisualizerContent data={data} />}
-        {activeView === "types" && <TypeVisualizerContent data={data} />}
-        {activeView === "usage" && <UsageVisualizerContent apiUrl={apiUrl} />}
+        <AnimatePresence mode="wait">
+          {activeView === "json" && (
+            <motion.div key="json" {...springAnimation}>
+              <JsonVisualizerContent data={data} />
+            </motion.div>
+          )}
+          {activeView === "types" && (
+            <motion.div key="types" {...springAnimation}>
+              <TypeVisualizerContent data={data} />
+            </motion.div>
+          )}
+          {activeView === "usage" && (
+            <motion.div key="usage" {...springAnimation}>
+              <UsageVisualizerContent apiUrl={apiUrl} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

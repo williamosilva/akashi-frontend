@@ -52,7 +52,7 @@ export function ObjectActions({
           isLoading
             ? "opacity-50 cursor-not-allowed"
             : "hover:from-emerald-600 hover:to-green-600",
-          !hasId ? "w-full flex-0 sm:w-[70%]" : "w-full flex-1 sm:w-auto"
+          !hasId ? "w-full flex-0 sm:w-[50%]" : "w-full flex-1 sm:w-auto"
         )}
       >
         {isLoading ? (
