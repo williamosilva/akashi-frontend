@@ -1,5 +1,5 @@
 import React, { JSX, useState } from "react";
-import { Check, Code, Copy } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 import Image from "next/image";
 import { jetbrainsMono } from "@/styles/fonts";
 import { Tooltip, TooltipProvider } from "../Tooltip";
@@ -8,12 +8,17 @@ import { cn } from "@/lib/utils";
 
 type ProgrammingLanguage = "typescript" | "python" | "java";
 
-export const TypeVisualizerContent: React.FC<{ data: any }> = ({ data }) => {
+// Define type for the data
+type DataObject = Record<string, unknown>;
+
+export const TypeVisualizerContent: React.FC<{ data: DataObject }> = ({
+  data,
+}) => {
   const [activeLanguage, setActiveLanguage] =
     useState<ProgrammingLanguage>("typescript");
 
   // Função para determinar o tipo em TypeScript
-  const getTypeInfoTypeScript = (value: any): string => {
+  const getTypeInfoTypeScript = (value: unknown): string => {
     if (value === null) return "null";
     if (Array.isArray(value)) {
       if (value.length === 0) return "any[]";
@@ -35,7 +40,7 @@ export const TypeVisualizerContent: React.FC<{ data: any }> = ({ data }) => {
       .join("");
   };
 
-  const getTypeInfoPython = (value: any): string => {
+  const getTypeInfoPython = (value: unknown): string => {
     if (value === null) return "None";
     if (Array.isArray(value)) {
       if (value.length === 0) return "list";
@@ -50,7 +55,7 @@ export const TypeVisualizerContent: React.FC<{ data: any }> = ({ data }) => {
   };
 
   const renderPythonStructure = (
-    data: any,
+    data: DataObject,
     className: string = "Root"
   ): JSX.Element[] => {
     const elements: JSX.Element[] = [];
@@ -62,7 +67,9 @@ export const TypeVisualizerContent: React.FC<{ data: any }> = ({ data }) => {
         !Array.isArray(value)
       ) {
         const nestedClassName = toPythonClassName(key);
-        elements.push(...renderPythonStructure(value, nestedClassName));
+        elements.push(
+          ...renderPythonStructure(value as DataObject, nestedClassName)
+        );
       }
     });
 
@@ -132,7 +139,7 @@ export const TypeVisualizerContent: React.FC<{ data: any }> = ({ data }) => {
 
   // Função corrigida para renderizar a estrutura TypeScript
   const renderTypeScriptStructure = (
-    data: any,
+    data: unknown,
     rootName: string = "Root",
     indent: number = 0
   ): JSX.Element => {
@@ -147,7 +154,8 @@ export const TypeVisualizerContent: React.FC<{ data: any }> = ({ data }) => {
       );
     }
 
-    const isArray = Array.isArray(data);
+    const dataObj = data as Record<string, unknown>;
+    const isArray = Array.isArray(data); // Used in the next if statement
 
     if (isArray) {
       const itemType = data.length > 0 ? getTypeInfoTypeScript(data[0]) : "any";
@@ -162,7 +170,7 @@ export const TypeVisualizerContent: React.FC<{ data: any }> = ({ data }) => {
     }
 
     // Para objetos, criar interfaces separadas
-    const entries = Object.entries(data);
+    const entries = Object.entries(dataObj);
 
     if (entries.length === 0) {
       return (
@@ -253,7 +261,7 @@ export const TypeVisualizerContent: React.FC<{ data: any }> = ({ data }) => {
   };
 
   // Função para determinar o tipo em Java (atualizada)
-  const getTypeInfoJava = (value: any, parentKey?: string): string => {
+  const getTypeInfoJava = (value: unknown, parentKey?: string): string => {
     if (value === null) return "Object";
     if (Array.isArray(value)) {
       if (value.length === 0) return "List<Object>";
@@ -272,7 +280,7 @@ export const TypeVisualizerContent: React.FC<{ data: any }> = ({ data }) => {
 
   // Função de renderização Java corrigida
   const renderJavaStructure = (
-    data: any,
+    data: unknown,
     className: string = "RootModel",
     indent: number = 0
   ): JSX.Element => {
@@ -280,8 +288,10 @@ export const TypeVisualizerContent: React.FC<{ data: any }> = ({ data }) => {
       return <div className="text-emerald-300">{getTypeInfoJava(data)}</div>;
     }
 
+    const dataObj = data as Record<string, unknown>;
+    // Using the isArray variable in conditional below
     const isArray = Array.isArray(data);
-    const fields = Object.entries(data);
+    const fields = Object.entries(dataObj);
     const classes: JSX.Element[] = [];
 
     // Primeiro processa os campos aninhados
@@ -410,7 +420,7 @@ export const TypeVisualizerContent: React.FC<{ data: any }> = ({ data }) => {
   };
 
   const generateTypeScriptCode = (
-    data: any,
+    data: unknown,
     rootName: string = "Root",
     indent: number = 0
   ): string => {
@@ -426,8 +436,9 @@ export const TypeVisualizerContent: React.FC<{ data: any }> = ({ data }) => {
       return `${indentStr}${itemType}[]\n`;
     }
 
+    const dataObj = data as Record<string, unknown>;
     code += `${indentStr}export interface ${rootName} {\n`;
-    Object.entries(data).forEach(([key, value]) => {
+    Object.entries(dataObj).forEach(([key, value]) => {
       const propName =
         key.includes(" ") || key.includes("-") ? `"${key}"` : key;
       let propType = getTypeInfoTypeScript(value);
@@ -450,7 +461,7 @@ export const TypeVisualizerContent: React.FC<{ data: any }> = ({ data }) => {
   };
 
   const generatePythonCode = (
-    data: any,
+    data: DataObject,
     className: string = "Root"
   ): string => {
     let code = "";
@@ -463,7 +474,7 @@ export const TypeVisualizerContent: React.FC<{ data: any }> = ({ data }) => {
         !Array.isArray(value)
       ) {
         const nestedName = toPythonClassName(key);
-        code += generatePythonCode(value, nestedName);
+        code += generatePythonCode(value as DataObject, nestedName);
       }
     });
 
@@ -490,48 +501,53 @@ export const TypeVisualizerContent: React.FC<{ data: any }> = ({ data }) => {
   };
 
   const generateJavaCode = (
-    data: any,
+    data: unknown,
     className: string = "RootModel",
     indentLevel: number = 0
   ): string => {
     let code = "";
     const indent = (level: number) => "    ".repeat(level);
 
-    Object.entries(data).forEach(([key, value]) => {
-      if (
-        typeof value === "object" &&
-        value !== null &&
-        !Array.isArray(value)
-      ) {
-        const nestedName = generateInterfaceName(key);
-        code += generateJavaCode(value, nestedName, indentLevel + 1);
-      }
-    });
+    if (typeof data === "object" && data !== null && !Array.isArray(data)) {
+      const dataObj = data as Record<string, unknown>;
 
-    code += indent(indentLevel) + `public class ${className} {\n`;
-    Object.entries(data).forEach(([key, value]) => {
-      const fieldName = toJavaFieldName(key);
-      const type = getTypeInfoJava(value, key);
-      code += indent(indentLevel + 1) + `private ${type} ${fieldName};\n`;
-    });
+      Object.entries(dataObj).forEach(([key, value]) => {
+        if (
+          typeof value === "object" &&
+          value !== null &&
+          !Array.isArray(value)
+        ) {
+          const nestedName = generateInterfaceName(key);
+          code += generateJavaCode(value, nestedName, indentLevel + 1);
+        }
+      });
 
-    Object.entries(data).forEach(([key, value]) => {
-      const fieldName = toJavaFieldName(key);
-      const type = getTypeInfoJava(value, key);
-      const CapName = fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
+      code += indent(indentLevel) + `public class ${className} {\n`;
+      Object.entries(dataObj).forEach(([key, value]) => {
+        const fieldName = toJavaFieldName(key);
+        const type = getTypeInfoJava(value, key);
+        code += indent(indentLevel + 1) + `private ${type} ${fieldName};\n`;
+      });
 
-      code += indent(indentLevel + 1) + `public ${type} get${CapName}() {\n`;
-      code += indent(indentLevel + 2) + `return this.${fieldName};\n`;
-      code += indent(indentLevel + 1) + "}\n";
+      Object.entries(dataObj).forEach(([key, value]) => {
+        const fieldName = toJavaFieldName(key);
+        const type = getTypeInfoJava(value, key);
+        const CapName = fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
 
-      code +=
-        indent(indentLevel + 1) +
-        `public void set${CapName}(${type} ${fieldName}) {\n`;
-      code += indent(indentLevel + 2) + `this.${fieldName} = ${fieldName};\n`;
-      code += indent(indentLevel + 1) + "}\n";
-    });
+        code += indent(indentLevel + 1) + `public ${type} get${CapName}() {\n`;
+        code += indent(indentLevel + 2) + `return this.${fieldName};\n`;
+        code += indent(indentLevel + 1) + "}\n";
 
-    code += indent(indentLevel) + "}\n\n";
+        code +=
+          indent(indentLevel + 1) +
+          `public void set${CapName}(${type} ${fieldName}) {\n`;
+        code += indent(indentLevel + 2) + `this.${fieldName} = ${fieldName};\n`;
+        code += indent(indentLevel + 1) + "}\n";
+      });
+
+      code += indent(indentLevel) + "}\n\n";
+    }
+
     return code;
   };
 

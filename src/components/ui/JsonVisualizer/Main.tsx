@@ -61,7 +61,7 @@ export const JsonVisualizer: React.FC<JsonVisualizerProps> = ({
           )}
           {activeView === "types" && (
             <motion.div key="types" {...springAnimation}>
-              <TypeVisualizerContent data={data} />
+              <TypeVisualizerContent data={data as Record<string, unknown>} />
             </motion.div>
           )}
           {activeView === "usage" && (
