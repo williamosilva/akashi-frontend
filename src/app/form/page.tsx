@@ -150,299 +150,310 @@ export default function FormPage() {
           {isLoading ? (
             <LoadingComponent />
           ) : (
-            <div
-              className={cn(
-                "min-h-screen w-full text-zinc-100",
-                montserrat.variable,
-                jetbrainsMono.variable
-              )}
-            >
-              <div className="container mx-auto px-4 pb-8 md:pt-8 pt-20 h-full flex flex-col lg:h-screen  ">
-                {selectedProjectId ? (
-                  <>
-                    <motion.div
-                      className="mb-8 pb-4 border-b border-emerald-500/30 flex justify-between items-center"
-                      initial={{ opacity: 0, y: -20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5 }}
-                    >
-                      <motion.h1
-                        className={cn(
-                          "text-4xl font-bold mb-2 text-start bg-clip-text text-transparent bg-gradient-to-r from-emerald-300 via-emerald-200 to-emerald-400",
-                          montserrat.className
-                        )}
-                      >
-                        {projectData?.name}
-                      </motion.h1>
-                      <TooltipProvider>
-                        <Tooltip content="Delete project" position="left">
-                          <button
-                            onClick={handleDeleteProject}
-                            className="p-2 rounded-full text-emerald-300 hover:text-emerald-400 hover:bg-emerald-400/10 transition-colors"
-                            aria-label="Logout"
-                          >
-                            <Trash className="h-5 w-5" />
-                          </button>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </motion.div>
-
-                    {error && (
-                      <motion.div
-                        className="bg-red-500/20 border border-red-500/30 rounded-md p-3 mb-6 text-red-200"
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                      >
-                        <p className={cn("text-sm", jetbrainsMono.className)}>
-                          {error}
-                        </p>
-                      </motion.div>
-                    )}
-                    {/* pinto */}
-                    {projectData?.dataInfo &&
-                    Object.keys(projectData.dataInfo).length > 0 ? (
+            <>
+              {selectedProjectId && (
+                <div
+                  className={cn(
+                    "min-h-screen w-full text-zinc-100",
+                    montserrat.variable,
+                    jetbrainsMono.variable
+                  )}
+                >
+                  <div className="container mx-auto px-4 pb-8 md:pt-8 pt-20 h-full flex flex-col lg:h-screen  ">
+                    {selectedProjectId ? (
                       <>
-                        {" "}
                         <motion.div
-                          className="flex justify-between items-start md:gap-0 gap-2 md:items-center mb-6 md:flex-row flex-col"
-                          initial={{ opacity: 0, y: -10 }}
+                          className="mb-8 pb-4 border-b border-emerald-500/30 flex justify-between items-center"
+                          initial={{ opacity: 0, y: -20 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.5, delay: 0.3 }}
+                          transition={{ duration: 0.5 }}
                         >
-                          <motion.h2
+                          <motion.h1
                             className={cn(
-                              "text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-500",
+                              "text-4xl font-bold mb-2 text-start bg-clip-text text-transparent bg-gradient-to-r from-emerald-300 via-emerald-200 to-emerald-400",
                               montserrat.className
                             )}
                           >
-                            Objects
-                          </motion.h2>
-                          <div className="flex space-x-4 md:w-auto w-full">
-                            <motion.button
-                              className="px-3 md:py-1 py-3 rounded-md md:w-auto w-full bg-zinc-800 text-emerald-300 text-sm font-medium border border-emerald-500/20 hover:bg-zinc-700 transition-colors flex items-center"
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                              onClick={toggleSortOrder}
-                            >
-                              <ArrowUpDown
-                                className={cn(
-                                  "mr-1 transform transition-transform",
-                                  sortOrder === "asc" && "rotate-180"
-                                )}
-                                size={14}
-                              />
-                              Sort {sortOrder === "asc" ? "A-Z" : "Z-A"}
-                            </motion.button>
-                            <motion.button
-                              onClick={() => setIsModalOpen(true)}
-                              className="px-3 md:py-1 py-3  rounded-md bg-emerald-500 text-zinc-900 text-sm font-medium md:w-auto w-full hover:bg-emerald-400 transition-colors flex items-center"
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                            >
-                              <Plus className="mr-1" size={14} />
-                              Add
-                            </motion.button>
-                          </div>
+                            {projectData?.name}
+                          </motion.h1>
+                          <TooltipProvider>
+                            <Tooltip content="Delete project" position="left">
+                              <button
+                                onClick={handleDeleteProject}
+                                className="p-2 rounded-full text-emerald-300 hover:text-emerald-400 hover:bg-emerald-400/10 transition-colors"
+                                aria-label="Logout"
+                              >
+                                <Trash className="h-5 w-5" />
+                              </button>
+                            </Tooltip>
+                          </TooltipProvider>
                         </motion.div>
-                        <div className="overflow-y-auto h-full flex-col justify-between flex gap-4">
-                          {/* Primeira div com altura dinâmica e scroll quando necessário */}
+
+                        {error && (
                           <motion.div
-                            className="flex-1 overflow-y-auto min-h-0 w-full"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: 0.5, delay: 0.4 }}
+                            className="bg-red-500/20 border border-red-500/30 rounded-md p-3 mb-6 text-red-200"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
                           >
-                            <motion.div
-                              className="w-full"
-                              initial={{ opacity: 0, y: -200 }}
-                              animate={{ opacity: 1, y: 0 }}
+                            <p
+                              className={cn("text-sm", jetbrainsMono.className)}
                             >
-                              <div className="grid xl:grid-cols-12 lg:grid-cols-6 md:grid-cols-5 sm:grid-cols-4 grid-cols-3 gap-4">
-                                {(() => {
-                                  let entries = Object.entries(
-                                    projectData.dataInfo
-                                  );
-
-                                  if (sortOrder !== "none") {
-                                    entries = entries.sort(
-                                      ([keyA, valueA], [keyB, valueB]) => {
-                                        const nameA =
-                                          valueA.akashiObjectName.toLowerCase();
-                                        const nameB =
-                                          valueB.akashiObjectName.toLowerCase();
-
-                                        return sortOrder === "asc"
-                                          ? nameA.localeCompare(nameB)
-                                          : nameB.localeCompare(nameA);
-                                      }
-                                    );
-                                  }
-
-                                  return entries.map(([key, value], index) => (
-                                    <motion.div
-                                      key={key}
-                                      className="w-full aspect-square bg-zinc-800/50 rounded-lg border border-emerald-500/20 hover:border-emerald-500/60 transition-all cursor-pointer hover:bg-zinc-700/50 group overflow-hidden"
-                                      initial={{ opacity: 0, scale: 0.9 }}
-                                      animate={{ opacity: 1, scale: 1 }}
-                                      transition={{
-                                        delay: index * 0.05,
-                                        duration: 0.2,
-                                      }}
-                                      onClick={() => {
-                                        const objectWithIdAsKey = {
-                                          [key]: value,
-                                        };
-                                        setSelectedObject({
-                                          key,
-                                          data: objectWithIdAsKey,
-                                        });
-                                      }}
-                                    >
-                                      <div className="h-full w-full p-2 flex flex-col items-center justify-center">
-                                        <motion.div
-                                          className="text-emerald-400 mb-2"
-                                          initial={{ scale: 1 }}
-                                          whileHover={{ scale: 1.1 }}
-                                          transition={{
-                                            type: "spring",
-                                            stiffness: 400,
-                                            damping: 10,
-                                          }}
-                                        >
-                                          <Folder size={24} />
-                                        </motion.div>
-                                        <h3 className="text-emerald-300 font-medium text-center text-xs group-hover:text-emerald-200 transition-colors line-clamp-2">
-                                          {value.akashiObjectName}
-                                        </h3>
-                                      </div>
-                                    </motion.div>
-                                  ));
-                                })()}
+                              {error}
+                            </p>
+                          </motion.div>
+                        )}
+                        {/* pinto */}
+                        {projectData?.dataInfo &&
+                        Object.keys(projectData.dataInfo).length > 0 ? (
+                          <>
+                            {" "}
+                            <motion.div
+                              className="flex justify-between items-start md:gap-0 gap-2 md:items-center mb-6 md:flex-row flex-col"
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.5, delay: 0.3 }}
+                            >
+                              <motion.h2
+                                className={cn(
+                                  "text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-500",
+                                  montserrat.className
+                                )}
+                              >
+                                Objects
+                              </motion.h2>
+                              <div className="flex space-x-4 md:w-auto w-full">
+                                <motion.button
+                                  className="px-3 md:py-1 py-3 rounded-md md:w-auto w-full bg-zinc-800 text-emerald-300 text-sm font-medium border border-emerald-500/20 hover:bg-zinc-700 transition-colors flex items-center"
+                                  whileHover={{ scale: 1.05 }}
+                                  whileTap={{ scale: 0.95 }}
+                                  onClick={toggleSortOrder}
+                                >
+                                  <ArrowUpDown
+                                    className={cn(
+                                      "mr-1 transform transition-transform",
+                                      sortOrder === "asc" && "rotate-180"
+                                    )}
+                                    size={14}
+                                  />
+                                  Sort {sortOrder === "asc" ? "A-Z" : "Z-A"}
+                                </motion.button>
+                                <motion.button
+                                  onClick={() => setIsModalOpen(true)}
+                                  className="px-3 md:py-1 py-3  rounded-md bg-emerald-500 text-zinc-900 text-sm font-medium md:w-auto w-full hover:bg-emerald-400 transition-colors flex items-center"
+                                  whileHover={{ scale: 1.05 }}
+                                  whileTap={{ scale: 0.95 }}
+                                >
+                                  <Plus className="mr-1" size={14} />
+                                  Add
+                                </motion.button>
                               </div>
                             </motion.div>
-                          </motion.div>
+                            <div className="overflow-y-auto h-full flex-col justify-between flex gap-4">
+                              {/* Primeira div com altura dinâmica e scroll quando necessário */}
+                              <motion.div
+                                className="flex-1 overflow-y-auto min-h-0 w-full"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.5, delay: 0.4 }}
+                              >
+                                <motion.div
+                                  className="w-full"
+                                  initial={{ opacity: 0, y: -200 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                >
+                                  <div className="grid xl:grid-cols-12 lg:grid-cols-6 md:grid-cols-5 sm:grid-cols-4 grid-cols-3 gap-4">
+                                    {(() => {
+                                      let entries = Object.entries(
+                                        projectData.dataInfo
+                                      );
 
-                          {/* Segunda div com altura fixa */}
-                          {/* <div className="flex lg:h-[40%] h-[60%] w-full gap-4 lg:flex-row flex-col shrink-0 items-end">
+                                      if (sortOrder !== "none") {
+                                        entries = entries.sort(
+                                          ([keyA, valueA], [keyB, valueB]) => {
+                                            const nameA =
+                                              valueA.akashiObjectName.toLowerCase();
+                                            const nameB =
+                                              valueB.akashiObjectName.toLowerCase();
+
+                                            return sortOrder === "asc"
+                                              ? nameA.localeCompare(nameB)
+                                              : nameB.localeCompare(nameA);
+                                          }
+                                        );
+                                      }
+
+                                      return entries.map(
+                                        ([key, value], index) => (
+                                          <motion.div
+                                            key={key}
+                                            className="w-full aspect-square bg-zinc-800/50 rounded-lg border border-emerald-500/20 hover:border-emerald-500/60 transition-all cursor-pointer hover:bg-zinc-700/50 group overflow-hidden"
+                                            initial={{ opacity: 0, scale: 0.9 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            transition={{
+                                              delay: index * 0.05,
+                                              duration: 0.2,
+                                            }}
+                                            onClick={() => {
+                                              const objectWithIdAsKey = {
+                                                [key]: value,
+                                              };
+                                              setSelectedObject({
+                                                key,
+                                                data: objectWithIdAsKey,
+                                              });
+                                            }}
+                                          >
+                                            <div className="h-full w-full p-2 flex flex-col items-center justify-center">
+                                              <motion.div
+                                                className="text-emerald-400 mb-2"
+                                                initial={{ scale: 1 }}
+                                                whileHover={{ scale: 1.1 }}
+                                                transition={{
+                                                  type: "spring",
+                                                  stiffness: 400,
+                                                  damping: 10,
+                                                }}
+                                              >
+                                                <Folder size={24} />
+                                              </motion.div>
+                                              <h3 className="text-emerald-300 font-medium text-center text-xs group-hover:text-emerald-200 transition-colors line-clamp-2">
+                                                {value.akashiObjectName}
+                                              </h3>
+                                            </div>
+                                          </motion.div>
+                                        )
+                                      );
+                                    })()}
+                                  </div>
+                                </motion.div>
+                              </motion.div>
+
+                              {/* Segunda div com altura fixa */}
+                              {/* <div className="flex lg:h-[40%] h-[60%] w-full gap-4 lg:flex-row flex-col shrink-0 items-end">
                         <JsonVisualizer data={dataJson} apiUrl={apiUrl} />
 
                         <QuoteCard
                           link={`https://akashi-backend.onrender.com/projects/${selectedProjectId}/formatted`}
                         />
                       </div> */}
-                          <div className="flex lg:h-[40%] h-[60%] w-full gap-4 lg:flex-row flex-col shrink-0 items-end min-h-0 min-w-0">
-                            {/* Filho 1 - 80% - metade do gap (0.5rem = 8px) */}
-                            <div className="lg:flex-[0_0_calc(65%-0.5rem)] lg:h-full h-full w-full min-h-0 min-w-0">
-                              <JsonVisualizer data={dataJson} apiUrl={apiUrl} />
-                            </div>
+                              <div className="flex lg:h-[40%] h-[60%] w-full gap-4 lg:flex-row flex-col shrink-0 items-end min-h-0 min-w-0">
+                                {/* Filho 1 - 80% - metade do gap (0.5rem = 8px) */}
+                                <div className="lg:flex-[0_0_calc(65%-0.5rem)] lg:h-full h-full w-full min-h-0 min-w-0">
+                                  <JsonVisualizer
+                                    data={dataJson}
+                                    apiUrl={apiUrl}
+                                  />
+                                </div>
 
-                            {/* Filho 2 - 20% - metade do gap */}
-                            <div className="lg:flex-[0_0_calc(35%-0.5rem)] lg:h-[88%] h-full w-full min-h-0 min-w-0">
-                              <QuoteCard link={apiUrl} />
+                                {/* Filho 2 - 20% - metade do gap */}
+                                <div className="lg:flex-[0_0_calc(35%-0.5rem)] lg:h-[88%] h-full w-full min-h-0 min-w-0">
+                                  <QuoteCard link={apiUrl} />
+                                </div>
+                              </div>
                             </div>
+                          </>
+                        ) : (
+                          <div className="flex flex-col items-center justify-center h-full ">
+                            <motion.div
+                              className="text-center"
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.5 }}
+                            >
+                              <motion.div
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                transition={{
+                                  type: "spring",
+                                  stiffness: 260,
+                                  damping: 20,
+                                  delay: 0.1,
+                                }}
+                              >
+                                <Box className="mx-auto h-12 w-12 text-emerald-300" />
+                              </motion.div>
+                              <motion.h3
+                                className={cn(
+                                  "text-sm font-semibold mt-2 text-emerald-300",
+                                  montserrat.className
+                                )}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.2 }}
+                              >
+                                No Objects Created
+                              </motion.h3>
+                              <motion.p
+                                className="mt-1 text-sm text-zinc-400"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.3 }}
+                              >
+                                Get started by creating a new object.
+                              </motion.p>
+                              <motion.div
+                                className="mt-6"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.4 }}
+                              >
+                                <motion.button
+                                  className="inline-flex items-center px-4  py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-green-400 to-green-600 focus:outline-none  shadow-md"
+                                  onClick={() => setIsModalOpen(true)}
+                                  whileHover={{
+                                    scale: 1.05,
+                                    // boxShadow: "0 5px 15px rgba(0, 0, 0, 0.1)",
+                                  }}
+                                  whileTap={{ scale: 0.95 }}
+                                >
+                                  <Box className="mr-2 h-4 w-4" />
+                                  Create Object
+                                </motion.button>
+                              </motion.div>
+                            </motion.div>
                           </div>
-                        </div>
+                        )}
                       </>
                     ) : (
-                      <div className="flex flex-col items-center justify-center h-full ">
+                      <motion.div
+                        className="flex-grow flex items-center justify-center"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5, delay: 0.4 }}
+                      >
                         <motion.div
                           className="text-center"
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.5 }}
+                          initial={{ y: 20, opacity: 0 }}
+                          animate={{ y: 0, opacity: 1 }}
+                          transition={{ duration: 0.5, delay: 0.6 }}
                         >
-                          <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{
-                              type: "spring",
-                              stiffness: 260,
-                              damping: 20,
-                              delay: 0.1,
-                            }}
-                          >
-                            <Box className="mx-auto h-12 w-12 text-emerald-300" />
-                          </motion.div>
-                          <motion.h3
+                          <FileText
+                            className="mx-auto text-emerald-400 mb-4"
+                            size={48}
+                          />
+                          <h3
                             className={cn(
-                              "text-sm font-semibold mt-2 text-emerald-300",
+                              "text-2xl font-semibold mb-2 text-emerald-300",
                               montserrat.className
                             )}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.2 }}
                           >
-                            No Objects Created
-                          </motion.h3>
-                          <motion.p
-                            className="mt-1 text-sm text-zinc-400"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.3 }}
+                            No Project Selected
+                          </h3>
+                          <p
+                            className={cn(
+                              "text-zinc-400 mb-4",
+                              jetbrainsMono.className
+                            )}
                           >
-                            Get started by creating a new object.
-                          </motion.p>
-                          <motion.div
-                            className="mt-6"
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.4 }}
-                          >
-                            <motion.button
-                              className="inline-flex items-center px-4  py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-green-400 to-green-600 focus:outline-none  shadow-md"
-                              onClick={() => setIsModalOpen(true)}
-                              whileHover={{
-                                scale: 1.05,
-                                // boxShadow: "0 5px 15px rgba(0, 0, 0, 0.1)",
-                              }}
-                              whileTap={{ scale: 0.95 }}
-                            >
-                              <Box className="mr-2 h-4 w-4" />
-                              Create Object
-                            </motion.button>
-                          </motion.div>
+                            Select an existing project or create a new one
+                          </p>
                         </motion.div>
-                      </div>
+                      </motion.div>
                     )}
-                  </>
-                ) : (
-                  <motion.div
-                    className="flex-grow flex items-center justify-center"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5, delay: 0.4 }}
-                  >
-                    <motion.div
-                      className="text-center"
-                      initial={{ y: 20, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{ duration: 0.5, delay: 0.6 }}
-                    >
-                      <FileText
-                        className="mx-auto text-emerald-400 mb-4"
-                        size={48}
-                      />
-                      <h3
-                        className={cn(
-                          "text-2xl font-semibold mb-2 text-emerald-300",
-                          montserrat.className
-                        )}
-                      >
-                        No Project Selected
-                      </h3>
-                      <p
-                        className={cn(
-                          "text-zinc-400 mb-4",
-                          jetbrainsMono.className
-                        )}
-                      >
-                        Select an existing project or create a new one
-                      </p>
-                    </motion.div>
-                  </motion.div>
-                )}
-              </div>
-            </div>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </AuroraBackground>
       </div>
