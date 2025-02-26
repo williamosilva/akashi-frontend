@@ -14,6 +14,8 @@ interface ProjectContextType {
   selectedProjectId: string | null;
   setSelectedProjectId: (id: string) => void;
   triggerReload: () => void;
+  openCreateProjectModal: boolean;
+  setOpenCreateProjectModal: (open: boolean) => void;
 }
 
 interface UserContextType {
@@ -42,6 +44,8 @@ export const ProjectContext = createContext<ProjectContextType>({
   selectedProjectId: null,
   setSelectedProjectId: () => {},
   triggerReload: () => {},
+  openCreateProjectModal: false,
+  setOpenCreateProjectModal: () => {},
 });
 
 export const useUser = () => useContext(UserContext);
@@ -64,6 +68,7 @@ export default function ConditionalLayout({
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
     null
   );
+  const [openCreateProjectModal, setOpenCreateProjectModal] = useState(false);
   const [sidebarSignal, setSidebarSignal] = useState(0);
 
   const isFormRoute = pathname.startsWith("/form");
@@ -153,8 +158,16 @@ export default function ConditionalLayout({
 
   const projectContextValue = {
     selectedProjectId,
-    setSelectedProjectId,
-    triggerReload: () => setSidebarSignal((prev) => prev + 1),
+    setSelectedProjectId: (id: string) => {
+      setSelectedProjectId(id);
+    },
+    triggerReload: () => {
+      setSidebarSignal((prev) => prev + 1);
+    },
+    openCreateProjectModal,
+    setOpenCreateProjectModal: (open: boolean) => {
+      setOpenCreateProjectModal(open);
+    },
   };
 
   return (
@@ -166,6 +179,8 @@ export default function ConditionalLayout({
               selectedProjectId={selectedProjectId}
               onProjectSelect={setSelectedProjectId}
               signal={sidebarSignal}
+              openCreateProjectModal={openCreateProjectModal}
+              setOpenCreateProjectModal={setOpenCreateProjectModal}
             />
             <main className="flex-1 overflow-auto">{children}</main>
           </div>

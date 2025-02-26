@@ -29,12 +29,16 @@ const Sidebar = ({
   selectedProjectId: propSelectedProjectId,
   onProjectSelect,
   signal,
+  openCreateProjectModal,
+  setOpenCreateProjectModal,
 }: {
   className?: string;
   isCreateDisabled?: boolean;
   selectedProjectId?: string | null;
   onProjectSelect?: (projectId: string) => void;
   signal?: number;
+  openCreateProjectModal: boolean;
+  setOpenCreateProjectModal: (open: boolean) => void;
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
@@ -304,7 +308,7 @@ const Sidebar = ({
                         onClick={
                           isCreateDisabled
                             ? undefined
-                            : () => setIsCreateModalOpen(true)
+                            : () => setOpenCreateProjectModal(true)
                         }
                         whileTap={
                           isCreateDisabled ? undefined : { scale: 0.98 }
@@ -537,7 +541,7 @@ const Sidebar = ({
                   onClick={
                     isCreateDisabled
                       ? undefined
-                      : () => setIsCreateModalOpen(true)
+                      : () => setOpenCreateProjectModal(true)
                   }
                   whileTap={isCreateDisabled ? undefined : { scale: 0.98 }}
                   disabled={isCreateDisabled}
@@ -653,8 +657,8 @@ const Sidebar = ({
         </motion.div>
       )}
       <CreateProjectModal
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
+        isOpen={openCreateProjectModal}
+        onClose={() => setOpenCreateProjectModal(false)}
         onCreateProject={handleCreateProject}
       />
     </>

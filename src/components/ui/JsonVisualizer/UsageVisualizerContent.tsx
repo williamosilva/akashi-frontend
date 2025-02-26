@@ -31,7 +31,7 @@ const CodeToken = ({ type, children }) => {
     }
   };
 
-  return <span className={getTokenClass()}>{children}</span>;
+  return <span className={`${getTokenClass()} break-words`}>{children}</span>;
 };
 
 // Componente para renderizar uma linha de código com tokens
@@ -65,7 +65,7 @@ const CodeLine = ({ line, language }) => {
     const words = line.split(/(\s+|[(){};,.])/);
 
     return (
-      <div className="leading-relaxed">
+      <div className="leading-relaxed break-words w-full">
         {words.map((word, idx) => {
           // Verificar cada padrão
           for (const { regex, type } of patterns) {
@@ -79,7 +79,7 @@ const CodeLine = ({ line, language }) => {
           }
           // Se não corresponder a nenhum padrão, retornar o texto como está
           return (
-            <span key={idx} className="text-emerald-200/90">
+            <span key={idx} className="text-emerald-200/90 break-words">
               {word}
             </span>
           );
@@ -131,7 +131,7 @@ const CodeLine = ({ line, language }) => {
             );
           }
           return (
-            <span key={idx} className="text-emerald-200/90">
+            <span key={idx} className="text-emerald-200/90 break-words">
               {word}
             </span>
           );
@@ -191,7 +191,7 @@ const CodeLine = ({ line, language }) => {
             );
           }
           return (
-            <span key={idx} className="text-emerald-200/90">
+            <span key={idx} className="text-emerald-200/90 break-words">
               {word}
             </span>
           );
@@ -210,7 +210,7 @@ const CodeBlock = ({ code, language }) => {
 
   return (
     <pre
-      className={`text-emerald-200 whitespace-pre-wrap  ${jetbrainsMono.className}`}
+      className={`text-emerald-200 whitespace-pre-wrap max-w-full ${jetbrainsMono.className}`}
     >
       {lines.map((line, idx) => (
         <CodeLine key={idx} line={line} language={language} />
@@ -356,7 +356,7 @@ public class ApiClient {
       </div>
 
       {/* Container de código com o syntax highlighter */}
-      <div className="bg-zinc-800 p-6 rounded-lg">
+      <div className="bg-zinc-800 p-6 rounded-lg w-full overflow-x-auto">
         <CodeBlock
           code={codeExamples[activeLanguage]}
           language={activeLanguage}

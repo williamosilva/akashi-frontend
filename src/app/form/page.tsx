@@ -39,8 +39,13 @@ export default function FormPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [apiUrl, setApiUrl] = useState<string | null>(null);
   // const router = useRouter();
-  const { selectedProjectId, triggerReload, setSelectedProjectId } =
-    useProject();
+  const {
+    selectedProjectId,
+    triggerReload,
+    setSelectedProjectId,
+    openCreateProjectModal,
+    setOpenCreateProjectModal,
+  } = useProject();
 
   const [sortOrder, setSortOrder] = useState("none");
 
@@ -459,7 +464,7 @@ export default function FormPage() {
                     >
                       <motion.button
                         className="inline-flex items-center px-4  py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-green-400 to-green-600 focus:outline-none  shadow-md"
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={() => setOpenCreateProjectModal(true)}
                         whileHover={{
                           scale: 1.05,
                           // boxShadow: "0 5px 15px rgba(0, 0, 0, 0.1)",
