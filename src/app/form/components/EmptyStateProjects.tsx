@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Box, FileText } from "lucide-react";
+import { FileText } from "lucide-react";
 import { montserrat } from "@/styles/fonts";
 import { cn } from "@/lib/utils";
 

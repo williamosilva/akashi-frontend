@@ -9,13 +9,20 @@ import { JsonVisualizer } from "@/components/ui/JsonVisualizer/Main";
 import QuoteCard from "@/components/ui/QuoteCard";
 import { cn } from "@/lib/utils";
 
+// Importe o tipo FormattedProject
+import { FormattedProject } from "@/types/project.types"; // Ajuste o caminho de importação conforme necessário
+
+// Atualização dos tipos para resolver os problemas de ESLint e tipagem
 interface MainContentProps {
   projectData: PartialProjectData;
   sortOrder: "asc" | "desc" | "none";
   toggleSortOrder: () => void;
   setIsModalOpen: (isOpen: boolean) => void;
-  setSelectedObject: (object: { key: string; data: any }) => void;
-  dataJson: any;
+  setSelectedObject: (object: {
+    key: string;
+    data: Record<string, unknown>;
+  }) => void;
+  dataJson: FormattedProject | null; // Permitindo null como valor válido
   apiUrl: string | null;
 }
 
