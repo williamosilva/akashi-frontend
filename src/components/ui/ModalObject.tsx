@@ -37,7 +37,6 @@ export default function ModalObject({
   useEffect(() => {
     if (isVisible) {
       setError(null);
-      // Reseta a ordenação para "none" quando o modal é aberto
       setSortOrder("none");
 
       if (initialData) {
@@ -45,14 +44,31 @@ export default function ModalObject({
         if (keys.length > 0) {
           const id = keys[0];
           const objectData = initialData[id];
-          const { akashiObjectName, ...restData } = objectData;
 
-          setObjectId(id);
-          setCurrentData(restData);
-          setCurrentKey(itemKey || id);
-          setObjectName(akashiObjectName || itemKey || id);
+          // Verificação de tipo segura
+          if (
+            typeof objectData === "object" &&
+            objectData !== null &&
+            "akashiObjectName" in objectData
+          ) {
+            const { akashiObjectName, ...restData } = objectData as {
+              akashiObjectName: string;
+              [key: string]: unknown;
+            };
+
+            setObjectId(id);
+            setCurrentData(restData as DynamicIntegrationObject);
+            setCurrentKey(itemKey || id);
+            setObjectName(akashiObjectName || itemKey || id);
+          } else {
+            // Tratar caso de dados inválidos
+            setCurrentData(initialData as DynamicIntegrationObject);
+            setCurrentKey(itemKey || "");
+            setObjectId(null);
+            setObjectName(itemKey || "New Object");
+          }
         } else {
-          setCurrentData(initialData);
+          setCurrentData(initialData as DynamicIntegrationObject);
           setCurrentKey(itemKey || "");
           setObjectId(null);
           setObjectName(itemKey || "New Object");
