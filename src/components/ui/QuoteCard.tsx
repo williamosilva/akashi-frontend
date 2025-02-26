@@ -127,7 +127,7 @@ export default function QuoteCard({ link }: { link: string }) {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative flex flex-col justify-between overflow-hidden backdrop-blur-sm bg-zinc-800/30 rounded-lg border border-emerald-500/20 md:p-4 sm:p-3 p-6 shadow-2xl h-full"
+          className="relative flex flex-col justify-between overflow-hidden backdrop-blur-sm bg-zinc-800/30 rounded-lg border border-emerald-500/20 md:p-4 sm:p-3 p-4 shadow-2xl h-full"
         >
           {/* Dynamic Galaxy background inside the card */}
           <div className="absolute inset-0">
@@ -166,7 +166,7 @@ export default function QuoteCard({ link }: { link: string }) {
             </motion.p>
           </div>
 
-          <div className="flex flex-row items-center gap-4 relative z-10 w-full max-w-3xl mx-auto px-0 sm:px-0">
+          <div className="flex flex-row items-center gap-2 relative z-10 w-full max-w-3xl mx-auto px-0 sm:px-0">
             <input
               type="text"
               value={link}
