@@ -94,8 +94,12 @@ export default function MainContent({
 
                 if (sortOrder !== "none") {
                   entries = entries.sort(([, valueA], [, valueB]) => {
-                    const nameA = valueA.akashiObjectName.toLowerCase();
-                    const nameB = valueB.akashiObjectName.toLowerCase();
+                    const nameA = (
+                      valueA as { akashiObjectName: string }
+                    ).akashiObjectName.toLowerCase();
+                    const nameB = (
+                      valueB as { akashiObjectName: string }
+                    ).akashiObjectName.toLowerCase();
 
                     return sortOrder === "asc"
                       ? nameA.localeCompare(nameB)
@@ -142,7 +146,10 @@ export default function MainContent({
                           <Folder size={24} />
                         </motion.div>
                         <h3 className="text-emerald-300 font-medium text-center text-xs group-hover:text-emerald-200 transition-colors line-clamp-2 select-none">
-                          {value.akashiObjectName}
+                          {
+                            (value as { akashiObjectName: string })
+                              .akashiObjectName
+                          }
                         </h3>
                       </div>
                     </MagicCard>
