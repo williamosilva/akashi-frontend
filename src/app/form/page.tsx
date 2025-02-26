@@ -5,73 +5,50 @@ import { AuroraBackground } from "@/components/ui/Aurora-background";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { montserrat, jetbrainsMono } from "@/styles/fonts";
-import {
-  ArrowUpDown,
-  Plus,
-  LogOut,
-  FolderPlus,
-  FileText,
-  Trash,
-  Folder,
-  Box,
-} from "lucide-react";
-import { JsonVisualizer } from "@/components/ui/JsonVisualizer/Main";
-import { AuthService } from "@/services/auth.service";
-import { useRouter } from "next/navigation";
 import { useProject } from "@/components/ui/ConditionalLayout";
 import { ProjectService } from "@/services/project.service";
-import { Project, PartialProjectData } from "@/types/project.types";
+import { PartialProjectData, FormattedProject } from "@/types/project.types";
 import ModalObject from "@/components/ui/ModalObject";
-// import JsonVisualizer from "@/components/ui/JsonVisualizer";
-import QuoteCard from "@/components/ui/QuoteCard";
-import { Tooltip, TooltipProvider } from "@/components/ui/Tooltip";
 import LoadingComponent from "@/components/ui/LoadingComponent";
-import { Button } from "@/components/ui/button";
-import { MagicCard } from "@/components/ui/MagicCard";
 import Header from "./components/Header";
 import MainContent from "./components/MainContent";
 import EmptyStateObjects from "./components/EmptyStateObjects";
 import EmptyStateProjects from "./components/EmptyStateProjects";
 
 export default function FormPage() {
-  const [selectedProject, setSelectedProject] = useState<string | null>(null);
+  const [, setSelectedProject] = useState<string | null>(null);
   const [projectData, setProjectData] = useState<PartialProjectData | null>(
     null
   );
+  const [dataJson, setDataJson] = useState<FormattedProject | null>(null);
 
-  const [dataJson, setDataJson] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [apiUrl, setApiUrl] = useState<string>("");
+  const [apiUrl, setApiUrl] = useState<string | null>("");
 
-  // const router = useRouter();
   const {
     selectedProjectId,
     triggerReload,
     setSelectedProjectId,
-    openCreateProjectModal,
     setOpenCreateProjectModal,
   } = useProject();
 
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "none">("none");
 
-  // Função para alternar a ordem
   const toggleSortOrder = () => {
     if (sortOrder === "none" || sortOrder === "desc") {
       setSortOrder("asc");
     } else {
-      // quando está em "asc"
       setSortOrder("desc");
     }
   };
-  // Estado para controle do modal
+
   const [selectedObject, setSelectedObject] = useState<{
     key: string;
     data: any;
   } | null>(null);
 
-  // Fetch project data whenever selectedProjectId changes
   useEffect(() => {
     async function fetchProjectData() {
       if (!selectedProjectId) {
@@ -85,14 +62,10 @@ export default function FormPage() {
 
       try {
         const projectService = ProjectService.getInstance();
-
-        // Primeira requisição - obter informações detalhadas do projeto
         const project = await projectService.getProjectDataInfo(
           selectedProjectId
         );
         setProjectData(project);
-
-        // Segunda requisição - obter projeto formatado em JSON
         const jsonProject = await projectService.getFormattedProject(
           selectedProjectId
         );
@@ -115,23 +88,28 @@ export default function FormPage() {
   }, [selectedProjectId]);
 
   function handleDeleteProject() {
-    ProjectService.getInstance()
-      .deleteProject(selectedProjectId)
-      .then(() => {
-        setSelectedProject(null);
-        triggerReload();
-        setSelectedProjectId(null);
-      })
-      .catch((err) => {
-        console.error("Error deleting project:", err);
-        setError("Failed to delete project");
-      });
+    if (selectedProjectId) {
+      ProjectService.getInstance()
+        .deleteProject(selectedProjectId)
+        .then(() => {
+          setSelectedProject(null);
+          triggerReload();
+          setSelectedProjectId(null);
+        })
+        .catch((err) => {
+          console.error("Error deleting project:", err);
+          setError("Failed to delete project");
+        });
+    } else {
+      console.error("No project selected.");
+      setError("No project selected.");
+    }
   }
+
   const handleRefreshData = async () => {
     if (selectedProjectId) {
       try {
         setIsLoading(true);
-        console.log("bateu aquiii");
         const projectService = ProjectService.getInstance();
         const project = await projectService.getProjectDataInfo(
           selectedProjectId
@@ -215,7 +193,6 @@ export default function FormPage() {
         </AuroraBackground>
       </div>
 
-      {/* Modal para adicionar/editar objetos */}
       <ModalObject
         isVisible={isModalOpen || !!selectedObject}
         projectId={selectedProjectId || ""}

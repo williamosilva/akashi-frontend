@@ -6,7 +6,7 @@ import { PartialProjectData } from "@/types/project.types";
 import { Trash } from "lucide-react";
 
 interface HeaderProps {
-  projectData: PartialProjectData;
+  projectData: PartialProjectData | null;
   handleDeleteProject: () => void;
 }
 

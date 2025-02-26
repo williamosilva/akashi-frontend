@@ -16,7 +16,7 @@ interface MainContentProps {
   setIsModalOpen: (isOpen: boolean) => void;
   setSelectedObject: (object: { key: string; data: any }) => void;
   dataJson: any;
-  apiUrl: string;
+  apiUrl: string | null;
 }
 
 export default function MainContent({

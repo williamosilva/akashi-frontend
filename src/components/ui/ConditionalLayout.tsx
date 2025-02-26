@@ -12,7 +12,7 @@ const VALID_ROUTES = ["/", "/form", "/success"];
 
 interface ProjectContextType {
   selectedProjectId: string | null;
-  setSelectedProjectId: (id: string) => void;
+  setSelectedProjectId: (id: string | null) => void;
   triggerReload: () => void;
   openCreateProjectModal: boolean;
   setOpenCreateProjectModal: (open: boolean) => void;
@@ -158,7 +158,7 @@ export default function ConditionalLayout({
 
   const projectContextValue = {
     selectedProjectId,
-    setSelectedProjectId: (id: string) => {
+    setSelectedProjectId: (id: string | null) => {
       setSelectedProjectId(id);
     },
     triggerReload: () => {
