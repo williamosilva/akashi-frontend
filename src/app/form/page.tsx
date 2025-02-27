@@ -15,8 +15,19 @@ import MainContent from "./components/MainContent";
 import EmptyStateObjects from "./components/EmptyStateObjects";
 import EmptyStateProjects from "./components/EmptyStateProjects";
 import { SucessPaid } from "./components/sucess-paid/SucessPaid";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function FormPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Store URL parameters
+  const [urlParams, setUrlParams] = useState({
+    email: "",
+    plan: "",
+  });
+
+  // Rest of your existing state
   const [, setSelectedProject] = useState<string | null>(null);
   const [projectData, setProjectData] = useState<PartialProjectData | null>(
     null
@@ -26,6 +37,7 @@ export default function FormPage() {
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [apiUrl, setApiUrl] = useState<string | null>("");
+  const [showPaidModal, setShowPaidModal] = useState(false);
   const {
     selectedProjectId,
     triggerReload,
@@ -44,6 +56,27 @@ export default function FormPage() {
     key: string;
     data: Record<string, unknown>;
   } | null>(null);
+
+  // Effect to capture URL parameters and then clear them
+  useEffect(() => {
+    // Get parameters from URL
+    const email = searchParams.get("email");
+    const plan = searchParams.get("plan");
+
+    // If parameters exist, store them and clean the URL
+    if (email || plan) {
+      setUrlParams({
+        email: email || "",
+        plan: plan || "",
+      });
+
+      setShowPaidModal(true);
+
+      // Clean the URL without triggering a refresh
+      window.history.replaceState({}, "", "/form");
+    }
+  }, [searchParams]);
+
   useEffect(() => {
     async function fetchProjectData() {
       if (!selectedProjectId) {
@@ -200,7 +233,13 @@ export default function FormPage() {
           if (refresh) handleRefreshData();
         }}
       />
-      <SucessPaid />
+
+      {/* Pass URL parameters to SucessPaid component */}
+      <SucessPaid
+        email={urlParams.email}
+        plan={urlParams.plan}
+        hasParams={showPaidModal}
+      />
     </main>
   );
 }

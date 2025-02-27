@@ -8,7 +8,8 @@ import { fadeUpVariants } from "@/animations/variation";
 import { useHook } from "../ui/ConditionalLayout";
 
 export default function AkashiHero() {
-  const { setOpenAuthModal } = useHook();
+  const { setOpenAuthModal, setTargetSection } = useHook();
+
   return (
     <div
       className={cn(
@@ -93,7 +94,10 @@ export default function AkashiHero() {
             >
               Get Started
             </button>
-            <button className="px-6 sm:w-1/2  md:w-auto w-[80%] py-3 rounded-lg bg-zinc-800 text-emerald-300 border border-emerald-500/20 hover:bg-zinc-700 transition-colors font-montserrat">
+            <button
+              onClick={() => setTargetSection("vscode")}
+              className="px-6 sm:w-1/2  md:w-auto w-[80%] py-3 rounded-lg bg-zinc-800 text-emerald-300 border border-emerald-500/20 hover:bg-zinc-700 transition-colors font-montserrat"
+            >
               View Documentation
             </button>
           </motion.div>

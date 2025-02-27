@@ -101,12 +101,11 @@ const PlanCard = ({
 
 export default function PriceSection() {
   const [mounted, setMounted] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [currentPlan, setCurrentPlan] = useState("Free");
   const paymentService = PaymentService.getInstance();
-  const router = useRouter();
   const { setOpenAuthModal } = useHook();
-  // Obtendo o usuário do context
+
   const { email } = useContext(UserContext);
 
   const verifySubscription = async () => {
@@ -161,61 +160,61 @@ export default function PriceSection() {
     } catch (error) {
       console.error("Error creating checkout session:", error);
       alert(
-        "Não foi possível iniciar o processo de pagamento. Tente novamente mais tarde."
+        "The payment process could not be started. Please try again later."
       );
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Verificar se há um token de sucesso na URL (redirecionamento após pagamento)
-  const checkSuccessToken = async () => {
-    try {
-      console.log("caiu no checkSucessToken");
-      const pathParts = window.location.pathname.split("/");
-      const successTokenIndex = pathParts.indexOf("success");
+  // // Verificar se há um token de sucesso na URL (redirecionamento após pagamento)
+  // const checkSuccessToken = async () => {
+  //   try {
+  //     console.log("caiu no checkSucessToken");
+  //     const pathParts = window.location.pathname.split("/");
+  //     const successTokenIndex = pathParts.indexOf("success");
 
-      if (
-        successTokenIndex !== -1 &&
-        pathParts.length > successTokenIndex + 1
-      ) {
-        const successToken = pathParts[successTokenIndex + 1];
+  //     if (
+  //       successTokenIndex !== -1 &&
+  //       pathParts.length > successTokenIndex + 1
+  //     ) {
+  //       const successToken = pathParts[successTokenIndex + 1];
 
-        if (successToken) {
-          setIsLoading(true);
-          console.log("fez a req do checkSucessToken");
-          // Verificar o token de sessão
-          const verificationResult = await paymentService.verifySessionToken(
-            successToken
-          );
+  //       if (successToken) {
+  //         setIsLoading(true);
+  //         console.log("fez a req do checkSucessToken");
+  //         // Verificar o token de sessão
+  //         const verificationResult = await paymentService.verifySessionToken(
+  //           successToken
+  //         );
 
-          if (verificationResult.valid) {
-            // Atualizar o plano atual
-            await verifySubscription();
+  //         if (verificationResult.valid) {
+  //           // Atualizar o plano atual
+  //           await verifySubscription();
 
-            // Limpar o token da URL redirecionando para a página de preços
-            router.push("/pricing");
+  //           // Limpar o token da URL redirecionando para a página de preços
+  //           router.push("/pricing");
 
-            // Mostrar mensagem de sucesso
-            alert("Assinatura confirmada com sucesso!");
-          }
-        }
-      }
-    } catch (error) {
-      console.error("Error verifying session token:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //           // Mostrar mensagem de sucesso
+  //           alert("Assinatura confirmada com sucesso!");
+  //         }
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error verifying session token:", error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    setMounted(true);
+  // useEffect(() => {
+  //   setMounted(true);
 
-    // Verificar se existe um token na URL (após redirecionamento de pagamento)
-    if (typeof window !== "undefined") {
-      checkSuccessToken();
-    }
-  }, []);
+  //   // Verificar se existe um token na URL (após redirecionamento de pagamento)
+  //   if (typeof window !== "undefined") {
+  //     checkSuccessToken();
+  //   }
+  // }, []);
 
   useEffect(() => {
     // Verificar a assinatura atual do usuário quando o usuário muda
@@ -224,9 +223,9 @@ export default function PriceSection() {
     }
   }, [mounted, email]);
 
-  if (!mounted) {
-    return null;
-  }
+  // if (!mounted) {
+  //   return null;
+  // }
 
   return (
     <div className="min-h-screen w-full py-24 ">

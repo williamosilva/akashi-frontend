@@ -25,6 +25,7 @@
     "react-force-graph-2d": "^1.25.2",
     "react-responsive": "^10.0.0",
     "react-scroll": "^1.9.3",
+    "resend": "^4.1.2",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^11.0.5"
