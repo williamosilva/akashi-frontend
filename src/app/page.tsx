@@ -7,7 +7,7 @@ import DynamicVSCodeSection from "@/components/sections/Dynamic-vscode-section";
 import Background from "@/components/ui/Background";
 import Footer from "@/components/ui/Footer";
 import PriceSection from "@/components/sections/Price";
-import { useHook } from "@/components/ui/ConditionalLayout";
+import { useHook, useUser } from "@/components/ui/ConditionalLayout";
 import { useEffect } from "react";
 
 export default function Home() {

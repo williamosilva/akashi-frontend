@@ -62,6 +62,28 @@ export class PaymentService extends ApiService {
       message?: string;
       email?: string;
       planType?: "basic" | "premium";
+    }>(`/payments/verify-token`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        token,
+      }),
+    });
+  }
+
+  public async verifyToken(token: string): Promise<{
+    valid: boolean;
+    message?: string;
+    email?: string;
+    planType?: "basic" | "premium";
+  }> {
+    return this.request<{
+      valid: boolean;
+      message?: string;
+      email?: string;
+      planType?: "basic" | "premium";
     }>(`/payments/verify-subscription/${token}`, {
       method: "GET",
       headers: {

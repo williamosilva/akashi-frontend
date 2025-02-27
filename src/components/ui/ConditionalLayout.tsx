@@ -88,7 +88,9 @@ export default function ConditionalLayout({
 
   const isFormRoute = pathname.startsWith("/form");
   const isHome = pathname === "/";
-  const isValidRoute = VALID_ROUTES.includes(pathname);
+  const isSuccessCallbackRoute = pathname.match(/^\/success\/[^\/]+$/);
+  const isValidRoute =
+    VALID_ROUTES.includes(pathname) || isSuccessCallbackRoute;
 
   useEffect(() => {
     console.log("targetSection", targetSection);
@@ -99,20 +101,18 @@ export default function ConditionalLayout({
       console.log("caiu aqui");
       try {
         const accessToken = AuthService.getAccessToken();
-
         const refreshToken = AuthService.getRefreshToken();
-
         if (!accessToken || !refreshToken) {
           router.push("/");
           return;
         }
-
         const validToken = await authService.validateToken(accessToken);
         console.log("Token válido:", validToken);
         const newAccessToken = accessToken;
 
         const userData = await authService.getMe(newAccessToken);
         console.log("userData", userData);
+        console.log("caiu aqui2");
         setUserId(userData.id);
         setEmail(userData.email);
         setFullName(userData.fullName);
@@ -122,6 +122,7 @@ export default function ConditionalLayout({
         handleLogout();
       } finally {
         setIsValidating(false);
+        console.log("caiu aqui3");
       }
     };
 
@@ -136,6 +137,10 @@ export default function ConditionalLayout({
 
     validateAndLoadUser();
   }, [pathname, router, authService, isHome, isValidRoute]);
+
+  useEffect(() => {
+    console.log("emaiul dentro do laoyut", email);
+  }, [email]);
 
   if (isValidating) {
     return (

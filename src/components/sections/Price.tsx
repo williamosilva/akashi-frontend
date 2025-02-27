@@ -171,7 +171,7 @@ export default function PriceSection() {
   // Verificar se há um token de sucesso na URL (redirecionamento após pagamento)
   const checkSuccessToken = async () => {
     try {
-      // Obter o token da URL
+      console.log("caiu no checkSucessToken");
       const pathParts = window.location.pathname.split("/");
       const successTokenIndex = pathParts.indexOf("success");
 
@@ -183,7 +183,7 @@ export default function PriceSection() {
 
         if (successToken) {
           setIsLoading(true);
-
+          console.log("fez a req do checkSucessToken");
           // Verificar o token de sessão
           const verificationResult = await paymentService.verifySessionToken(
             successToken
