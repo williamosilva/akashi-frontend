@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import Navbar from "@/components/ui/Navbar";
 import Sidebar from "@/components/ui/Sidebar";
 import type React from "react";
@@ -28,6 +28,12 @@ interface UserContextType {
   photo: string | null;
   setPhoto: (photo: string | null) => void;
 }
+interface hookContext {
+  openAuthModal: boolean;
+  setOpenAuthModal: (open: boolean) => void;
+  targetSection: string | null;
+  setTargetSection: (section: string) => void;
+}
 
 export const UserContext = createContext<UserContextType>({
   userId: "",
@@ -48,8 +54,16 @@ export const ProjectContext = createContext<ProjectContextType>({
   setOpenCreateProjectModal: () => {},
 });
 
+export const HookContext = createContext<hookContext>({
+  openAuthModal: false,
+  setOpenAuthModal: () => {},
+  targetSection: null,
+  setTargetSection: () => {},
+});
+
 export const useUser = () => useContext(UserContext);
 export const useProject = () => useContext(ProjectContext);
+export const useHook = () => useContext(HookContext);
 
 export default function ConditionalLayout({
   children,
@@ -60,7 +74,7 @@ export default function ConditionalLayout({
   const pathname = usePathname();
   const [isValidating, setIsValidating] = useState(true);
   const authService = AuthService.getInstance();
-
+  const [openAuthModal, setOpenAuthModal] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [photo, setPhoto] = useState<string | null>(null);
   const [fullName, setFullName] = useState<string | null>(null);
@@ -68,6 +82,7 @@ export default function ConditionalLayout({
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
     null
   );
+  const [targetSection, setTargetSection] = useState<string | null>(null);
   const [openCreateProjectModal, setOpenCreateProjectModal] = useState(false);
   const [sidebarSignal, setSidebarSignal] = useState(0);
 
@@ -76,14 +91,20 @@ export default function ConditionalLayout({
   const isValidRoute = VALID_ROUTES.includes(pathname);
 
   useEffect(() => {
+    console.log("targetSection", targetSection);
+  }, [targetSection]);
+
+  useEffect(() => {
     const validateAndLoadUser = async () => {
       console.log("caiu aqui");
       try {
         const accessToken = AuthService.getAccessToken();
+
         const refreshToken = AuthService.getRefreshToken();
 
         if (!accessToken || !refreshToken) {
-          throw new Error("Autenticação necessária");
+          router.push("/");
+          return;
         }
 
         const validToken = await authService.validateToken(accessToken);
@@ -153,27 +174,39 @@ export default function ConditionalLayout({
     },
   };
 
+  const hookContextValue = {
+    openAuthModal,
+    setOpenAuthModal,
+    targetSection,
+    setTargetSection,
+  };
+
   return (
-    <UserContext.Provider value={userContextValue}>
-      <ProjectContext.Provider value={projectContextValue}>
-        {isFormRoute ? (
-          <div className="flex h-auto lg:h-screen">
-            <Sidebar
-              selectedProjectId={selectedProjectId}
-              onProjectSelect={setSelectedProjectId}
-              signal={sidebarSignal}
-              openCreateProjectModal={openCreateProjectModal}
-              setOpenCreateProjectModal={setOpenCreateProjectModal}
-            />
-            <main className="flex-1 overflow-auto">{children}</main>
-          </div>
-        ) : (
-          <div className="flex flex-col min-h-screen">
-            <Navbar />
-            <main className="flex-1">{children}</main>
-          </div>
-        )}
-      </ProjectContext.Provider>
-    </UserContext.Provider>
+    <HookContext.Provider value={hookContextValue}>
+      <UserContext.Provider value={userContextValue}>
+        <ProjectContext.Provider value={projectContextValue}>
+          {isFormRoute ? (
+            <div className="flex h-auto lg:h-screen">
+              <Sidebar
+                selectedProjectId={selectedProjectId}
+                onProjectSelect={setSelectedProjectId}
+                signal={sidebarSignal}
+                openCreateProjectModal={openCreateProjectModal}
+                setOpenCreateProjectModal={setOpenCreateProjectModal}
+              />
+              <main className="flex-1 overflow-auto">{children}</main>
+            </div>
+          ) : (
+            <div className="flex flex-col min-h-screen">
+              <Navbar
+                openAuthModal={openAuthModal}
+                setOpenAuthModal={setOpenAuthModal}
+              />
+              <main className="flex-1">{children}</main>
+            </div>
+          )}
+        </ProjectContext.Provider>
+      </UserContext.Provider>
+    </HookContext.Provider>
   );
 }

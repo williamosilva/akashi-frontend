@@ -20,11 +20,6 @@ export class ProjectService extends ApiService {
     return ProjectService.instance;
   }
 
-  private getUserIdFromStorage(): string | null {
-    if (typeof window === "undefined") return null;
-    return localStorage.getItem("userId");
-  }
-
   // Busca projetos de um usuário
   public async getProjectsByUser(userId: string): Promise<Project[]> {
     return this.request<Project[]>(`/projects/user/${userId}`);

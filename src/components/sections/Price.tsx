@@ -4,15 +4,20 @@ import { cn } from "@/lib/utils";
 import { Check, X } from "lucide-react";
 import { plans } from "@/data";
 import { jetbrainsMono, montserrat } from "@/styles/fonts";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { PaymentService } from "@/services/payment.service";
+import { useHook, UserContext } from "@/components/ui/ConditionalLayout";
+import { useRouter } from "next/navigation";
 
 const PlanCard = ({
   plan,
   isCurrentPlan,
+  isLoading,
   onChoosePlan,
 }: {
   plan: (typeof plans)[0];
   isCurrentPlan: boolean;
+  isLoading: boolean;
   onChoosePlan: () => void;
 }) => {
   const isPremium = plan.name === "Premium";
@@ -77,14 +82,16 @@ const PlanCard = ({
         ) : (
           <button
             onClick={onChoosePlan}
+            disabled={isLoading}
             className={cn(
               "w-full px-6 py-3 mt-auto rounded-lg font-semibold transition-colors",
               isPremium
                 ? "bg-teal-500 hover:bg-teal-600 text-white"
-                : "bg-emerald-500 hover:bg-emerald-600 text-white"
+                : "bg-emerald-500 hover:bg-emerald-600 text-white",
+              isLoading && "opacity-70 cursor-not-allowed"
             )}
           >
-            Choose Plan
+            {isLoading ? "Loading..." : "Choose Plan"}
           </button>
         )}
       </div>
@@ -94,11 +101,128 @@ const PlanCard = ({
 
 export default function PriceSection() {
   const [mounted, setMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [currentPlan, setCurrentPlan] = useState("Free");
+  const paymentService = PaymentService.getInstance();
+  const router = useRouter();
+  const { setOpenAuthModal } = useHook();
+  // Obtendo o usuário do context
+  const { email } = useContext(UserContext);
+
+  const verifySubscription = async () => {
+    try {
+      setIsLoading(true);
+
+      if (!email) {
+        setCurrentPlan("Free");
+        return;
+      }
+      console.log("email", email);
+
+      // Verificar a assinatura usando o email do usuário
+      const response = await paymentService.verifySubscription(email);
+
+      // A resposta segue o formato do backend: { hasActiveSubscription: boolean, subscription: { plan: 'basic' | 'premium' } | null }
+      if (response.hasActiveSubscription && response.subscription) {
+        setCurrentPlan(
+          response.subscription.plan === "premium" ? "Premium" : "Basic"
+        );
+      } else {
+        setCurrentPlan("Free");
+      }
+    } catch (error) {
+      console.error("Error verifying subscription:", error);
+      setCurrentPlan("Free");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Função para iniciar o processo de checkout
+  const handleChoosePlan = async (planType: "basic" | "premium") => {
+    try {
+      setIsLoading(true);
+
+      if (!email) {
+        // Redirecionar para login se não houver usuário
+        setOpenAuthModal(true);
+        return;
+      }
+      console.log("email", email);
+      console.log("planType", planType);
+      // Criar uma sessão de checkout
+      const { checkoutUrl } = await paymentService.createCheckoutSession(
+        email,
+        planType
+      );
+
+      // Redirecionar para a URL de checkout do Stripe
+      window.location.href = checkoutUrl;
+    } catch (error) {
+      console.error("Error creating checkout session:", error);
+      alert(
+        "Não foi possível iniciar o processo de pagamento. Tente novamente mais tarde."
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Verificar se há um token de sucesso na URL (redirecionamento após pagamento)
+  const checkSuccessToken = async () => {
+    try {
+      // Obter o token da URL
+      const pathParts = window.location.pathname.split("/");
+      const successTokenIndex = pathParts.indexOf("success");
+
+      if (
+        successTokenIndex !== -1 &&
+        pathParts.length > successTokenIndex + 1
+      ) {
+        const successToken = pathParts[successTokenIndex + 1];
+
+        if (successToken) {
+          setIsLoading(true);
+
+          // Verificar o token de sessão
+          const verificationResult = await paymentService.verifySessionToken(
+            successToken
+          );
+
+          if (verificationResult.valid) {
+            // Atualizar o plano atual
+            await verifySubscription();
+
+            // Limpar o token da URL redirecionando para a página de preços
+            router.push("/pricing");
+
+            // Mostrar mensagem de sucesso
+            alert("Assinatura confirmada com sucesso!");
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error verifying session token:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     setMounted(true);
+
+    // Verificar se existe um token na URL (após redirecionamento de pagamento)
+    if (typeof window !== "undefined") {
+      checkSuccessToken();
+    }
   }, []);
+
+  useEffect(() => {
+    // Verificar a assinatura atual do usuário quando o usuário muda
+    if (mounted && email) {
+      verifySubscription();
+    }
+  }, [mounted, email]);
 
   if (!mounted) {
     return null;
@@ -122,6 +246,14 @@ export default function PriceSection() {
             Select the perfect plan to power your projects and transform your
             workflow.
           </p>
+          {isLoading && (
+            <p className="mt-4 text-zinc-400">Verificando seu plano atual...</p>
+          )}
+          {!isLoading && currentPlan !== "Free" && (
+            <p className="mt-4 text-teal-400 font-semibold">
+              Você está atualmente no plano {currentPlan}
+            </p>
+          )}
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -130,7 +262,17 @@ export default function PriceSection() {
               key={plan.name}
               plan={plan}
               isCurrentPlan={currentPlan === plan.name}
-              onChoosePlan={() => setCurrentPlan(plan.name)}
+              isLoading={isLoading}
+              onChoosePlan={() => {
+                if (plan.name === "Basic") {
+                  handleChoosePlan("basic");
+                } else if (plan.name === "Premium") {
+                  handleChoosePlan("premium");
+                } else {
+                  // Para o plano Free, não faz nada ou mostra mensagem
+                  setCurrentPlan("Free");
+                }
+              }}
             />
           ))}
         </div>

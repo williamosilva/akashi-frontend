@@ -8,10 +8,13 @@ import { useEffect, useState } from "react";
 import { Github, Linkedin, Globe } from "lucide-react";
 import { fadeInUpVariants } from "@/animations/variation";
 import { jetbrainsMono } from "@/styles/fonts";
+import { useHook, useUser } from "@/components/ui/ConditionalLayout";
+import { AuthService } from "@/services/auth.service";
+import { useRouter } from "next/navigation";
 
 export default function Footer() {
   const [gradientOpacity, setGradientOpacity] = useState(0.15);
-
+  const authService = AuthService.getInstance();
   useEffect(() => {
     const pulseInterval = setInterval(() => {
       setGradientOpacity((prev) => (prev === 0.15 ? 0.2 : 0.15));
@@ -19,6 +22,38 @@ export default function Footer() {
 
     return () => clearInterval(pulseInterval);
   }, []);
+
+  const { userId, setUserId, setFullName, setPhoto, setEmail } = useUser();
+
+  const handleLogout = () => {
+    setUserId(null);
+    setFullName(null);
+    setPhoto(null);
+    setEmail(null);
+    AuthService.clearAuthData();
+    router.push("/");
+  };
+
+  const { setTargetSection } = useHook();
+  const router = useRouter();
+  const handleGetStartedClick = async () => {
+    try {
+      const accessToken = AuthService.getAccessToken();
+
+      if (accessToken) {
+        const validToken = await authService.validateToken(accessToken || "");
+        console.log("Token válido:", validToken);
+        router.push("/form");
+        return;
+      }
+
+      console.log("Usuario nao logado");
+      setTargetSection("hero");
+    } catch (error) {
+      console.error("Erro de autenticação:", error);
+      handleLogout();
+    }
+  };
 
   return (
     <motion.footer
@@ -83,6 +118,7 @@ export default function Footer() {
               animationIterationCount: "infinite",
               animationDirection: "alternate",
             }}
+            onClick={handleGetStartedClick}
             whileHover={{
               scale: 1.05,
               boxShadow: "0 0 25px rgba(16, 185, 129, 0.7)",

@@ -7,11 +7,17 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { jetbrainsMono } from "@/styles/fonts";
 import { AuthModal } from "@/components/ui/Auth-modal";
-import { useUser } from "./ConditionalLayout";
+import { useHook, useUser } from "./ConditionalLayout";
 import { AuthService } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
 
-export default function Navbar() {
+export default function Navbar({
+  openAuthModal,
+  setOpenAuthModal,
+}: {
+  openAuthModal: boolean;
+  setOpenAuthModal: (open: boolean) => void;
+}) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [authView, setAuthView] = useState<"login" | "register">("login");
@@ -35,11 +41,18 @@ export default function Navbar() {
       setIsLoggedIn(false);
     }
   }, []);
-
+  // const { openAuthModal, setOpenAuthModal } = useHook();
   const handleAuthClick = (view: "login" | "register") => {
     setAuthView(view);
     setIsAuthOpen(true);
   };
+
+  useEffect(() => {
+    console.log("openAuthModal", openAuthModal);
+    if (openAuthModal) {
+      setIsAuthOpen(true);
+    }
+  }, [openAuthModal]);
 
   function handleLogout() {
     AuthService.getInstance().logout();
@@ -111,7 +124,10 @@ export default function Navbar() {
 
       <AuthModal
         isOpen={isAuthOpen}
-        onClose={() => setIsAuthOpen(false)}
+        onClose={() => {
+          setIsAuthOpen(false);
+          setOpenAuthModal(false);
+        }}
         initialView={authView}
       />
     </>

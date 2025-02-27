@@ -30,6 +30,7 @@ export const plans = [
   {
     name: "Free",
     price: "$0",
+    type: "free",
     features: [
       "Create 1 project",
       "Basic Data Management",
@@ -39,8 +40,9 @@ export const plans = [
     color: "emerald",
   },
   {
-    name: "Pro",
+    name: "Basic",
     price: "$4",
+    type: "basic",
     features: [
       "Create up to 5 projects",
       "Basic Data Management",
@@ -53,6 +55,7 @@ export const plans = [
   {
     name: "Premium",
     price: "$5",
+    type: "premium",
     features: [
       "Create up to 10 projects",
       "Advanced API Features",
