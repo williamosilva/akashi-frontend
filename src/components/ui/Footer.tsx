@@ -34,6 +34,13 @@ export default function Footer() {
     router.push("/");
   };
 
+  const Items = [
+    { name: "Product", href: "hero2" },
+    { name: "Docs", href: "vscode" },
+    { name: "Pricing", href: "price" },
+    { name: "About", href: "features" },
+  ];
+
   const { setTargetSection } = useHook();
   const router = useRouter();
   const handleGetStartedClick = async () => {
@@ -144,14 +151,16 @@ export default function Footer() {
             </span>
           </div>
           <nav className="flex flex-wrap justify-center md:justify-center space-x-6 mb-4 md:mb-0 w-full">
-            {["Product", "Docs", "Pricing", "About"].map((item) => (
-              <motion.div key={item} whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
-                <Link
-                  href="#"
-                  className="text-zinc-400 hover:text-emerald-300 transition-colors"
-                >
-                  {item}
-                </Link>
+            {Items.map((item) => (
+              <motion.div
+                key={item.name}
+                whileHover={{ y: -2 }}
+                whileTap={{ y: 0 }}
+                onClick={() => setTargetSection(item.href)}
+              >
+                <p className="text-zinc-400 hover:text-emerald-300 transition-colors cursor-pointer">
+                  {item.name}
+                </p>
               </motion.div>
             ))}
           </nav>
