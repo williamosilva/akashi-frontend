@@ -14,6 +14,7 @@ import Header from "./components/Header";
 import MainContent from "./components/MainContent";
 import EmptyStateObjects from "./components/EmptyStateObjects";
 import EmptyStateProjects from "./components/EmptyStateProjects";
+import { SucessPaid } from "./components/sucess-paid/SucessPaid";
 
 export default function FormPage() {
   const [, setSelectedProject] = useState<string | null>(null);
@@ -21,21 +22,17 @@ export default function FormPage() {
     null
   );
   const [dataJson, setDataJson] = useState<FormattedProject | null>(null);
-
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [apiUrl, setApiUrl] = useState<string | null>("");
-
   const {
     selectedProjectId,
     triggerReload,
     setSelectedProjectId,
     setOpenCreateProjectModal,
   } = useProject();
-
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "none">("none");
-
   const toggleSortOrder = () => {
     if (sortOrder === "none" || sortOrder === "desc") {
       setSortOrder("asc");
@@ -43,12 +40,10 @@ export default function FormPage() {
       setSortOrder("desc");
     }
   };
-
   const [selectedObject, setSelectedObject] = useState<{
     key: string;
     data: Record<string, unknown>;
   } | null>(null);
-
   useEffect(() => {
     async function fetchProjectData() {
       if (!selectedProjectId) {
@@ -205,6 +200,7 @@ export default function FormPage() {
           if (refresh) handleRefreshData();
         }}
       />
+      <SucessPaid />
     </main>
   );
 }
