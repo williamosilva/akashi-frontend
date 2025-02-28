@@ -20,9 +20,9 @@ const LangButtons = React.forwardRef<HTMLDivElement, LangButtonsProps>(
   ({ className, onLanguageChange, tabSize = 40, ...props }, ref) => {
     const languages = [
       {
-        id: "typescript",
-        label: "TypeScript",
-        image: "/images/typescript_icon.png",
+        id: "javascript",
+        label: "JavaScript",
+        image: "/images/JavaScript_icon.png",
       },
       {
         id: "python",
@@ -97,7 +97,7 @@ const LangButtons = React.forwardRef<HTMLDivElement, LangButtonsProps>(
           />
 
           {/* Language Buttons */}
-          <div className="relative flex flex-col space-y-4 items-center">
+          <div className="relative flex xl:flex-col flex-row gap-4 items-center">
             {languages.map((lang, index) => (
               <div
                 key={lang.id}
@@ -107,7 +107,7 @@ const LangButtons = React.forwardRef<HTMLDivElement, LangButtonsProps>(
                 className={cn(
                   "cursor-pointer transition-all p-2 duration-300 rounded-full overflow-hidden ",
                   index === activeIndex
-                    ? "scale-125 bg-[#21222C]"
+                    ? "scale-150 bg-[#21222C]"
                     : "scale-100 bg-[#282A36]"
                 )}
                 style={{
@@ -128,8 +128,8 @@ const LangButtons = React.forwardRef<HTMLDivElement, LangButtonsProps>(
                       `/placeholder.svg?height=${tabSize}&width=${tabSize}`
                     }
                     alt={lang.label}
-                    width={tabSize - 12}
-                    height={tabSize - 12}
+                    width={tabSize - 18}
+                    height={tabSize - 18}
                     className="object-contain rounded-md"
                   />
                   <span className="sr-only">{lang.label}</span>

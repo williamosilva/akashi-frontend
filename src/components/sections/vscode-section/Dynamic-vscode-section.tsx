@@ -1,61 +1,43 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { FileCode, ChevronRight } from "lucide-react";
 import { jetbrainsMono, montserrat } from "@/styles/fonts";
 import { LangButtons } from "./components/LangButtons";
 import { fadeInUpVariants } from "@/animations/variation";
+import {
+  codeSnippetJavaScript,
+  codeSnippetPython,
+  codeSnippetJava,
+} from "./data";
 
-const codeSnippet = `
-<span class="text-[#ff79c6]">import</span> <span class="text-[#f8f8f2]">axios</span> <span class="text-[#ff79c6]">from</span> <span class="text-[#f1fa8c]">'axios'</span><span class="text-[#f8f8f2]">;</span>
-
-<span class="text-[#50fa7b]">async function</span> <span class="text-[#8be9fd]">getProjectData</span><span class="text-[#f8f8f2]">() {</span>
- <span class="text-[#ff79c6]">try</span> <span class="text-[#f8f8f2]">{</span>
-   <span class="text-[#ff79c6]">const</span> <span class="text-[#f8f8f2]">response = </span><span class="text-[#ff79c6]">await</span> <span class="text-[#f8f8f2]">axios.get(</span><span class="text-[#f1fa8c]">\`Your-akashi-private-link\`</span><span class="text-[#f8f8f2]">);</span>
-   <span class="text-[#ff79c6]">const</span> <span class="text-[#f8f8f2]">yourData = response.data;</span>
-   <span class="text-[#ff79c6]">return</span> <span class="text-[#f8f8f2]">yourData;</span>
- <span class="text-[#f8f8f2]">} </span><span class="text-[#ff79c6]">catch</span> <span class="text-[#f8f8f2]">(error) {</span>
-   <span class="text-[#f8f8f2]">console.error(</span><span class="text-[#f1fa8c]">'Error fetching project data:'</span><span class="text-[#f8f8f2]">, error);</span>
-   <span class="text-[#ff79c6]">throw</span> <span class="text-[#f8f8f2]">error;</span>
- <span class="text-[#f8f8f2]">}</span>
-<span class="text-[#f8f8f2]">}</span>
-
-<span class="text-[#6272a4]">// Usage</span>
-<span class="text-[#f8f8f2]">getProjectData()</span>
- <span class="text-[#f8f8f2]">.then(</span><span class="text-[#ffb86c]">yourData</span> <span class="text-[#ff79c6]">=></span> <span class="text-[#f8f8f2]">console.log(</span><span class="text-[#f1fa8c]">'Your Data:'</span><span class="text-[#f8f8f2]">, yourData))</span>
- <span class="text-[#f8f8f2]">.catch(</span><span class="text-[#ffb86c]">error</span> <span class="text-[#ff79c6]">=></span> <span class="text-[#f8f8f2]">console.error(</span><span class="text-[#f1fa8c]">'Error:'</span><span class="text-[#f8f8f2]">, error.message));</span>
-
-<span class="text-[#6272a4]">/* Example response:
-{
- "Project Name": {
-   "userList": [...],
-   "apiIntegration": {...},
-   "dataExample": {...}
- }
-}
-*/</span>
-`;
 export default function DynamicVSCodeSection() {
-  const codeRef = useRef<HTMLPreElement>(null);
+  const [lang, setLang] = useState("javascript");
+  const [key, setKey] = useState(0); // Chave única para forçar a renderização da animação
 
-  useEffect(() => {
-    if (codeRef.current) {
-      codeRef.current.innerHTML = codeSnippet;
+  // Get the correct code snippet based on selected language
+  const getCodeSnippet = () => {
+    switch (lang) {
+      case "javascript":
+        return codeSnippetJavaScript;
+      case "python":
+        return codeSnippetPython;
+      case "java":
+        return codeSnippetJava;
+      default:
+        return codeSnippetJavaScript;
     }
-  }, []);
+  };
+
+  const handleLanguageChange = (langId: string) => {
+    setLang(langId);
+    setKey((prev) => prev + 1); // Incrementa a chave para forçar reanimação
+  };
 
   return (
     <div className="relative w-full flex items-center justify-center overflow-hidden py-10 sm:py-20">
-      <motion.div
-        className="absolute top-1/2 left-[20%]
-        -translate-x-1/2 -translate-y-1/2
-        z-20"
-      >
-        <LangButtons />
-      </motion.div>
-
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 relative z-10 flex flex-col justify-center items-center">
         <motion.div
           custom={0}
@@ -91,23 +73,35 @@ export default function DynamicVSCodeSection() {
           variants={fadeInUpVariants}
           initial="hidden"
           animate="visible"
-          className="w-full max-w-5xl mx-auto"
+          className="w-full max-w-5xl mx-auto flex xl:flex-row flex-col-reverse items-center"
         >
-          <div className="bg-[#282a36] rounded-lg overflow-hidden shadow-2xl transform scale-90 sm:scale-100">
+          <motion.div className="xl:right-10 right-0 xl:top-0 sm:top-10 top-4 relative">
+            <LangButtons onLanguageChange={handleLanguageChange} />
+          </motion.div>
+          <div className="bg-[#282a36] rounded-lg w-full overflow-hidden shadow-2xl transform scale-90 sm:scale-100">
             <div className="bg-[#44475a] px-4 py-2 flex items-center justify-between">
               <div className="flex space-x-2">
                 <div className="w-3 h-3 rounded-full bg-[#ff5555] hover:bg-[#ff6e6e] transition-colors" />
                 <div className="w-3 h-3 rounded-full bg-[#ffb86c] hover:bg-[#ffc985] transition-colors" />
                 <div className="w-3 h-3 rounded-full bg-[#50fa7b] hover:bg-[#69ff92] transition-colors" />
               </div>
-              <span
+              <motion.span
+                key={`filename-${lang}`}
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -5 }}
+                transition={{ duration: 0.3 }}
                 className={cn(
                   "text-xs sm:text-sm text-[#f8f8f2]",
                   jetbrainsMono.className
                 )}
               >
-                project-data.js
-              </span>
+                {lang === "javascript"
+                  ? "project-data.js"
+                  : lang === "python"
+                  ? "project_data.py"
+                  : "ProjectData.java"}
+              </motion.span>
               <div className="w-3 h-3" />
             </div>
             <div className="flex">
@@ -118,19 +112,47 @@ export default function DynamicVSCodeSection() {
                 </div>
                 <div className="flex items-center text-[#f8f8f2] ml-4 hover:bg-[#44475a] rounded px-2 py-1 transition-colors cursor-pointer">
                   <FileCode size={14} className="mr-1" />
-                  <span className="text-sm hidden sm:inline">
-                    project-data.js
-                  </span>
+                  <motion.span
+                    key={`sidebar-filename-${lang}`}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                    className="text-sm hidden sm:inline"
+                  >
+                    {lang === "javascript"
+                      ? "project-data.js"
+                      : lang === "python"
+                      ? "project_data.py"
+                      : "ProjectData.java"}
+                  </motion.span>
                 </div>
               </div>
-              <div className="flex-grow p-4 overflow-auto bg-[#282a36] h-[300px] sm:h-[400px] md:h-[500px] scrollbar-thin scrollbar-thumb-[#44475a] scrollbar-track-[#282a36]">
-                <pre
-                  ref={codeRef}
-                  className={cn(
-                    "text-xs sm:text-sm text-[#f8f8f2] whitespace-pre-wrap",
-                    jetbrainsMono.className
-                  )}
-                />
+              <div
+                className="flex-grow p-4 overflow-auto bg-[#282a36] h-[300px] 
+  w-full sm:h-[400px] md:h-[500px] 
+  scrollbar-thin scrollbar-thumb-[#44475a] scrollbar-track-[#282a36]"
+              >
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={`code-${key}`}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{
+                      duration: 0.4,
+                      ease: "easeInOut",
+                    }}
+                    className="w-full"
+                  >
+                    <pre
+                      className={cn(
+                        "text-xs sm:text-sm text-[#f8f8f2] whitespace-pre-wrap break-words",
+                        jetbrainsMono.className
+                      )}
+                      dangerouslySetInnerHTML={{ __html: getCodeSnippet() }}
+                    />
+                  </motion.div>
+                </AnimatePresence>
               </div>
             </div>
           </div>
