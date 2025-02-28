@@ -5,32 +5,38 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { FileCode, ChevronRight } from "lucide-react";
 import { jetbrainsMono, montserrat } from "@/styles/fonts";
+import { LangButtons } from "./components/LangButtons";
 import { fadeInUpVariants } from "@/animations/variation";
 
 const codeSnippet = `
 <span class="text-[#ff79c6]">import</span> <span class="text-[#f8f8f2]">axios</span> <span class="text-[#ff79c6]">from</span> <span class="text-[#f1fa8c]">'axios'</span><span class="text-[#f8f8f2]">;</span>
 
-<span class="text-[#50fa7b]">async function</span> <span class="text-[#8be9fd]">getProjectData</span><span class="text-[#f8f8f2]">(</span><span class="text-[#ffb86c]">projectId</span><span class="text-[#f8f8f2]">) {</span>
-  <span class="text-[#ff79c6]">try</span> <span class="text-[#f8f8f2]">{</span>
-    <span class="text-[#ff79c6]">const</span> <span class="text-[#f8f8f2]">response = </span><span class="text-[#ff79c6]">await</span> <span class="text-[#f8f8f2]">axios.get(</span><span class="text-[#f1fa8c]">\`https://api.yoursaas.com/projects/\${projectId}/data\`</span><span class="text-[#f8f8f2]">, {</span>
-      <span class="text-[#f8f8f2]">headers: {</span>
-        <span class="text-[#f1fa8c]">'Authorization'</span><span class="text-[#f8f8f2]">: </span><span class="text-[#f1fa8c]">'Bearer YOUR_ACCESS_TOKEN'</span>
-      <span class="text-[#f8f8f2]">}</span>
-    <span class="text-[#f8f8f2]">});</span>
-    <span class="text-[#ff79c6]">return</span> <span class="text-[#f8f8f2]">response.data;</span>
-  <span class="text-[#f8f8f2]">} </span><span class="text-[#ff79c6]">catch</span> <span class="text-[#f8f8f2]">(error) {</span>
-    <span class="text-[#f8f8f2]">console.error(</span><span class="text-[#f1fa8c]">'Error fetching project data:'</span><span class="text-[#f8f8f2]">, error);</span>
-    <span class="text-[#ff79c6]">throw</span> <span class="text-[#f8f8f2]">error;</span>
-  <span class="text-[#f8f8f2]">}</span>
+<span class="text-[#50fa7b]">async function</span> <span class="text-[#8be9fd]">getProjectData</span><span class="text-[#f8f8f2]">() {</span>
+ <span class="text-[#ff79c6]">try</span> <span class="text-[#f8f8f2]">{</span>
+   <span class="text-[#ff79c6]">const</span> <span class="text-[#f8f8f2]">response = </span><span class="text-[#ff79c6]">await</span> <span class="text-[#f8f8f2]">axios.get(</span><span class="text-[#f1fa8c]">\`Your-akashi-private-link\`</span><span class="text-[#f8f8f2]">);</span>
+   <span class="text-[#ff79c6]">const</span> <span class="text-[#f8f8f2]">yourData = response.data;</span>
+   <span class="text-[#ff79c6]">return</span> <span class="text-[#f8f8f2]">yourData;</span>
+ <span class="text-[#f8f8f2]">} </span><span class="text-[#ff79c6]">catch</span> <span class="text-[#f8f8f2]">(error) {</span>
+   <span class="text-[#f8f8f2]">console.error(</span><span class="text-[#f1fa8c]">'Error fetching project data:'</span><span class="text-[#f8f8f2]">, error);</span>
+   <span class="text-[#ff79c6]">throw</span> <span class="text-[#f8f8f2]">error;</span>
+ <span class="text-[#f8f8f2]">}</span>
 <span class="text-[#f8f8f2]">}</span>
 
 <span class="text-[#6272a4]">// Usage</span>
-<span class="text-[#ff79c6]">const</span> <span class="text-[#f8f8f2]">projectId = </span><span class="text-[#f1fa8c]">'12345'</span><span class="text-[#f8f8f2]">;</span>
-<span class="text-[#f8f8f2]">getProjectData(projectId)</span>
-  <span class="text-[#f8f8f2]">.then(data => console.log(</span><span class="text-[#f1fa8c]">'Project Data:'</span><span class="text-[#f8f8f2]">, data))</span>
-  <span class="text-[#f8f8f2]">.catch(error => console.error(</span><span class="text-[#f1fa8c]">'Error:'</span><span class="text-[#f8f8f2]">, error.message));</span>
-`;
+<span class="text-[#f8f8f2]">getProjectData()</span>
+ <span class="text-[#f8f8f2]">.then(</span><span class="text-[#ffb86c]">yourData</span> <span class="text-[#ff79c6]">=></span> <span class="text-[#f8f8f2]">console.log(</span><span class="text-[#f1fa8c]">'Your Data:'</span><span class="text-[#f8f8f2]">, yourData))</span>
+ <span class="text-[#f8f8f2]">.catch(</span><span class="text-[#ffb86c]">error</span> <span class="text-[#ff79c6]">=></span> <span class="text-[#f8f8f2]">console.error(</span><span class="text-[#f1fa8c]">'Error:'</span><span class="text-[#f8f8f2]">, error.message));</span>
 
+<span class="text-[#6272a4]">/* Example response:
+{
+ "Project Name": {
+   "userList": [...],
+   "apiIntegration": {...},
+   "dataExample": {...}
+ }
+}
+*/</span>
+`;
 export default function DynamicVSCodeSection() {
   const codeRef = useRef<HTMLPreElement>(null);
 
@@ -42,6 +48,14 @@ export default function DynamicVSCodeSection() {
 
   return (
     <div className="relative w-full flex items-center justify-center overflow-hidden py-10 sm:py-20">
+      <motion.div
+        className="absolute top-1/2 left-[20%]
+        -translate-x-1/2 -translate-y-1/2
+        z-20"
+      >
+        <LangButtons />
+      </motion.div>
+
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 relative z-10 flex flex-col justify-center items-center">
         <motion.div
           custom={0}

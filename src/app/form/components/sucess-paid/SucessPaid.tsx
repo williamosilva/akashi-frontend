@@ -183,9 +183,11 @@ export function SucessPaid({ email, plan, hasParams }: SucessPaidProps) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
               >
-                Thank you for subscribing to our {planDisplay} plan{" "}
-                <span className="text-emerald-300">{email} !</span> You now have
-                access to all {plan} features on our platform. Enjoy exploring!
+                Thank you for subscribing to {planDisplay} plan. A confirmation
+                email has been sent to{" "}
+                <span className="text-emerald-300">{email}</span>
+                .You now have access to all {plan} features on our platform.
+                Enjoy exploring!
               </motion.p>
 
               <motion.button

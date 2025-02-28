@@ -13,11 +13,13 @@ export default function SuccessPage() {
   const paymentService = PaymentService.getInstance();
   const { email } = useUser();
   const checkSuccessToken = async () => {
+    console.log("começou a checksucesstoken");
     try {
       setIsLoading(true);
       const verificationResult = await paymentService.verifySessionToken(
         token as string
       );
+      console.log("verificationResult", verificationResult);
       if (verificationResult.valid) {
         if (verificationResult.email === email) {
           console.log("Email corresponde ao token");

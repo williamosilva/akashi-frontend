@@ -7,20 +7,26 @@ import { jetbrainsMono, montserrat } from "@/styles/fonts";
 import { useState, useEffect, useContext } from "react";
 import { PaymentService } from "@/services/payment.service";
 import { useHook, UserContext } from "@/components/ui/ConditionalLayout";
-import { useRouter } from "next/navigation";
 
 const PlanCard = ({
   plan,
   isCurrentPlan,
   isLoading,
   onChoosePlan,
+  userPlan, // Novo parâmetro para armazenar o plano atual do usuário
 }: {
   plan: (typeof plans)[0];
   isCurrentPlan: boolean;
   isLoading: boolean;
   onChoosePlan: () => void;
+  userPlan: string; // Tipo do plano atual do usuário ("free", "basic", "premium")
 }) => {
   const isPremium = plan.name === "Premium";
+
+  // Lógica para determinar se devemos mostrar "Current Plan"
+  // Mostra para o plano atual do usuário E também para o Free se o usuário tiver outro plano
+  const showCurrentPlan =
+    isCurrentPlan || (plan.type === "free" && userPlan !== "free");
 
   return (
     <div
@@ -73,7 +79,7 @@ const PlanCard = ({
             </li>
           ))}
         </ul>
-        {isCurrentPlan ? (
+        {showCurrentPlan ? (
           <div className="h-12 flex mt-auto items-center justify-center select-none">
             <p className="text-center text-zinc-400 font-semibold">
               Current Plan
@@ -100,7 +106,6 @@ const PlanCard = ({
 };
 
 export default function PriceSection() {
-  const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [currentPlan, setCurrentPlan] = useState("Free");
   const paymentService = PaymentService.getInstance();
@@ -121,6 +126,7 @@ export default function PriceSection() {
       // Verificar a assinatura usando o email do usuário
       const response = await paymentService.verifySubscription(email);
 
+      console.log("response plano", response);
       // A resposta segue o formato do backend: { hasActiveSubscription: boolean, subscription: { plan: 'basic' | 'premium' } | null }
       if (response.hasActiveSubscription && response.subscription) {
         setCurrentPlan(
@@ -143,19 +149,15 @@ export default function PriceSection() {
       setIsLoading(true);
 
       if (!email) {
-        // Redirecionar para login se não houver usuário
         setOpenAuthModal(true);
         return;
       }
-      console.log("email", email);
-      console.log("planType", planType);
-      // Criar uma sessão de checkout
+
       const { checkoutUrl } = await paymentService.createCheckoutSession(
         email,
         planType
       );
 
-      // Redirecionar para a URL de checkout do Stripe
       window.location.href = checkoutUrl;
     } catch (error) {
       console.error("Error creating checkout session:", error);
@@ -167,65 +169,13 @@ export default function PriceSection() {
     }
   };
 
-  // // Verificar se há um token de sucesso na URL (redirecionamento após pagamento)
-  // const checkSuccessToken = async () => {
-  //   try {
-  //     console.log("caiu no checkSucessToken");
-  //     const pathParts = window.location.pathname.split("/");
-  //     const successTokenIndex = pathParts.indexOf("success");
-
-  //     if (
-  //       successTokenIndex !== -1 &&
-  //       pathParts.length > successTokenIndex + 1
-  //     ) {
-  //       const successToken = pathParts[successTokenIndex + 1];
-
-  //       if (successToken) {
-  //         setIsLoading(true);
-  //         console.log("fez a req do checkSucessToken");
-  //         // Verificar o token de sessão
-  //         const verificationResult = await paymentService.verifySessionToken(
-  //           successToken
-  //         );
-
-  //         if (verificationResult.valid) {
-  //           // Atualizar o plano atual
-  //           await verifySubscription();
-
-  //           // Limpar o token da URL redirecionando para a página de preços
-  //           router.push("/pricing");
-
-  //           // Mostrar mensagem de sucesso
-  //           alert("Assinatura confirmada com sucesso!");
-  //         }
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Error verifying session token:", error);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   setMounted(true);
-
-  //   // Verificar se existe um token na URL (após redirecionamento de pagamento)
-  //   if (typeof window !== "undefined") {
-  //     checkSuccessToken();
-  //   }
-  // }, []);
-
   useEffect(() => {
-    // Verificar a assinatura atual do usuário quando o usuário muda
-    if (mounted && email) {
+    console.log("email", email);
+    if (email) {
+      console.log("verificando assinatura");
       verifySubscription();
     }
-  }, [mounted, email]);
-
-  // if (!mounted) {
-  //   return null;
-  // }
+  }, [email]);
 
   return (
     <div className="min-h-screen w-full py-24 ">
@@ -245,14 +195,14 @@ export default function PriceSection() {
             Select the perfect plan to power your projects and transform your
             workflow.
           </p>
-          {isLoading && (
+          {/* {isLoading && (
             <p className="mt-4 text-zinc-400">Verificando seu plano atual...</p>
           )}
           {!isLoading && currentPlan !== "Free" && (
             <p className="mt-4 text-teal-400 font-semibold">
               Você está atualmente no plano {currentPlan}
             </p>
-          )}
+          )} */}
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -268,7 +218,6 @@ export default function PriceSection() {
                 } else if (plan.name === "Premium") {
                   handleChoosePlan("premium");
                 } else {
-                  // Para o plano Free, não faz nada ou mostra mensagem
                   setCurrentPlan("Free");
                 }
               }}
