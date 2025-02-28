@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { API_CONFIG } from "@/config/api.config";
 import { AuthService } from "@/services/auth.service";
 import { useUser } from "./ConditionalLayout";
+import Image from "next/image";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -306,7 +307,13 @@ export function AuthModal({
                 disabled={isLoading}
                 className="w-full flex items-center justify-center gap-2 py-2.5 bg-zinc-800 border border-emerald-500/20 rounded-lg text-zinc-100 hover:bg-zinc-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {/* Ícone do Google */}
+                {/* Imagem do Google */}
+                <Image
+                  src="/images/google_icon.png"
+                  alt="Google logo"
+                  width={20}
+                  height={20}
+                />
                 Continue with Google
               </button>
 
@@ -316,7 +323,13 @@ export function AuthModal({
                 disabled={isLoading}
                 className="w-full flex items-center justify-center gap-2 py-2.5 bg-zinc-800 border border-emerald-500/20 rounded-lg text-zinc-100 hover:bg-zinc-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {/* Ícone do GitHub */}
+                {/* Imagem do GitHub */}
+                <Image
+                  src="/images/github_icon.png"
+                  alt="GitHub logo"
+                  width={20}
+                  height={20}
+                />
                 Continue with GitHub
               </button>
             </div>
