@@ -57,7 +57,7 @@ export default function Home() {
         <div id="hero">
           <HeroGeometric />
         </div>
-        <div id="features-step">
+        <div id="features">
           <FeatureSteps
             features={featuresStep}
             title="Your Journey Starts Here"
@@ -65,7 +65,7 @@ export default function Home() {
             imageHeight="h-[500px]"
           />
         </div>
-        <div id="features">
+        <div id="sub-features">
           <Features />
         </div>
         <div id="mindmap">
