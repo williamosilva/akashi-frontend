@@ -23,6 +23,8 @@ export interface UserData {
   email: string;
   fullName: string;
   photo?: string;
+  plan: "free" | "premium" | "basic" | "admin";
+  projectCount: number;
 }
 
 export interface TokenResponse {

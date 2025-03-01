@@ -32,7 +32,7 @@ export default function ModalObject({
   const [objectId, setObjectId] = useState<string | null>(null);
   const [objectName, setObjectName] = useState<string>("New Object");
   const [sortOrder, setSortOrder] = useState<SortOrder>("none");
-  console.log("joseph", currentData);
+  // console.log("joseph", currentData);
 
   useEffect(() => {
     if (isVisible) {

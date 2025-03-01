@@ -27,6 +27,12 @@ interface UserContextType {
   setFullName: (fullName: string | null) => void;
   photo: string | null;
   setPhoto: (photo: string | null) => void;
+  countProjects: number;
+  setCountProjects: React.Dispatch<React.SetStateAction<number>>; // Alteração aqui
+  plan: "free" | "premium" | "basic" | "admin" | null;
+  setPlan: React.Dispatch<
+    React.SetStateAction<"free" | "premium" | "basic" | "admin" | null>
+  >;
 }
 interface hookContext {
   openAuthModal: boolean;
@@ -44,6 +50,10 @@ export const UserContext = createContext<UserContextType>({
   setFullName: () => {},
   photo: "",
   setPhoto: () => {},
+  countProjects: 0,
+  setCountProjects: () => {},
+  plan: null,
+  setPlan: () => {},
 });
 
 export const ProjectContext = createContext<ProjectContextType>({
@@ -82,23 +92,40 @@ export default function ConditionalLayout({
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
     null
   );
+  const [sideBarControlled, setSideBarControlled] = useState({
+    signal: false,
+    message: "",
+  });
   const [targetSection, setTargetSection] = useState<string | null>(null);
   const [openCreateProjectModal, setOpenCreateProjectModal] = useState(false);
   const [sidebarSignal, setSidebarSignal] = useState(0);
-
+  const [countProjects, setCountProjects] = useState(0);
+  const [plan, setPlan] = useState<
+    "free" | "premium" | "basic" | "admin" | null
+  >(null);
   const isFormRoute = pathname.startsWith("/form");
   const isHome = pathname === "/";
   const isSuccessCallbackRoute = pathname.match(/^\/success\/[^\/]+$/);
   const isValidRoute =
     VALID_ROUTES.includes(pathname) || isSuccessCallbackRoute;
 
-  useEffect(() => {
-    console.log("targetSection", targetSection);
-  }, [targetSection]);
+  // useEffect(() => {
+  //   console.log("targetSection", targetSection);
+  // }, [targetSection]);
 
+  const handleLogout = () => {
+    setUserId(null);
+    setFullName(null);
+    setPhoto(null);
+    setEmail(null);
+    AuthService.clearAuthData();
+    router.push("/");
+  };
+
+  // 1. useEffect para buscar dados da API (sem dependências do estado local)
   useEffect(() => {
     const validateAndLoadUser = async () => {
-      console.log("caiu aqui");
+      console.log("Buscar dados da API...");
       try {
         const accessToken = AuthService.getAccessToken();
         const refreshToken = AuthService.getRefreshToken();
@@ -106,13 +133,13 @@ export default function ConditionalLayout({
           router.push("/");
           return;
         }
-        const validToken = await authService.validateToken(accessToken);
-        console.log("Token válido:", validToken);
-        const newAccessToken = accessToken;
 
-        const userData = await authService.getMe(newAccessToken);
-        console.log("userData", userData);
-        console.log("caiu aqui2");
+        const validToken = await authService.validateToken(accessToken);
+        const userData = await authService.getMe(accessToken);
+
+        // Atualiza o estado local com os dados da API
+        setPlan(userData.plan);
+        setCountProjects(userData.projectCount);
         setUserId(userData.id);
         setEmail(userData.email);
         setFullName(userData.fullName);
@@ -122,25 +149,44 @@ export default function ConditionalLayout({
         handleLogout();
       } finally {
         setIsValidating(false);
-        console.log("caiu aqui3");
       }
     };
 
-    const handleLogout = () => {
-      setUserId(null);
-      setFullName(null);
-      setPhoto(null);
-      setEmail(null);
-      AuthService.clearAuthData();
-      router.push("/");
-    };
-
     validateAndLoadUser();
-  }, [pathname, router, authService, isHome, isValidRoute]);
+  }, [pathname, router, authService]); // Remova countProjects das dependências!
 
+  // 2. useEffect para verificar condições (observa mudanças no estado local)
   useEffect(() => {
-    console.log("emaiul dentro do laoyut", email);
-  }, [email]);
+    console.log("Verificando condições com estado local:", {
+      plan,
+      countProjects,
+    });
+
+    if (plan === "free" && countProjects >= 1) {
+      console.log("Usuário free com projeto");
+      setSideBarControlled({
+        signal: true,
+        message: "You have reached the project limit for the Free plan.",
+      });
+    } else if (plan === "basic" && countProjects >= 5) {
+      console.log("Usuário basic com projeto");
+      setSideBarControlled({
+        signal: true,
+        message: "You have reached the project limit for the Basic plan.",
+      });
+    } else if (plan === "premium" && countProjects >= 10) {
+      console.log("Usuário premium com projeto");
+      setSideBarControlled({
+        signal: true,
+        message: "You have reached the project limit for the Premium plan.",
+      });
+    } else {
+      setSideBarControlled({
+        signal: false,
+        message: "",
+      });
+    }
+  }, [plan, countProjects]);
 
   if (isValidating) {
     return (
@@ -163,6 +209,10 @@ export default function ConditionalLayout({
     setFullName,
     photo,
     setPhoto,
+    plan,
+    setPlan,
+    countProjects,
+    setCountProjects,
   };
 
   const projectContextValue = {
@@ -197,6 +247,7 @@ export default function ConditionalLayout({
                 onProjectSelect={setSelectedProjectId}
                 signal={sidebarSignal}
                 openCreateProjectModal={openCreateProjectModal}
+                isCreateDisabled={sideBarControlled}
                 setOpenCreateProjectModal={setOpenCreateProjectModal}
               />
               <main className="flex-1 overflow-auto">{children}</main>

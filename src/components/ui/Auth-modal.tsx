@@ -49,9 +49,6 @@ export function AuthModal({
     );
 
     const messageListener = (event: MessageEvent) => {
-      // Debug: Log all incoming messages
-
-      // Verificar se a origem é confiável
       const allowedOrigins = [
         API_CONFIG.baseURL,
         process.env.NEXT_PUBLIC_FRONTEND_URL,
@@ -168,6 +165,7 @@ export function AuthModal({
           password: formData.password,
         });
       }
+      console.log("response", response);
 
       if (response?.id) {
         setUserId(response.id);

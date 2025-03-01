@@ -14,7 +14,7 @@ interface SucessPaidProps {
 export function SucessPaid({ email, plan, hasParams }: SucessPaidProps) {
   const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null);
   const [isVisible, setIsVisible] = useState(false);
-  console.log("SucessPaidProps", { email, plan, hasParams });
+  // console.log("SucessPaidProps", { email, plan, hasParams });
 
   useEffect(() => {
     // Only set up the portal if hasParams is true

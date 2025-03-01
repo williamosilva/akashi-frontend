@@ -25,7 +25,10 @@ import { useUser } from "@/components/ui/ConditionalLayout";
 
 const Sidebar = ({
   className,
-  isCreateDisabled = false,
+  isCreateDisabled = {
+    signal: false,
+    message: "",
+  },
   selectedProjectId: propSelectedProjectId,
   onProjectSelect,
   signal,
@@ -33,7 +36,10 @@ const Sidebar = ({
   setOpenCreateProjectModal,
 }: {
   className?: string;
-  isCreateDisabled?: boolean;
+  isCreateDisabled?: {
+    signal: boolean;
+    message: string;
+  };
   selectedProjectId?: string | null;
   onProjectSelect?: (projectId: string) => void;
   signal?: number;
@@ -55,6 +61,8 @@ const Sidebar = ({
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  console.log("isCreateDisabled dentro da sidebar", isCreateDisabled);
+
   const {
     userId,
     setUserId,
@@ -64,6 +72,8 @@ const Sidebar = ({
     setFullName,
     photo,
     setPhoto,
+    setCountProjects,
+    plan,
   } = useUser();
 
   useEffect(() => {
@@ -80,7 +90,6 @@ const Sidebar = ({
   };
 
   useEffect(() => {
-    // setSelectedProjectId(null);
     const loadProjects = async () => {
       try {
         if (!userId) return console.error("User ID not found");
@@ -88,6 +97,7 @@ const Sidebar = ({
         const projects = await ProjectService.getInstance().getProjectsByUser(
           userId
         );
+        console.log("projetos", projects);
 
         setProjects(projects);
       } catch (error) {
@@ -109,6 +119,7 @@ const Sidebar = ({
       } as CreateProjectDto);
 
       setProjects((prevProjects) => [...prevProjects, newProject]);
+      setCountProjects((prevCount) => prevCount + 1);
     } catch (error) {
       console.error("Error creating project:", error);
     }
@@ -294,39 +305,87 @@ const Sidebar = ({
 
                     {/* Navigation */}
                     <nav className="flex-1 overflow-y-auto p-2 space-y-1.5 w-full flex-col flex">
-                      {/* Create Object Button */}
-                      <motion.button
-                        layout
-                        layoutId="create-button"
-                        className={cn(
-                          "w-full px-4 py-3 rounded-lg flex items-center justify-center gap-2 group transition-all",
-                          isCreateDisabled
-                            ? "bg-zinc-700/50 text-zinc-500 cursor-not-allowed"
-                            : "bg-emerald-500/10 hover:bg-emerald-500/30 text-emerald-300"
-                        )}
-                        onClick={
-                          isCreateDisabled
-                            ? undefined
-                            : () => setOpenCreateProjectModal(true)
-                        }
-                        whileTap={
-                          isCreateDisabled ? undefined : { scale: 0.98 }
-                        }
-                        disabled={isCreateDisabled}
-                      >
-                        <Plus
+                      {isCreateDisabled.signal ? (
+                        <TooltipProvider>
+                          <Tooltip
+                            content={isCreateDisabled.message}
+                            position="top"
+                          >
+                            <motion.button
+                              layout
+                              layoutId="create-button"
+                              className={cn(
+                                "w-full px-4 py-3 rounded-lg flex items-center justify-center gap-2 group transition-all",
+                                isCreateDisabled.signal
+                                  ? "bg-zinc-700/50 text-zinc-500 cursor-not-allowed"
+                                  : "bg-emerald-500/10 hover:bg-emerald-500/30 text-emerald-300"
+                              )}
+                              onClick={
+                                isCreateDisabled.signal
+                                  ? undefined
+                                  : () => setOpenCreateProjectModal(true)
+                              }
+                              whileTap={
+                                isCreateDisabled.signal
+                                  ? undefined
+                                  : { scale: 0.98 }
+                              }
+                              disabled={isCreateDisabled.signal}
+                            >
+                              <Plus
+                                className={cn(
+                                  "h-5 w-5",
+                                  isCreateDisabled.signal
+                                    ? "text-zinc-500"
+                                    : "text-emerald-300"
+                                )}
+                              />
+                              {/* Remova o AnimatePresence aqui */}
+
+                              {(isExpanded || isMobile) && (
+                                <span className="text-sm">Create Project</span>
+                              )}
+                            </motion.button>
+                          </Tooltip>
+                        </TooltipProvider>
+                      ) : (
+                        <motion.button
+                          layout
+                          layoutId="create-button"
                           className={cn(
-                            "h-5 w-5",
-                            isCreateDisabled
-                              ? "text-zinc-500"
-                              : "text-emerald-300"
+                            "w-full px-4 py-3 rounded-lg flex items-center justify-center gap-2 group transition-all",
+                            isCreateDisabled.signal
+                              ? "bg-zinc-700/50 text-zinc-500 cursor-not-allowed"
+                              : "bg-emerald-500/10 hover:bg-emerald-500/30 text-emerald-300"
                           )}
-                        />
-                        {/* Remova o AnimatePresence aqui */}
-                        {(isExpanded || isMobile) && (
-                          <span className="text-sm">Create Project</span>
-                        )}
-                      </motion.button>
+                          onClick={
+                            isCreateDisabled.signal
+                              ? undefined
+                              : () => setOpenCreateProjectModal(true)
+                          }
+                          whileTap={
+                            isCreateDisabled.signal
+                              ? undefined
+                              : { scale: 0.98 }
+                          }
+                          disabled={isCreateDisabled.signal}
+                        >
+                          <Plus
+                            className={cn(
+                              "h-5 w-5",
+                              isCreateDisabled.signal
+                                ? "text-zinc-500"
+                                : "text-emerald-300"
+                            )}
+                          />
+                          {/* Remova o AnimatePresence aqui */}
+
+                          {(isExpanded || isMobile) && (
+                            <span className="text-sm">Create Project</span>
+                          )}
+                        </motion.button>
+                      )}
+
                       {filteredProjects.map((project) => {
                         const isSelected = project._id === selectedProjectId;
 
@@ -528,34 +587,81 @@ const Sidebar = ({
               {/* Navigation */}
               <nav className="flex-1 overflow-y-auto p-2 space-y-1.5 w-full flex-col flex max-w-full">
                 {/* Create Object Button */}
-                <motion.button
-                  layout
-                  layoutId="create-button"
-                  className={cn(
-                    "w-full px-4 py-3 rounded-lg flex items-center justify-center gap-2 group transition-all",
-                    isCreateDisabled
-                      ? "bg-zinc-700/50 text-zinc-500 cursor-not-allowed"
-                      : "bg-emerald-500/10 hover:bg-emerald-500/30 text-emerald-300"
-                  )}
-                  onClick={
-                    isCreateDisabled
-                      ? undefined
-                      : () => setOpenCreateProjectModal(true)
-                  }
-                  whileTap={isCreateDisabled ? undefined : { scale: 0.98 }}
-                  disabled={isCreateDisabled}
-                >
-                  <Plus
+
+                {isCreateDisabled.signal ? (
+                  <TooltipProvider>
+                    <Tooltip content={isCreateDisabled.message} position="top">
+                      <motion.button
+                        layout
+                        layoutId="create-button"
+                        className={cn(
+                          "w-full px-4 py-3 rounded-lg flex items-center justify-center gap-2 group transition-all",
+                          isCreateDisabled.signal
+                            ? "bg-zinc-700/50 text-zinc-500 cursor-not-allowed"
+                            : "bg-emerald-500/10 hover:bg-emerald-500/30 text-emerald-300"
+                        )}
+                        onClick={
+                          isCreateDisabled.signal
+                            ? undefined
+                            : () => setOpenCreateProjectModal(true)
+                        }
+                        whileTap={
+                          isCreateDisabled.signal ? undefined : { scale: 0.98 }
+                        }
+                        disabled={isCreateDisabled.signal}
+                      >
+                        <Plus
+                          className={cn(
+                            "h-5 w-5",
+                            isCreateDisabled.signal
+                              ? "text-zinc-500"
+                              : "text-emerald-300"
+                          )}
+                        />
+                        {/* Remova o AnimatePresence aqui */}
+
+                        {(isExpanded || isMobile) && (
+                          <span className="text-sm">Create Project</span>
+                        )}
+                      </motion.button>
+                    </Tooltip>
+                  </TooltipProvider>
+                ) : (
+                  <motion.button
+                    layout
+                    layoutId="create-button"
                     className={cn(
-                      "h-5 w-5",
-                      isCreateDisabled ? "text-zinc-500" : "text-emerald-300"
+                      "w-full px-4 py-3 rounded-lg flex items-center justify-center gap-2 group transition-all",
+                      isCreateDisabled.signal
+                        ? "bg-zinc-700/50 text-zinc-500 cursor-not-allowed"
+                        : "bg-emerald-500/10 hover:bg-emerald-500/30 text-emerald-300"
                     )}
-                  />
-                  {/* Remova o AnimatePresence aqui */}
-                  {(isExpanded || isMobile) && (
-                    <span className="text-sm">Create Project</span>
-                  )}
-                </motion.button>
+                    onClick={
+                      isCreateDisabled.signal
+                        ? undefined
+                        : () => setOpenCreateProjectModal(true)
+                    }
+                    whileTap={
+                      isCreateDisabled.signal ? undefined : { scale: 0.98 }
+                    }
+                    disabled={isCreateDisabled.signal}
+                  >
+                    <Plus
+                      className={cn(
+                        "h-5 w-5",
+                        isCreateDisabled.signal
+                          ? "text-zinc-500"
+                          : "text-emerald-300"
+                      )}
+                    />
+                    {/* Remova o AnimatePresence aqui */}
+
+                    {(isExpanded || isMobile) && (
+                      <span className="text-sm">Create Project</span>
+                    )}
+                  </motion.button>
+                )}
+
                 {filteredProjects.map((project) => {
                   const isSelected = project._id === selectedProjectId;
 

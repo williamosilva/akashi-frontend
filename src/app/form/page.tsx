@@ -5,7 +5,7 @@ import { AuroraBackground } from "@/components/ui/Aurora-background";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { montserrat, jetbrainsMono } from "@/styles/fonts";
-import { useProject } from "@/components/ui/ConditionalLayout";
+import { useProject, useUser } from "@/components/ui/ConditionalLayout";
 import { ProjectService } from "@/services/project.service";
 import { PartialProjectData, FormattedProject } from "@/types/project.types";
 import ModalObject from "@/components/ui/ModalObject";
@@ -15,10 +15,9 @@ import MainContent from "./components/MainContent";
 import EmptyStateObjects from "./components/EmptyStateObjects";
 import EmptyStateProjects from "./components/EmptyStateProjects";
 import { SucessPaid } from "./components/sucess-paid/SucessPaid";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 export default function FormPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
 
   // Store URL parameters
@@ -38,6 +37,7 @@ export default function FormPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [apiUrl, setApiUrl] = useState<string | null>("");
   const [showPaidModal, setShowPaidModal] = useState(false);
+  const { setCountProjects } = useUser();
   const {
     selectedProjectId,
     triggerReload,
@@ -57,13 +57,10 @@ export default function FormPage() {
     data: Record<string, unknown>;
   } | null>(null);
 
-  // Effect to capture URL parameters and then clear them
   useEffect(() => {
-    // Get parameters from URL
     const email = searchParams.get("email");
     const plan = searchParams.get("plan");
 
-    // If parameters exist, store them and clean the URL
     if (email || plan) {
       setUrlParams({
         email: email || "",
@@ -72,7 +69,6 @@ export default function FormPage() {
 
       setShowPaidModal(true);
 
-      // Clean the URL without triggering a refresh
       window.history.replaceState({}, "", "/form");
     }
   }, [searchParams]);
@@ -120,6 +116,7 @@ export default function FormPage() {
       ProjectService.getInstance()
         .deleteProject(selectedProjectId)
         .then(() => {
+          setCountProjects((prevCount) => prevCount - 1);
           setSelectedProject(null);
           triggerReload();
           setSelectedProjectId(null);

@@ -7,26 +7,24 @@ import { jetbrainsMono, montserrat } from "@/styles/fonts";
 import { useState, useEffect, useContext } from "react";
 import { PaymentService } from "@/services/payment.service";
 import { useHook, UserContext } from "@/components/ui/ConditionalLayout";
+import { useUser } from "@/components/ui/ConditionalLayout";
 
 const PlanCard = ({
   plan,
   isCurrentPlan,
   isLoading,
   onChoosePlan,
-  userPlan, // Novo parâmetro para armazenar o plano atual do usuário
 }: {
   plan: (typeof plans)[0];
   isCurrentPlan: boolean;
   isLoading: boolean;
   onChoosePlan: () => void;
-  userPlan: string; // Tipo do plano atual do usuário ("free", "basic", "premium")
 }) => {
   const isPremium = plan.name === "Premium";
 
   // Lógica para determinar se devemos mostrar "Current Plan"
   // Mostra para o plano atual do usuário E também para o Free se o usuário tiver outro plano
-  const showCurrentPlan =
-    isCurrentPlan || (plan.type === "free" && userPlan !== "free");
+  const showCurrentPlan = isCurrentPlan || plan.type === "free";
 
   return (
     <div

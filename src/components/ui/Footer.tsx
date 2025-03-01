@@ -49,7 +49,7 @@ export default function Footer() {
 
       if (accessToken) {
         const validToken = await authService.validateToken(accessToken || "");
-        console.log("Token válido:", validToken);
+        // console.log("Token válido:", validToken);
         router.push("/form");
         return;
       }
