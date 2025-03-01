@@ -5,7 +5,7 @@ import { AuroraBackground } from "@/components/ui/Aurora-background";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { montserrat, jetbrainsMono } from "@/styles/fonts";
-import { useProject, useUser } from "@/components/ui/ConditionalLayout";
+import { useProject } from "@/components/ui/ConditionalLayout";
 import { ProjectService } from "@/services/project.service";
 import { PartialProjectData, FormattedProject } from "@/types/project.types";
 import ModalObject from "@/components/ui/ModalObject";
@@ -16,6 +16,7 @@ import EmptyStateObjects from "./components/EmptyStateObjects";
 import EmptyStateProjects from "./components/EmptyStateProjects";
 import { SucessPaid } from "./components/sucess-paid/SucessPaid";
 import { useSearchParams } from "next/navigation";
+import { useUser } from "@/components/ui/ConditionalLayout";
 
 export default function FormPage() {
   const searchParams = useSearchParams();
@@ -25,12 +26,19 @@ export default function FormPage() {
     email: "",
     plan: "",
   });
-
+  const { plan, countProjects } = useUser();
   // Rest of your existing state
   const [, setSelectedProject] = useState<string | null>(null);
   const [projectData, setProjectData] = useState<PartialProjectData | null>(
     null
   );
+  const [sideBarControlled, setSideBarControlled] = useState<{
+    signal: boolean;
+    message: string;
+  }>({
+    signal: false,
+    message: "",
+  });
   const [dataJson, setDataJson] = useState<FormattedProject | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -158,6 +166,38 @@ export default function FormPage() {
     }
   };
 
+  useEffect(() => {
+    console.log("Verificando condições com estado local:", {
+      plan,
+      countProjects,
+    });
+
+    if (plan === "free" && countProjects >= 1) {
+      console.log("Usuário free com projeto");
+      setSideBarControlled({
+        signal: true,
+        message: "You have reached the project limit for the Free plan.",
+      });
+    } else if (plan === "basic" && countProjects >= 5) {
+      console.log("Usuário basic com projeto");
+      setSideBarControlled({
+        signal: true,
+        message: "You have reached the project limit for the Basic plan.",
+      });
+    } else if (plan === "premium" && countProjects >= 10) {
+      console.log("Usuário premium com projeto");
+      setSideBarControlled({
+        signal: true,
+        message: "You have reached the project limit for the Premium plan.",
+      });
+    } else {
+      setSideBarControlled({
+        signal: false,
+        message: "",
+      });
+    }
+  }, [plan, countProjects]);
+
   return (
     <main className="relative overflow-hidden">
       <div className="relative z-[2]">
@@ -211,6 +251,7 @@ export default function FormPage() {
               ) : (
                 <EmptyStateProjects
                   setOpenCreateProjectModal={setOpenCreateProjectModal}
+                  isCreateDisabled={sideBarControlled}
                 />
               )}
             </>

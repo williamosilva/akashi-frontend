@@ -3,12 +3,20 @@ import { motion } from "framer-motion";
 import { FileText } from "lucide-react";
 import { montserrat } from "@/styles/fonts";
 import { cn } from "@/lib/utils";
+import { Tooltip, TooltipProvider } from "@/components/ui/Tooltip";
+
+interface EmptyStateProjectsProps {
+  setOpenCreateProjectModal: (isOpen: boolean) => void;
+  isCreateDisabled: {
+    message: string;
+    signal: boolean;
+  };
+}
 
 export default function EmptyStateProjects({
   setOpenCreateProjectModal,
-}: {
-  setOpenCreateProjectModal: (isOpen: boolean) => void;
-}) {
+  isCreateDisabled,
+}: EmptyStateProjectsProps) {
   return (
     <motion.div
       className="flex-grow flex items-center justify-center"
@@ -60,17 +68,28 @@ export default function EmptyStateProjects({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <motion.button
-            className="inline-flex items-center px-4  py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-green-400 to-green-600 focus:outline-none  shadow-md"
-            onClick={() => setOpenCreateProjectModal(true)}
-            whileHover={{
-              scale: 1.05,
-            }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <FileText className="mr-2 h-4 w-4" />
-            Create Project
-          </motion.button>
+          {isCreateDisabled.signal ? (
+            <TooltipProvider>
+              <Tooltip content={isCreateDisabled.message} position="bottom">
+                <motion.button className="inline-flex items-center px-4 bg-zinc-700/50 text-zinc-500 cursor-not-allowed  py-2 border border-transparent text-sm font-medium rounded-md  bg-gradient-to-r  focus:outline-none  shadow-md">
+                  <FileText className="mr-2 h-4 w-4" />
+                  Create Project
+                </motion.button>
+              </Tooltip>
+            </TooltipProvider>
+          ) : (
+            <motion.button
+              className="inline-flex items-center px-4  py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-green-400 to-green-600 focus:outline-none  shadow-md"
+              onClick={() => setOpenCreateProjectModal(true)}
+              whileHover={{
+                scale: 1.05,
+              }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <FileText className="mr-2 h-4 w-4" />
+              Create Project
+            </motion.button>
+          )}
         </motion.div>
       </motion.div>
     </motion.div>
