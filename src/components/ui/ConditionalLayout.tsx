@@ -147,7 +147,7 @@ export default function ConditionalLayout({
     };
 
     validateAndLoadUser();
-  }, [pathname, router, authService]);
+  }, [pathname, authService]);
 
   useEffect(() => {
     if (plan === "free" && countProjects >= 1) {
