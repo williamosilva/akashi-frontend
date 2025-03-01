@@ -66,3 +66,26 @@ export const plans = [
     color: "teal",
   },
 ];
+
+export const featuresStep = [
+  {
+    step: "Step 1",
+    title: "Easy to Use",
+    content:
+      "Design visual objects that automatically generate structured JSON.",
+    image: "/images/first_step.png",
+  },
+  {
+    step: "Step 2",
+    title: "Advanced Integration",
+    content:
+      "Connect external APIs with support for dynamic filters and API Keys.",
+    image: "/images/second_step.png",
+  },
+  {
+    step: "Step 3",
+    title: "Total Centralization",
+    content: "Manage typing and integrations in a unified and efficient way.",
+    image: "/images/third_step.png",
+  },
+];

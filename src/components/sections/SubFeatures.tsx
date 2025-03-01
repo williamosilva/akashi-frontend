@@ -77,7 +77,6 @@ export default function Features() {
         jetbrainsMono.variable
       )}
     >
-      <div className="absolute z-[0] inset-0 bg-gradient-to-b from-zinc-900 via-transparent to-transparent pointer-events-none" />
       <div className="container mx-auto px-4 max-w-6xl z-[1] relative">
         <motion.div
           custom={0}
