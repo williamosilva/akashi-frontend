@@ -1,7 +1,10 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, Plus, Sparkles } from "lucide-react";
+import { Star, Plus, Sparkles, Loader2 } from "lucide-react";
 import { PremiumButtonProps } from "@/types/user.types";
+import { PaymentService } from "@/services/payment.service";
+import { useUser } from "./ConditionalLayout";
+import { useState } from "react";
 
 const SparkleEffect = () => {
   return (
@@ -38,34 +41,72 @@ export default function PremiumButtonEmpty({
   onSimpleObjectCreate,
   onApiIntegrationCreate,
 }: PremiumButtonProps) {
-  const onUpgradeClick = () => {};
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSimpleLoading, setIsSimpleLoading] = useState(false);
+  const paymentService = PaymentService.getInstance();
+  const { email } = useUser();
+
+  const onUpgradeClick = async () => {
+    console.log("chamou");
+    try {
+      setIsLoading(true);
+
+      const { checkoutUrl } = await paymentService.createCheckoutSession(
+        email || "",
+        "premium"
+      );
+
+      window.location.href = checkoutUrl;
+    } catch (error) {
+      console.error("Error creating checkout session:", error);
+      alert(
+        "The payment process could not be started. Please try again later."
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSimpleObjectCreate = async () => {
+    try {
+      setIsSimpleLoading(true);
+      await onSimpleObjectCreate();
+    } catch (error) {
+      console.error("Error creating simple object:", error);
+    } finally {
+      setIsSimpleLoading(false);
+    }
+  };
+
   const canAccessApiIntegration =
     userPlan === "premium" || userPlan === "admin";
 
-  console.log("PremiumButtonEmpty");
-
   return (
-    <div className="flex gap-4 font-sans h-full md:w-[500px]  w-full flex-grow sm:flex-row flex-col">
+    <div className="flex gap-4 font-sans h-full md:w-[500px] w-full flex-grow sm:flex-row flex-col">
       <button
-        onClick={onSimpleObjectCreate}
-        className=" w-full relative px-4 py-3 rounded-lg bg-zinc-800 border border-emerald-500/20 text-emerald-300 text-sm font-medium hover:bg-zinc-700 transition-all flex items-center justify-center"
+        onClick={handleSimpleObjectCreate}
+        disabled={isSimpleLoading}
+        className="w-full relative px-4 py-3 rounded-lg bg-zinc-800 border border-emerald-500/20 text-emerald-300 text-sm font-medium hover:bg-zinc-700 transition-all flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
       >
-        <Plus size={16} className="sm:mr-2 mr-0" />
-        Create Simple Object
+        {isSimpleLoading ? (
+          <Loader2 size={16} className="mr-2 animate-spin" />
+        ) : (
+          <Plus size={16} className="sm:mr-2 mr-0" />
+        )}
+        {isSimpleLoading ? "Creating..." : "Create Simple Object"}
       </button>
 
-      <div className="relative  w-full h-auto ">
+      <div className="relative w-full h-auto">
         <button
           onClick={() => {
             if (canAccessApiIntegration) {
               onApiIntegrationCreate();
             }
           }}
-          disabled={!canAccessApiIntegration}
           className={`w-full whitespace-nowrap relative flex-grow px-4 py-3 rounded-lg border h-[54px] sm:h-full text-sm font-medium transition-all flex items-center justify-center ${
             canAccessApiIntegration
               ? "bg-gradient-to-r from-emerald-500 to-green-500 text-white hover:from-emerald-600 hover:to-green-600"
-              : "bg-zinc-800 border-zinc-700 text-zinc-500 "
+              : "bg-zinc-800 border-zinc-700 text-zinc-500"
           }`}
         >
           <Plus size={16} className="sm:mr-2 mr-0" />
@@ -79,10 +120,15 @@ export default function PremiumButtonEmpty({
               </div>
               <button
                 onClick={onUpgradeClick}
-                className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white text-sm font-medium py-2 px-4 rounded-md transition-all duration-200 flex items-center justify-center gap-2"
+                disabled={isLoading}
+                className="bg-gradient-to-r from-green-500 to-emerald-600 hover:opacity-85 hover:scale-105 text-white text-sm font-medium py-2 px-4 rounded-md transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-70 disabled:transform-none disabled:cursor-not-allowed"
               >
-                <Sparkles size={16} className="text-white" />
-                Upgrade your Plan
+                {isLoading ? (
+                  <Loader2 size={16} className="text-white animate-spin" />
+                ) : (
+                  <Sparkles size={16} className="text-white" />
+                )}
+                {isLoading ? "Processing..." : "Upgrade your Plan"}
               </button>
             </div>
           )}

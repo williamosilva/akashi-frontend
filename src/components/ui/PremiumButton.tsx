@@ -127,7 +127,7 @@ export default function PremiumButton({
                       className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400"
                     />
                     <span className="text-[10px] font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 tracking-wide">
-                      PREMIUM
+                      ONLY PREMIUM
                     </span>
                   </motion.span>
                 )}

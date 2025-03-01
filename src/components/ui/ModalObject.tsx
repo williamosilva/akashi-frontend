@@ -6,6 +6,7 @@ import { ObjectHeader } from "./Object-modal-content/ObjectHeader";
 import { ObjectProperties } from "./Object-modal-content/ObjectProperties";
 import { ObjectActions } from "./Object-modal-content/ObjectActions";
 import { ProjectService } from "@/services/project.service";
+import { useUser } from "./ConditionalLayout";
 import type {
   ModalObjectProps,
   DynamicIntegrationObject,
@@ -25,7 +26,7 @@ export default function ModalObject({
 }: ModalObjectProps) {
   const [currentData, setCurrentData] =
     useState<DynamicIntegrationObject>(DEFAULT_DATA);
-  const [userPlan] = useState<SubscriptionPlan>("premium");
+  // const [userPlan] = useState<SubscriptionPlan>("premium");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentKey, setCurrentKey] = useState(itemKey || "new-object");
@@ -33,6 +34,7 @@ export default function ModalObject({
   const [objectName, setObjectName] = useState<string>("New Object");
   const [sortOrder, setSortOrder] = useState<SortOrder>("none");
   // console.log("joseph", currentData);
+  const { plan } = useUser();
 
   useEffect(() => {
     if (isVisible) {
@@ -251,7 +253,7 @@ export default function ModalObject({
       <div className="relative w-full  mx-auto max-h-[100vh] min-h-80 flex flex-col rounded-lg h-auto px-0">
         <ObjectHeader
           name={objectName}
-          userPlan={userPlan}
+          userPlan={plan}
           sortAscending={sortAscending}
           setSortAscending={toggleSorting}
           onApiIntegrationCreate={handleCreateApiIntegration}
@@ -264,7 +266,7 @@ export default function ModalObject({
         <ObjectProperties
           data={dataForProperties}
           onUpdate={handleObjectUpdate}
-          isApiEditable={userPlan === "premium" || userPlan === "admin"}
+          isApiEditable={true}
           empty={Object.keys(currentData).length === 0}
           isLoading={isLoading}
         />
