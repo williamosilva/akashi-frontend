@@ -166,13 +166,27 @@ export default function Footer() {
           </nav>
           <div className="flex space-x-4 w-full md:justify-end justify-center">
             {[
-              { name: "GitHub", icon: Github, href: "#" },
-              { name: "LinkedIn", icon: Linkedin, href: "#" },
-              { name: "Website", icon: Globe, href: "#" },
+              {
+                name: "GitHub",
+                icon: Github,
+                href: "https://github.com/williamosilva",
+              },
+              {
+                name: "LinkedIn",
+                icon: Linkedin,
+                href: "https://www.linkedin.com/in/williamsilva2005/",
+              },
+              {
+                name: "Website",
+                icon: Globe,
+                href: "http://williamsilva.dev/",
+              },
             ].map((social) => (
               <motion.a
                 key={social.name}
                 href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-zinc-400 hover:text-emerald-300 transition-colors"
                 whileHover={{ y: -2 }}
                 whileTap={{ y: 0 }}
