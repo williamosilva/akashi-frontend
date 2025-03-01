@@ -143,6 +143,43 @@ export function FeatureSteps({
           </div>
         </div>
       </div>
+      <div className="flex items-center rounded-full border border-emerald-500/20 bg-zinc-800/50 p-2 shadow shadow-black/5 mt-14">
+        <div className="flex -space-x-2.5">
+          <img
+            className="rounded-full ring-2 ring-zinc-900"
+            src="https://originui.com/avatar-80-03.jpg"
+            width={32}
+            height={32}
+            alt="Avatar 01"
+          />
+          <img
+            className="rounded-full ring-2 ring-zinc-900"
+            src="https://originui.com/avatar-80-04.jpg"
+            width={32}
+            height={32}
+            alt="Avatar 02"
+          />
+          <img
+            className="rounded-full ring-2 ring-zinc-900"
+            src="https://originui.com/avatar-80-05.jpg"
+            width={32}
+            height={32}
+            alt="Avatar 03"
+          />
+          <img
+            className="rounded-full ring-2 ring-zinc-900"
+            src="https://originui.com/avatar-80-06.jpg"
+            width={32}
+            height={32}
+            alt="Avatar 04"
+          />
+        </div>
+        <p className="px-3 text-sm text-zinc-400">
+          Trusted by{" "}
+          <strong className="font-medium text-emerald-300">100+</strong>{" "}
+          developers.
+        </p>
+      </div>
       <div className="absolute z-[0] inset-0 bg-gradient-to-b from-zinc-900 via-transparent to-transparent pointer-events-none" />
     </div>
   );
