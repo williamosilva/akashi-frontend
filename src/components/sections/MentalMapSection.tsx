@@ -226,7 +226,9 @@ const MindMapSection = () => {
           break;
         case "hub":
           const time = performance.now() * 0.001;
-          const pulseSize = Math.sin(time * 2) * 2 + 20 * scale;
+          const baseRadius = 10 * scale;
+          const amplitude = 5 * scale;
+          const pulseSize = Math.sin(time * 2) * amplitude + baseRadius;
           const hubGlow = ctx.createRadialGradient(x, y, 0, x, y, 50 * scale);
           hubGlow.addColorStop(0, "rgba(52, 211, 153, 0.5)");
           hubGlow.addColorStop(1, "rgba(52, 211, 153, 0)");
@@ -347,7 +349,10 @@ const MindMapSection = () => {
   return (
     <section className="relative w-full h-screen flex flex-col mt-4">
       <div className="absolute inset-0">
-        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
+        <canvas
+          ref={canvasRef}
+          className="absolute inset-0 w-full h-full xl:mt-0 mt-10"
+        />
       </div>
 
       <div className="relative z-10 flex flex-col justify-center items-center text-center mt-24 px-4">

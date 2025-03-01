@@ -48,7 +48,7 @@ export interface ApiItem {
   [key: string]: string | undefined;
 }
 
-export type SubscriptionPlan = "free" | "basic" | "premium" | "admin";
+export type SubscriptionPlan = "free" | "basic" | "premium" | "admin" | null;
 
 export interface ApiResponse {
   error?: string;
