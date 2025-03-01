@@ -149,25 +149,17 @@ export default function ConditionalLayout({
   }, [pathname, router, authService]);
 
   useEffect(() => {
-    console.log("Verificando condições com estado local:", {
-      plan,
-      countProjects,
-    });
-
     if (plan === "free" && countProjects >= 1) {
-      console.log("Usuário free com projeto");
       setSideBarControlled({
         signal: true,
         message: "You have reached the project limit for the Free plan.",
       });
     } else if (plan === "basic" && countProjects >= 5) {
-      console.log("Usuário basic com projeto");
       setSideBarControlled({
         signal: true,
         message: "You have reached the project limit for the Basic plan.",
       });
     } else if (plan === "premium" && countProjects >= 10) {
-      console.log("Usuário premium com projeto");
       setSideBarControlled({
         signal: true,
         message: "You have reached the project limit for the Premium plan.",

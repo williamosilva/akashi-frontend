@@ -34,7 +34,6 @@ export default function Home() {
     const timeoutId = setTimeout(() => {
       if (targetSection === "hero") {
         setOpenAuthModal(true);
-        console.log("Modal aberto após scroll do Hero");
       }
       setTargetSection("");
     }, scrollDuration);

@@ -47,7 +47,6 @@ export default function PremiumButtonEmpty({
   const { email } = useUser();
 
   const onUpgradeClick = async () => {
-    console.log("chamou");
     try {
       setIsLoading(true);
 

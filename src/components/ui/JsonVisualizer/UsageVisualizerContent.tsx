@@ -290,7 +290,7 @@ export const UsageVisualizerContent = ({ apiUrl }: Props) => {
 
   const codeExamples = {
     typescript: `const fetchData = async () => {
-  try {
+  try {q
     const response = await fetch('${apiUrl}');
     const jsonData = await response.json();
     console.log(jsonData);

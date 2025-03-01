@@ -54,12 +54,10 @@ export default function Footer() {
           router.push("/form");
           return;
         } else {
-          console.log("Usuario nao logado");
           setTargetSection("hero");
         }
       }
 
-      console.log("Usuario nao logado");
       setTargetSection("hero");
     } catch (error) {
       console.error("Erro de autenticação:", error);

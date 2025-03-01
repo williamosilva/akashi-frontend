@@ -39,7 +39,6 @@ export default function Navbar({
   };
 
   useEffect(() => {
-    console.log("openAuthModal", openAuthModal);
     if (openAuthModal) {
       setIsAuthOpen(true);
     }

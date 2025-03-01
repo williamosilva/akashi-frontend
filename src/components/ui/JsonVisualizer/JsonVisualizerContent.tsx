@@ -6,7 +6,6 @@ import { useState } from "react";
 export const JsonVisualizerContent: React.FC<{ data: unknown }> = ({
   data,
 }) => {
-  console.log(data);
   if (typeof data !== "object" || data === null) {
     return <JsonValue value={data} />;
   }

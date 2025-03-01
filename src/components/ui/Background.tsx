@@ -6,7 +6,7 @@ const SmokeBlob = ({ className = "" }) => (
 
 export default function Background() {
   return (
-    <div className="absolute w-full min-h-[700vh] flex items-center justify-center overflow-hidden bg-zinc-900">
+    <div className="absolute w-full min-h-[710vh] flex items-center justify-center overflow-hidden bg-zinc-900">
       <div className="absolute inset-0 overflow-hidden">
         <SmokeBlob className="w-96 h-96 left-[10%] top-[15%] opacity-20" />
         <SmokeBlob className="w-80 h-80 right-[15%] top-[25%] opacity-15" />
@@ -19,7 +19,7 @@ export default function Background() {
 
       <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.05] via-transparent to-zinc-800/[0.2] blur-2xl pointer-events-none" />
 
-      <div className="absolute inset-0 overflow-hidden z-[1] pointer-events-none">
+      <div className="sm:absolute hidden inset-0 overflow-hidden z-[1] pointer-events-none ">
         <Geometric3DShape
           delay={0.3}
           width={600}
