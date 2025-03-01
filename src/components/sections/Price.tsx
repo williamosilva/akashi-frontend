@@ -121,7 +121,7 @@ export default function PriceSection() {
       console.log("email", email);
 
       // Verificar a assinatura usando o email do usuário
-      const response = await paymentService.verifySubscription(email);
+      const response = await paymentService.verifySubscription();
 
       console.log("response plano", response);
       // A resposta segue o formato do backend: { hasActiveSubscription: boolean, subscription: { plan: 'basic' | 'premium' } | null }

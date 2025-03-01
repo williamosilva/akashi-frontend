@@ -58,10 +58,7 @@ export default function Home() {
           <HeroGeometric />
         </div>
         <div id="features">
-          <FeatureSteps
-            features={featuresStep}
-            title="Your Journey Starts Here"
-          />
+          <FeatureSteps features={featuresStep} />
         </div>
         <div id="sub-features">
           <Features />

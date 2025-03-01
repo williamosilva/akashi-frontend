@@ -17,7 +17,6 @@ interface Feature {
 interface FeatureStepsProps {
   features: Feature[];
   className?: string;
-  title?: string;
   autoPlayInterval?: number;
 }
 
@@ -25,7 +24,6 @@ export function FeatureSteps({
   features,
   className,
   autoPlayInterval = 3000,
-  title,
 }: FeatureStepsProps) {
   const [currentFeature, setCurrentFeature] = useState(0);
   const [progress, setProgress] = useState(0);
