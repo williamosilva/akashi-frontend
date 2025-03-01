@@ -20,14 +20,11 @@ export function ObjectProperties({
   isLoading,
   isApiEditable,
 }: ObjectPropertiesProps) {
-  // Local state to track key errors
   const [keyErrors, setKeyErrors] = useState<Record<string, string>>({});
 
-  // Dados do objeto principal
   const objectId = Object.keys(data || {})[0] || "";
   const objectData = objectId ? data[objectId] : {};
 
-  // Classifica as propriedades mantendo a ordem original
   const getPropertyEntries = () => {
     return Object.entries(objectData)
       .filter(([, value]) => value !== null && value !== "")
@@ -38,10 +35,8 @@ export function ObjectProperties({
       }));
   };
 
-  // Get all existing keys for validation
   const getAllKeys = () => Object.keys(objectData);
 
-  // Verifica se é uma integração API
   const isApiIntegration = (value: unknown): value is ApiIntegrationValue => {
     return (
       typeof value === "object" &&
@@ -51,7 +46,6 @@ export function ObjectProperties({
     );
   };
 
-  // Manipulação genérica de propriedades
   const handlePropertyChange = (
     key: string,
     value: SimplePropertyValue | ApiIntegrationValue
@@ -63,17 +57,14 @@ export function ObjectProperties({
   };
 
   const handleRenameProperty = (oldKey: string, newKey: string) => {
-    // Validar se a nova chave já existe
     if (newKey !== oldKey && Object.keys(objectData).includes(newKey)) {
-      // Atualizar estado de erro
       setKeyErrors({
         ...keyErrors,
         [oldKey]: `A chave "${newKey}" já existe`,
       });
-      return; // Não prosseguir com a renomeação
+      return;
     }
 
-    // Limpar erro se existia
     if (keyErrors[oldKey]) {
       const updatedErrors = { ...keyErrors };
       delete updatedErrors[oldKey];
@@ -92,7 +83,6 @@ export function ObjectProperties({
   };
 
   const handleDeleteProperty = (keyToDelete: string) => {
-    // Limpar erro relacionado à chave se existir
     if (keyErrors[keyToDelete]) {
       const updatedErrors = { ...keyErrors };
       delete updatedErrors[keyToDelete];

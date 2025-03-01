@@ -5,7 +5,6 @@ import { useState, useRef, memo } from "react";
 import PremiumButtonEmpty from "../PremiumButtonEmpty";
 import { cn } from "@/lib/utils";
 
-// Componente separado para o campo de input
 const NameEditor = memo(
   ({
     name,
@@ -68,7 +67,6 @@ const NameEditor = memo(
 );
 NameEditor.displayName = "NameEditor";
 
-// Componente de título memoizado
 const MemoizedTitle = memo(
   ({ name, onEditClick }: { name: string; onEditClick: () => void }) => (
     <>
@@ -87,7 +85,6 @@ const MemoizedTitle = memo(
 );
 MemoizedTitle.displayName = "MemoizedTitle";
 
-// Botões de controle memoizados
 const MemoizedControls = memo(
   ({
     sortAscending,
@@ -129,7 +126,6 @@ const MemoizedControls = memo(
 );
 MemoizedControls.displayName = "MemoizedControls";
 
-// Componente principal
 export function ObjectHeader({
   name,
   sortAscending,

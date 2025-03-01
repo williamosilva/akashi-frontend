@@ -20,12 +20,10 @@ export class ProjectService extends ApiService {
     return ProjectService.instance;
   }
 
-  // Busca projetos de um usuário
   public async getProjectsByUser(userId: string): Promise<Project[]> {
     return this.request<Project[]>(`/projects/user/${userId}`);
   }
 
-  // Busca informações de dados de um projeto (com atualização das APIs)
   public async getProjectDataInfo(projectId: string): Promise<ProjectDataInfo> {
     return this.request<ProjectDataInfo>(`/projects/${projectId}/datainfo`);
   }

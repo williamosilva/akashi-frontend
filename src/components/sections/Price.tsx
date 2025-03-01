@@ -21,8 +21,6 @@ const PlanCard = ({
 }) => {
   const isPremium = plan.name === "Premium";
 
-  // Lógica para determinar se devemos mostrar "Current Plan"
-  // Mostra para o plano atual do usuário E também para o Free se o usuário tiver outro plano
   const showCurrentPlan = isCurrentPlan || plan.type === "free";
 
   return (
@@ -118,13 +116,9 @@ export default function PriceSection() {
         setCurrentPlan("Free");
         return;
       }
-      console.log("email", email);
 
-      // Verificar a assinatura usando o email do usuário
       const response = await paymentService.verifySubscription();
 
-      console.log("response plano", response);
-      // A resposta segue o formato do backend: { hasActiveSubscription: boolean, subscription: { plan: 'basic' | 'premium' } | null }
       if (response.hasActiveSubscription && response.subscription) {
         setCurrentPlan(
           response.subscription.plan === "premium" ? "Premium" : "Basic"
@@ -140,7 +134,6 @@ export default function PriceSection() {
     }
   };
 
-  // Função para iniciar o processo de checkout
   const handleChoosePlan = async (planType: "basic" | "premium") => {
     try {
       setIsLoading(true);
@@ -167,9 +160,7 @@ export default function PriceSection() {
   };
 
   useEffect(() => {
-    console.log("email", email);
     if (email) {
-      console.log("verificando assinatura");
       verifySubscription();
     }
   }, [email]);

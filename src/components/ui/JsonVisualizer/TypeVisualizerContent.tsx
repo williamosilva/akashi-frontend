@@ -8,7 +8,6 @@ import { cn } from "@/lib/utils";
 
 type ProgrammingLanguage = "typescript" | "python" | "java";
 
-// Define type for the data
 type DataObject = Record<string, unknown>;
 
 export const TypeVisualizerContent: React.FC<{ data: DataObject }> = ({
@@ -17,7 +16,6 @@ export const TypeVisualizerContent: React.FC<{ data: DataObject }> = ({
   const [activeLanguage, setActiveLanguage] =
     useState<ProgrammingLanguage>("typescript");
 
-  // Função para determinar o tipo em TypeScript
   const getTypeInfoTypeScript = (value: unknown): string => {
     if (value === null) return "null";
     if (Array.isArray(value)) {
@@ -31,9 +29,7 @@ export const TypeVisualizerContent: React.FC<{ data: DataObject }> = ({
     return typeof value;
   };
 
-  // Gera um nome de interface baseado em uma chave
   const generateInterfaceName = (key: string): string => {
-    // Transforma chaves como "New Object" em "NewObject"
     return key
       .split(" ")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
@@ -137,7 +133,6 @@ export const TypeVisualizerContent: React.FC<{ data: DataObject }> = ({
       .toLowerCase();
   };
 
-  // Função corrigida para renderizar a estrutura TypeScript
   const renderTypeScriptStructure = (
     data: unknown,
     rootName: string = "Root",
@@ -155,7 +150,7 @@ export const TypeVisualizerContent: React.FC<{ data: DataObject }> = ({
     }
 
     const dataObj = data as Record<string, unknown>;
-    const isArray = Array.isArray(data); // Used in the next if statement
+    const isArray = Array.isArray(data);
 
     if (isArray) {
       const itemType = data.length > 0 ? getTypeInfoTypeScript(data[0]) : "any";
@@ -169,7 +164,6 @@ export const TypeVisualizerContent: React.FC<{ data: DataObject }> = ({
       );
     }
 
-    // Para objetos, criar interfaces separadas
     const entries = Object.entries(dataObj);
 
     if (entries.length === 0) {
@@ -183,7 +177,6 @@ export const TypeVisualizerContent: React.FC<{ data: DataObject }> = ({
       );
     }
 
-    // Interface principal
     const interfaces: JSX.Element[] = [];
 
     interfaces.push(
@@ -224,7 +217,6 @@ export const TypeVisualizerContent: React.FC<{ data: DataObject }> = ({
       </div>
     );
 
-    // Interfaces aninhadas
     entries.forEach(([key, value]) => {
       if (
         typeof value === "object" &&
@@ -246,21 +238,18 @@ export const TypeVisualizerContent: React.FC<{ data: DataObject }> = ({
     return <>{interfaces}</>;
   };
 
-  // Função para converter chaves para camelCase
   const toJavaFieldName = (str: string) => {
     return str
-      .replace(/[^a-zA-Z0-9]/g, " ") // Substitui caracteres especiais por espaços
+      .replace(/[^a-zA-Z0-9]/g, " ")
       .split(" ")
-      .map(
-        (word, index) =>
-          index === 0
-            ? word.charAt(0).toLowerCase() + word.slice(1) // Primeira palavra em minúsculo
-            : word.charAt(0).toUpperCase() + word.slice(1) // Demais palavras em PascalCase
+      .map((word, index) =>
+        index === 0
+          ? word.charAt(0).toLowerCase() + word.slice(1)
+          : word.charAt(0).toUpperCase() + word.slice(1)
       )
       .join("");
   };
 
-  // Função para determinar o tipo em Java (atualizada)
   const getTypeInfoJava = (value: unknown, parentKey?: string): string => {
     if (value === null) return "Object";
     if (Array.isArray(value)) {
@@ -278,7 +267,6 @@ export const TypeVisualizerContent: React.FC<{ data: DataObject }> = ({
     return "Object";
   };
 
-  // Função de renderização Java corrigida
   const renderJavaStructure = (
     data: unknown,
     className: string = "RootModel",
@@ -289,11 +277,10 @@ export const TypeVisualizerContent: React.FC<{ data: DataObject }> = ({
     }
 
     const dataObj = data as Record<string, unknown>;
-    // Using the isArray variable in conditional below
+
     const fields = Object.entries(dataObj);
     const classes: JSX.Element[] = [];
 
-    // Primeiro processa os campos aninhados
     fields.forEach(([key, value]) => {
       if (
         typeof value === "object" &&
@@ -305,7 +292,6 @@ export const TypeVisualizerContent: React.FC<{ data: DataObject }> = ({
       }
     });
 
-    // Construir a classe atual
     const classContent = (
       <div key={className} style={{ marginLeft: `${indent * 20}px` }}>
         <div className="text-emerald-300">
@@ -313,7 +299,7 @@ export const TypeVisualizerContent: React.FC<{ data: DataObject }> = ({
         </div>
 
         {fields.map(([key, value]) => {
-          const fieldName = toJavaFieldName(key); // Usa a nova função de conversão
+          const fieldName = toJavaFieldName(key);
           const type = getTypeInfoJava(value, key);
 
           return (
@@ -322,10 +308,9 @@ export const TypeVisualizerContent: React.FC<{ data: DataObject }> = ({
                 style={{ marginLeft: `${(indent + 1) * 20}px` }}
                 className="text-emerald-200"
               >
-                private {type} {fieldName}; {/* Agora em camelCase */}
+                private {type} {fieldName};
               </div>
 
-              {/* Getters e Setters com camelCase */}
               <div
                 style={{ marginLeft: `${(indent + 1) * 20}px` }}
                 className="text-emerald-300"

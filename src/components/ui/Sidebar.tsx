@@ -162,7 +162,6 @@ const Sidebar = ({
     <>
       {isMobile ? (
         <>
-          {/* Animated Toggle Button that moves from left to right */}
           <AnimatePresence mode="wait">
             {isMobileMenuOpen ? (
               <motion.button
@@ -275,7 +274,6 @@ const Sidebar = ({
                     </div>
                     <div className="p-4">
                       <div className="relative">
-                        {/* <Search className="absolute left-2 mr-4 top-2.5 h-4 w-4 text-emerald-400/70" /> */}
                         <Input
                           ref={inputRef}
                           value={searchQuery}
@@ -289,13 +287,11 @@ const Sidebar = ({
                             !(isExpanded || isMobile) &&
                               "w-full px-0 pointer-events-none border-none"
                           )}
-                          // Adicione estas props
                           onBlur={(e) => {
-                            // Previne a perda de foco
                             e.preventDefault();
                             inputRef.current?.focus();
                           }}
-                          autoComplete="off" // Previne autocompletion que pode causar rerenders
+                          autoComplete="off"
                         />
                         {(isExpanded || isMobile) && (
                           <div className="absolute right-2 top-2 px-1.5 py-0.5 rounded border border-emerald-500/20 bg-zinc-800/50 backdrop-blur-sm">
@@ -305,7 +301,6 @@ const Sidebar = ({
                       </div>
                     </div>
 
-                    {/* Navigation */}
                     <nav className="flex-1 overflow-y-auto p-2 space-y-1.5 w-full flex flex-col h-0 min-h-0">
                       {isCreateDisabled.signal ? (
                         <TooltipProvider>
@@ -701,7 +696,6 @@ const Sidebar = ({
                               "relative w-full overflow-hidden group shrink-0",
                               isSelected && "pointer-events-none rounded-lg"
                             )}
-                            // whileHover={{ scale: isSelected ? 1 : 1.01 }}
                             whileTap={{ scale: isSelected ? 1 : 0.99 }}
                             transition={{
                               type: "spring",

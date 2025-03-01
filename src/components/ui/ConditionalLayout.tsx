@@ -7,6 +7,7 @@ import Sidebar from "@/components/ui/Sidebar";
 import type React from "react";
 import { AuthService } from "@/services/auth.service";
 import { createContext, useContext } from "react";
+import LoadingComponent from "./LoadingComponent";
 
 const VALID_ROUTES = ["/", "/form", "/success"];
 
@@ -28,7 +29,7 @@ interface UserContextType {
   photo: string | null;
   setPhoto: (photo: string | null) => void;
   countProjects: number;
-  setCountProjects: React.Dispatch<React.SetStateAction<number>>; // Alteração aqui
+  setCountProjects: React.Dispatch<React.SetStateAction<number>>;
   plan: "free" | "premium" | "basic" | "admin" | null;
   setPlan: React.Dispatch<
     React.SetStateAction<"free" | "premium" | "basic" | "admin" | null>
@@ -109,10 +110,6 @@ export default function ConditionalLayout({
   const isValidRoute =
     VALID_ROUTES.includes(pathname) || isSuccessCallbackRoute;
 
-  // useEffect(() => {
-  //   console.log("targetSection", targetSection);
-  // }, [targetSection]);
-
   const handleLogout = () => {
     setUserId(null);
     setFullName(null);
@@ -122,10 +119,8 @@ export default function ConditionalLayout({
     router.push("/");
   };
 
-  // 1. useEffect para buscar dados da API (sem dependências do estado local)
   useEffect(() => {
     const validateAndLoadUser = async () => {
-      console.log("Buscar dados da API...");
       try {
         const accessToken = AuthService.getAccessToken();
         const refreshToken = AuthService.getRefreshToken();
@@ -136,7 +131,6 @@ export default function ConditionalLayout({
 
         const userData = await authService.getMe(accessToken);
 
-        // Atualiza o estado local com os dados da API
         setPlan(userData.plan);
         setCountProjects(userData.projectCount);
         setUserId(userData.id);
@@ -152,9 +146,8 @@ export default function ConditionalLayout({
     };
 
     validateAndLoadUser();
-  }, [pathname, router, authService]); // Remova countProjects das dependências!
+  }, [pathname, router, authService]);
 
-  // 2. useEffect para verificar condições (observa mudanças no estado local)
   useEffect(() => {
     console.log("Verificando condições com estado local:", {
       plan,
@@ -189,8 +182,8 @@ export default function ConditionalLayout({
 
   if (isValidating) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="flex items-center justify-center min-h-screen w-full">
+        <LoadingComponent />
       </div>
     );
   }

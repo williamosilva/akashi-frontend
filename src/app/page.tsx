@@ -18,15 +18,12 @@ export default function Home() {
   useEffect(() => {
     if (!targetSection) return;
 
-    // Configurações da animação de scroll
     const isHeroSection = targetSection === "hero" || targetSection === "hero2";
     const scrollDuration = isHeroSection ? 1000 : 800;
     const scrollOffset = isHeroSection ? 0 : -50;
 
-    // Determina o ID da seção para onde fazer o scroll (sempre "hero" para ambos os casos)
     const sectionToScroll = isHeroSection ? "hero" : targetSection;
 
-    // Dispara a animação de scroll
     scroller.scrollTo(sectionToScroll, {
       duration: scrollDuration,
       delay: 0,
@@ -34,17 +31,14 @@ export default function Home() {
       offset: scrollOffset,
     });
 
-    // Configura o timeout para sincronizar com o fim da animação
     const timeoutId = setTimeout(() => {
-      // Abre o modal apenas se o target for "hero" (não "hero2")
       if (targetSection === "hero") {
-        setOpenAuthModal(true); // Abre o modal APÓS a rolagem do Hero
+        setOpenAuthModal(true);
         console.log("Modal aberto após scroll do Hero");
       }
-      setTargetSection(""); // Reseta sempre ao final
+      setTargetSection("");
     }, scrollDuration);
 
-    // Cleanup para evitar vazamentos de memória
     return () => clearTimeout(timeoutId);
   }, [targetSection, setTargetSection, setOpenAuthModal]);
 

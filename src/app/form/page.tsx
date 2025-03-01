@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { AuroraBackground } from "@/components/ui/Aurora-background";
+import { AuroraBackground } from "@/components/ui/AuroraBackground";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { montserrat, jetbrainsMono } from "@/styles/fonts";
@@ -21,13 +21,12 @@ import { useUser } from "@/components/ui/ConditionalLayout";
 export default function FormPage() {
   const searchParams = useSearchParams();
 
-  // Store URL parameters
   const [urlParams, setUrlParams] = useState({
     email: "",
     plan: "",
   });
   const { plan, countProjects } = useUser();
-  // Rest of your existing state
+
   const [, setSelectedProject] = useState<string | null>(null);
   const [projectData, setProjectData] = useState<PartialProjectData | null>(
     null

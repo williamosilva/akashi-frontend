@@ -14,16 +14,12 @@ interface SucessPaidProps {
 export function SucessPaid({ email, plan, hasParams }: SucessPaidProps) {
   const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null);
   const [isVisible, setIsVisible] = useState(false);
-  // console.log("SucessPaidProps", { email, plan, hasParams });
 
   useEffect(() => {
-    // Only set up the portal if hasParams is true
     if (!hasParams) return;
 
-    // Verifica se já existe um elemento com id "portal-root"
     let root = document.getElementById("portal-root");
 
-    // Se não existir, cria um novo elemento div
     if (!root) {
       root = document.createElement("div");
       root.id = "portal-root";
@@ -34,7 +30,7 @@ export function SucessPaid({ email, plan, hasParams }: SucessPaidProps) {
       root.style.width = "100vw";
       root.style.height = "100vh";
       root.style.pointerEvents = "auto";
-      // Adiciona ao body
+
       document.body.appendChild(root);
     }
 
@@ -48,7 +44,6 @@ export function SucessPaid({ email, plan, hasParams }: SucessPaidProps) {
     };
   }, [hasParams]);
 
-  // If not supposed to show or portal not ready, don't render
   if (!hasParams || !portalRoot) return null;
 
   const planDisplay = plan
@@ -57,15 +52,14 @@ export function SucessPaid({ email, plan, hasParams }: SucessPaidProps) {
 
   const handleClose = () => {
     setIsVisible(false);
-    // Give time for exit animation to complete before removing from DOM
+
     setTimeout(() => {
       if (portalRoot && portalRoot.parentNode) {
         portalRoot.parentNode.removeChild(portalRoot);
       }
-    }, 500); // Match this timing with your exit animation duration
+    }, 500);
   };
 
-  // Animation variants
   const backdropVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 0.3 } },
@@ -202,7 +196,6 @@ export function SucessPaid({ email, plan, hasParams }: SucessPaidProps) {
                 Close
               </motion.button>
 
-              {/* Efeito de meteoros para um visual impressionante */}
               <Meteors number={20} />
             </div>
           </motion.div>
@@ -211,6 +204,5 @@ export function SucessPaid({ email, plan, hasParams }: SucessPaidProps) {
     </AnimatePresence>
   );
 
-  // Usa ReactDOM.createPortal para renderizar o conteúdo no nó do portal
   return ReactDOM.createPortal(content, portalRoot);
 }

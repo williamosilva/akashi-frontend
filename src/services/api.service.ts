@@ -28,14 +28,14 @@ export class ApiService {
       const newTokens = await AuthService.refreshToken();
       if (!newTokens) {
         console.error("Falha ao renovar o token. Deslogando usuário...");
-        AuthService.getInstance().logout(); // Desloga o usuário
+        AuthService.getInstance().logout();
         throw new Error("Sessão expirada. Faça login novamente.");
       }
 
       const refreshToken = AuthService.getRefreshToken();
       if (!refreshToken) {
         console.error("Nenhum refreshToken disponível. Deslogando usuário...");
-        AuthService.getInstance().logout(); // Desloga o usuário
+        AuthService.getInstance().logout();
         throw new Error(
           "Nenhum refreshToken encontrado. Faça login novamente."
         );

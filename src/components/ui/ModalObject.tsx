@@ -29,7 +29,7 @@ export default function ModalObject({
   const [objectId, setObjectId] = useState<string | null>(null);
   const [objectName, setObjectName] = useState<string>("New Object");
   const [sortOrder, setSortOrder] = useState<SortOrder>("none");
-  // console.log("joseph", currentData);
+
   const { plan } = useUser();
 
   useEffect(() => {
@@ -43,7 +43,6 @@ export default function ModalObject({
           const id = keys[0];
           const objectData = initialData[id];
 
-          // Verificação de tipo segura
           if (
             typeof objectData === "object" &&
             objectData !== null &&
@@ -59,7 +58,6 @@ export default function ModalObject({
             setCurrentKey(itemKey || id);
             setObjectName(akashiObjectName || itemKey || id);
           } else {
-            // Tratar caso de dados inválidos
             setCurrentData(initialData as DynamicIntegrationObject);
             setCurrentKey(itemKey || "");
             setObjectId(null);
@@ -79,27 +77,21 @@ export default function ModalObject({
     }
   }, [isVisible, initialData, itemKey]);
 
-  // Get the base data
   const baseDataForProperties = objectId
     ? { [objectId]: currentData }
     : { [currentKey]: currentData };
 
-  // Apply sorting to the properties (or not, based on sortOrder)
   const dataForProperties = (() => {
     const result = { ...baseDataForProperties };
 
-    // Se não houver ordenação, retornar os dados como estão
     if (sortOrder === "none") {
       return result;
     }
 
-    // Para cada objeto em dataForProperties
     Object.keys(result).forEach((key) => {
       if (typeof result[key] === "object" && result[key] !== null) {
-        // Obter todas as chaves do objeto
         const sortedKeys = Object.keys(result[key]);
 
-        // Ordenar as chaves (ascendente ou descendente)
         sortedKeys.sort((a, b) => {
           if (sortOrder === "asc") {
             return a.localeCompare(b);
@@ -108,14 +100,11 @@ export default function ModalObject({
           }
         });
 
-        // Criar um novo objeto ordenado
         const sortedObj: Record<string, unknown> = {};
         sortedKeys.forEach((propKey) => {
           sortedObj[propKey] = result[key][propKey];
         });
 
-        // Substituir o objeto original pelo ordenado
-        // Fazendo um casting para DynamicIntegrationObject
         result[key] = sortedObj as DynamicIntegrationObject;
       }
     });
@@ -129,7 +118,6 @@ export default function ModalObject({
     try {
       setIsLoading(true);
 
-      // Usa o serviço para deletar o entry
       await ProjectService.getInstance().deleteDataInfoItem(
         projectId,
         objectId
@@ -154,22 +142,16 @@ export default function ModalObject({
         akashiObjectName: objectName,
       };
 
-      // Determina qual ID usar como entryId (objectId ou currentKey)
       const entryId = objectId;
 
-      // Verifica se está criando um novo entry ou atualizando um existente
       if (!entryId) {
-        // Criando novo entry - usa addDataInfoItem
         const result = await ProjectService.getInstance().addDataInfoItem(
           projectId,
           payload
         );
 
-        // A variável está sendo comentada para evitar o erro de lint
-        // const newEntryId = result.entryId;
-        void result; // Para evitar erros de variável não utilizada
+        void result;
       } else {
-        // Atualizando entry existente - usa updateDataInfoItem
         await ProjectService.getInstance().updateDataInfoItem(
           projectId,
           entryId,
@@ -199,17 +181,15 @@ export default function ModalObject({
   };
 
   const handleCreateSimpleObject = () => {
-    // Redefine o estado de ordenação para "none" ao criar um novo objeto
     setSortOrder("none");
 
     setCurrentData((prev) => ({
-      simpleKeyExample: "valueExample", // Novo simples com chave única
+      simpleKeyExample: "valueExample",
       ...prev,
     }));
   };
 
   const handleCreateApiIntegration = () => {
-    // Redefine o estado de ordenação para "none" ao criar uma nova integração
     setSortOrder("none");
 
     const newApiObject = {
@@ -224,7 +204,6 @@ export default function ModalObject({
     }));
   };
 
-  // Função para alternar entre os três estados de ordenação
   const toggleSorting = () => {
     setSortOrder((prev) => {
       if (prev === "none") return "asc";
@@ -234,12 +213,10 @@ export default function ModalObject({
     });
   };
 
-  // Para compatibilidade com a interface existente do ObjectHeader
   const sortAscending = sortOrder === "asc";
 
   return (
     <Modal isOpen={isVisible} onClose={() => onClose(false)}>
-      {/* Exibindo erro para que a variável error não seja considerada não utilizada */}
       {error && (
         <div className="error-message" style={{ display: "none" }}>
           {error}

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { jetbrainsMono } from "@/styles/fonts";
-import { AuthModal } from "@/components/ui/Auth-modal";
+import { AuthModal } from "@/components/ui/AuthModal";
 import { useUser } from "./ConditionalLayout";
 import { AuthService } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
@@ -24,7 +24,7 @@ export default function Navbar({
   const { userId, setUserId, setEmail, setFullName, setPhoto } = useUser();
   const isAuthenticated = !!userId;
   const router = useRouter();
-  console.log("isAuthenticated", isAuthenticated, userId);
+
   useEffect(() => {
     if (isAuthenticated) {
       setIsLoggedIn(true);
@@ -32,7 +32,7 @@ export default function Navbar({
       setIsLoggedIn(false);
     }
   }, []);
-  // const { openAuthModal, setOpenAuthModal } = useHook();
+
   const handleAuthClick = (view: "login" | "register") => {
     setAuthView(view);
     setIsAuthOpen(true);

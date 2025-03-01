@@ -15,9 +15,8 @@ import {
 
 export default function DynamicVSCodeSection() {
   const [lang, setLang] = useState("javascript");
-  const [key, setKey] = useState(0); // Chave única para forçar a renderização da animação
+  const [key, setKey] = useState(0);
 
-  // Get the correct code snippet based on selected language
   const getCodeSnippet = () => {
     switch (lang) {
       case "javascript":
@@ -33,7 +32,7 @@ export default function DynamicVSCodeSection() {
 
   const handleLanguageChange = (langId: string) => {
     setLang(langId);
-    setKey((prev) => prev + 1); // Incrementa a chave para forçar reanimação
+    setKey((prev) => prev + 1);
   };
 
   return (

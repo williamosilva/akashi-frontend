@@ -62,12 +62,12 @@ const Bars = ({ size = 24, ...props }: SpinnerVariantProps) => (
 );
 
 export type SpinnerProps = LucideProps & {
-  variant?: "bars"; // Apenas o tipo "bars"
+  variant?: "bars";
 };
 
 export const Spinner = ({ variant = "bars", ...props }: SpinnerProps) => {
   if (variant === "bars") {
     return <Bars {...props} />;
   }
-  return null; // Retorna null ou outro fallback, caso necessário
+  return null;
 };

@@ -46,7 +46,6 @@ export default function PremiumButton({
   const canAccessApiIntegration =
     userPlan === "premium" || userPlan === "admin";
 
-  // Função para lidar com cliques fora
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (

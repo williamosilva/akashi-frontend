@@ -63,7 +63,7 @@ const CopyButton = ({ textToCopy }: CopyButtonProps) => {
     try {
       await navigator.clipboard.writeText(textToCopy);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000); // Reset após 2 segundos
+      setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error("Falha ao copiar: ", err);
     }

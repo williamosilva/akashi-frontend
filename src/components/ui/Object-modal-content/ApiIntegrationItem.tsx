@@ -29,7 +29,6 @@ export function ApiIntegrationItem({
   error,
   existingKeys = [],
 }: ApiIntegrationItemProps) {
-  // Estados internos
   const [showApiKey, setShowApiKey] = useState(false);
   const [draftKey, setDraftKey] = useState(propertyKey || "");
   const [expanded, setExpanded] = useState(false);
@@ -78,7 +77,6 @@ export function ApiIntegrationItem({
     const newKey = e.target.value;
     setDraftKey(newKey);
 
-    // Validar enquanto o usuário digita para feedback imediato
     if (newKey !== propertyKey && existingKeys?.includes(newKey)) {
       setLocalError(`A chave "${newKey}" já existe`);
     } else {
@@ -86,18 +84,14 @@ export function ApiIntegrationItem({
     }
   };
 
-  // Corrigido para espelhar a lógica do PropertyItem
   const handleKeyChange = (e: React.FocusEvent<HTMLInputElement>) => {
     const newKey = e.target.value;
 
-    // Se a validação falhar, restaurar o valor anterior
     if (!validateKey(newKey)) {
-      // Deixamos o erro visível, mas restauramos o valor original no estado local
       setDraftKey(propertyKey || "");
       return;
     }
 
-    // Se passar na validação, prosseguir com a alteração
     if (newKey !== propertyKey && propertyKey) {
       onKeyChange(propertyKey, newKey);
     }
@@ -154,14 +148,10 @@ export function ApiIntegrationItem({
       } else {
         setApiResponse({ data: responseData });
       }
-
-      // Removido a parte onde armazenava o responseData em value.dataReturn
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Erro desconhecido";
       setApiResponse({ error: "Erro na requisição", details: errorMessage });
-
-      // Removido a parte onde armazenava o erro em value.dataReturn
     } finally {
       setLoading(false);
     }

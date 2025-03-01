@@ -65,7 +65,6 @@ export default function QuoteCard({ link }: { link: string | null }) {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // Handle quote transition and typing animation
   useEffect(() => {
     const interval = setInterval(() => {
       let nextIndex;
@@ -98,10 +97,8 @@ export default function QuoteCard({ link }: { link: string | null }) {
     );
   };
 
-  // Handle typing animation when quote changes
   useEffect(() => {
     if (quote.text !== displayedQuote.text) {
-      // Start erasing the current quote
       setIsTyping(true);
       let currentText = displayedQuote.text;
       const eraseInterval = setInterval(() => {
@@ -112,7 +109,6 @@ export default function QuoteCard({ link }: { link: string | null }) {
           clearInterval(eraseInterval);
           setDisplayedQuote(quote);
 
-          // Start typing the new quote
           let index = 0;
           const typeInterval = setInterval(() => {
             if (index < quote.text.length) {
@@ -132,7 +128,6 @@ export default function QuoteCard({ link }: { link: string | null }) {
     }
   }, [quote, displayedQuote, quote.text, typedQuote]);
 
-  // Initialize typing animation
   useEffect(() => {
     if (typedQuote === "" && quote.text !== "") {
       let index = 0;
@@ -168,13 +163,11 @@ export default function QuoteCard({ link }: { link: string | null }) {
       </div>
 
       <div className="relative z-10 w-full h-full">
-        {/* Quote Card with Dynamic Galaxy Effect */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="relative flex flex-col justify-between overflow-hidden backdrop-blur-sm bg-zinc-800/30 rounded-lg border border-emerald-500/20 md:p-4 sm:p-3 p-4 shadow-2xl h-full"
         >
-          {/* Dynamic Galaxy background inside the card */}
           <div className="absolute inset-0 opacity-30">
             <div className="absolute inset-0 galaxy-effect" />
             <div className="absolute inset-0 galaxy-effect-secondary" />

@@ -8,10 +8,6 @@ import {
 
 import { API_CONFIG } from "@/config/api.config";
 
-/**
- * Serviço de autenticação que gerencia operações relacionadas a login,
- * registro e gerenciamento de tokens.
- */
 export class AuthService extends ApiService {
   private static instance: AuthService;
 
@@ -19,9 +15,6 @@ export class AuthService extends ApiService {
     super();
   }
 
-  /**
-   * Retorna a instância singleton do AuthService
-   */
   public static getInstance(): AuthService {
     if (!AuthService.instance) {
       AuthService.instance = new AuthService();
@@ -29,10 +22,6 @@ export class AuthService extends ApiService {
     return AuthService.instance;
   }
 
-  /**
-   * Registra um novo usuário
-   * @param data Dados de registro (nome, email, senha, etc)
-   */
   public async register(data: RegisterDto): Promise<AuthResponse> {
     const response = await this.request<AuthResponse>("/auth/register", {
       method: "POST",
@@ -76,15 +65,7 @@ export class AuthService extends ApiService {
       },
     });
   }
-  /**
-   * Realiza login do usuário
-   * @param data Dados de login (email, senha)
-   */
 
-  /**
-   * Valida se um token é válido
-   * @param token Token a ser validado
-   */
   public async validateToken(token: string): Promise<boolean> {
     try {
       const response = await this.request<{ ok: boolean }>("/auth/validate", {
@@ -99,9 +80,6 @@ export class AuthService extends ApiService {
     }
   }
 
-  /**
-   * Atualiza o token de acesso usando o refresh token
-   */
   static async refreshToken(): Promise<{ accessToken: string } | null> {
     try {
       const refreshToken = this.getRefreshToken();
@@ -128,41 +106,23 @@ export class AuthService extends ApiService {
     }
   }
 
-  /**
-   * Realiza logout do usuário removendo dados do localStorage
-   */
-
-  // ===== MÉTODOS ESTÁTICOS PARA GERENCIAMENTO DE TOKENS E DADOS DO USUÁRIO =====
-
-  /**
-   * Salva tokens e dados do usuário no localStorage
-   */
   static saveTokens(accessToken: string, refreshToken: string) {
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
   }
 
-  /**
-   * Salva o token de acesso no localStorage
-   */
   public static setAccessToken(token: string): void {
     if (typeof window !== "undefined") {
       localStorage.setItem("accessToken", token);
     }
   }
 
-  /**
-   * Salva o token de refresh no localStorage
-   */
   public static setRefreshToken(token: string): void {
     if (typeof window !== "undefined") {
       localStorage.setItem("refreshToken", token);
     }
   }
 
-  /**
-   * Obtém o token de acesso do localStorage
-   */
   public static getAccessToken(): string | null {
     if (typeof window !== "undefined") {
       return localStorage.getItem("accessToken");
@@ -170,9 +130,6 @@ export class AuthService extends ApiService {
     return null;
   }
 
-  /**
-   * Obtém o token de refresh do localStorage
-   */
   public static getRefreshToken(): string | null {
     if (typeof window !== "undefined") {
       return localStorage.getItem("refreshToken");
@@ -180,9 +137,6 @@ export class AuthService extends ApiService {
     return null;
   }
 
-  /**
-   * Obtém o ID do usuário do localStorage
-   */
   public static getUserId(): string | null {
     if (typeof window !== "undefined") {
       return localStorage.getItem("userId");
@@ -190,9 +144,6 @@ export class AuthService extends ApiService {
     return null;
   }
 
-  /**
-   * Obtém o email do usuário do localStorage
-   */
   public static getEmail(): string | null {
     if (typeof window !== "undefined") {
       return localStorage.getItem("email");
@@ -214,12 +165,9 @@ export class AuthService extends ApiService {
     return null;
   }
 
-  /**
-   * Limpa todos os dados de autenticação do localStorage
-   */
   public logout(): void {
     AuthService.clearAuthData();
-    window.location.href = "/"; // Redireciona para a Home
+    window.location.href = "/";
   }
 
   public static clearAuthData(): void {

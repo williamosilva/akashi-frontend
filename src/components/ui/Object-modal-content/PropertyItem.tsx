@@ -48,15 +48,11 @@ export function PropertyItem({
   const handleKeyChange = (e: React.FocusEvent<HTMLInputElement>) => {
     const newKey = e.target.value;
 
-    // Se a validação falhar, restaurar o valor anterior
     if (!validateKey(newKey)) {
-      // Deixamos o erro visível, mas restauramos o valor original no estado local
-      // para que o usuário possa ver qual era o valor anterior
       setDraftKey(propertyKey);
       return;
     }
 
-    // Se passar na validação, prosseguir com a alteração
     onKeyChange(propertyKey, newKey);
   };
 
@@ -64,7 +60,6 @@ export function PropertyItem({
     const newKey = e.target.value;
     setDraftKey(newKey);
 
-    // Validar enquanto o usuário digita para feedback imediato
     if (newKey !== propertyKey && existingKeys.includes(newKey)) {
       setLocalError(`A chave "${newKey}" já existe`);
     } else {

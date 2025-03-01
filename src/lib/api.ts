@@ -1,16 +1,14 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://minha-api.com";
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY || "minha-chave";
 
-// 🔹 Função para obter o Bearer Token do localStorage
 const getBearerToken = () => {
   if (typeof window !== "undefined") {
-    const token = localStorage.getItem("auth_token"); // Nome do item no localStorage
+    const token = localStorage.getItem("auth_token");
     return token ? `Bearer ${token}` : "";
   }
   return "";
 };
 
-// 🔹 Função genérica para chamadas de API
 const apiRequest = async (
   endpoint: string,
   method: string = "GET",
@@ -22,7 +20,7 @@ const apiRequest = async (
       headers: {
         "Content-Type": "application/json",
         "x-api-key": API_KEY,
-        Authorization: getBearerToken(), // 🔹 Obtém o token do localStorage
+        Authorization: getBearerToken(),
       },
       body: body ? JSON.stringify(body) : null,
     });
@@ -38,7 +36,6 @@ const apiRequest = async (
   }
 };
 
-// 🔹 Função para obter dados do usuário com o token
 export const getUserDataByToken = async (token: string) => {
   return apiRequest(`/getData?token=${token}`);
 };

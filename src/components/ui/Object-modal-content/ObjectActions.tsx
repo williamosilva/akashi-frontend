@@ -24,7 +24,6 @@ export function ObjectActions({
     >
       {hasId && (
         <motion.button
-          // whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={onDelete}
           disabled={isLoading}
@@ -43,7 +42,6 @@ export function ObjectActions({
       )}
 
       <motion.button
-        // whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={onSave}
         disabled={isLoading}

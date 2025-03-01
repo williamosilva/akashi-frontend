@@ -31,7 +31,6 @@ export function AuthModal({
 
   const { setUserId, setEmail, setFullName, setPhoto } = useUser();
 
-  // AuthModal.tsx - handleSocialLogin
   const handleSocialLogin = (provider: "google" | "github") => {
     setIsLoading(true);
     setError("");
@@ -90,7 +89,6 @@ export function AuthModal({
 
     window.addEventListener("message", messageListener);
 
-    // Fallback: Verificar se o popup foi redirecionado
     const checkPopup = () => {
       try {
         if (popup?.closed) {
@@ -106,7 +104,6 @@ export function AuthModal({
     const checkInterval = setInterval(checkPopup, 500);
   };
 
-  // Form states
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -142,7 +139,7 @@ export function AuthModal({
       ...prev,
       [name]: value,
     }));
-    setError(""); // Clear error when user types
+    setError("");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

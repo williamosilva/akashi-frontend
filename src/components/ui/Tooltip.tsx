@@ -68,7 +68,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
         case "left":
           top =
             triggerRect.top + triggerRect.height / 2 - tooltipRect.height / 2;
-          left = triggerRect.left - tooltipRect.width - 16; // Aumentado de 8 para 16
+          left = triggerRect.left - tooltipRect.width - 16;
           break;
         case "right":
           top =
@@ -77,7 +77,6 @@ export const Tooltip: React.FC<TooltipProps> = ({
           break;
       }
 
-      // Adjust if tooltip is going off-screen
       if (left < 0) left = 8;
       if (left + tooltipRect.width > viewportWidth)
         left = viewportWidth - tooltipRect.width - 8;
