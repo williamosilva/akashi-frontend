@@ -50,7 +50,7 @@ const Sidebar = ({
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
     propSelectedProjectId || null
   );
-  // const { userId, photo, fullName, email } = useUser();
+  const [isLoading, setIsLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -60,8 +60,6 @@ const Sidebar = ({
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
-
-  console.log("isCreateDisabled dentro da sidebar", isCreateDisabled);
 
   const {
     userId,
@@ -73,7 +71,6 @@ const Sidebar = ({
     photo,
     setPhoto,
     setCountProjects,
-    plan,
   } = useUser();
 
   useEffect(() => {
@@ -90,6 +87,7 @@ const Sidebar = ({
   };
 
   useEffect(() => {
+    setIsLoading(true);
     const loadProjects = async () => {
       try {
         if (!userId) return console.error("User ID not found");
@@ -97,11 +95,13 @@ const Sidebar = ({
         const projects = await ProjectService.getInstance().getProjectsByUser(
           userId
         );
-        console.log("projetos", projects);
 
         setProjects(projects);
       } catch (error) {
+        setIsLoading(false);
         console.error("Erro ao carregar projetos:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -109,8 +109,7 @@ const Sidebar = ({
   }, [signal]);
 
   const handleCreateProject = async (projectName: string) => {
-    console.log("caiu aqui2");
-    console.log("userid", userId);
+    setIsLoading(true);
     try {
       const newProject = await ProjectService.getInstance().createProject({
         name: projectName,
@@ -121,7 +120,10 @@ const Sidebar = ({
       setProjects((prevProjects) => [...prevProjects, newProject]);
       setCountProjects((prevCount) => prevCount + 1);
     } catch (error) {
+      setIsLoading(false);
       console.error("Error creating project:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -304,7 +306,7 @@ const Sidebar = ({
                     </div>
 
                     {/* Navigation */}
-                    <nav className="flex-1 overflow-y-auto p-2 space-y-1.5 w-full flex-col flex">
+                    <nav className="flex-1 overflow-y-auto p-2 space-y-1.5 w-full flex flex-col h-0 min-h-0">
                       {isCreateDisabled.signal ? (
                         <TooltipProvider>
                           <Tooltip
@@ -315,7 +317,7 @@ const Sidebar = ({
                               layout
                               layoutId="create-button"
                               className={cn(
-                                "w-full px-4 py-3 rounded-lg flex items-center justify-center gap-2 group transition-all",
+                                "w-full px-4 py-3 rounded-lg flex items-center justify-center gap-2 group transition-all shrink-0",
                                 isCreateDisabled.signal
                                   ? "bg-zinc-700/50 text-zinc-500 cursor-not-allowed"
                                   : "bg-emerald-500/10 hover:bg-emerald-500/30 text-emerald-300"
@@ -353,7 +355,7 @@ const Sidebar = ({
                           layout
                           layoutId="create-button"
                           className={cn(
-                            "w-full px-4 py-3 rounded-lg flex items-center justify-center gap-2 group transition-all",
+                            "w-full px-4 py-3 rounded-lg flex items-center justify-center gap-2 group transition-all shrink-0",
                             isCreateDisabled.signal
                               ? "bg-zinc-700/50 text-zinc-500 cursor-not-allowed"
                               : "bg-emerald-500/10 hover:bg-emerald-500/30 text-emerald-300"
@@ -386,63 +388,78 @@ const Sidebar = ({
                         </motion.button>
                       )}
 
-                      {filteredProjects.map((project) => {
-                        const isSelected = project._id === selectedProjectId;
-
-                        return (
-                          <motion.button
-                            layout // Adicione esta prop
-                            layoutId={`project-${project._id}`} // Adicione esta prop
-                            key={project._id}
-                            onClick={() => handleProjectSelect(project._id)}
-                            className={cn(
-                              "relative w-full overflow-hidden group",
-                              isSelected && "pointer-events-none rounded-lg"
-                            )}
-                            whileHover={{ scale: isSelected ? 1 : 1.01 }}
-                            whileTap={{ scale: isSelected ? 1 : 0.99 }}
-                            transition={{
-                              type: "spring",
-                              stiffness: 400,
-                              damping: 30,
-                              layout: { duration: 0.2 }, // Adicione esta config
-                            }}
-                          >
-                            {/* Remova o AnimatePresence aqui */}
-                            {isSelected && (
-                              <motion.div
-                                layoutId={`bg-${project._id}`} // Adicione esta prop
-                                className="absolute inset-0 bg-emerald-500/10 backdrop-blur-sm"
+                      <div className="overflow-y-auto flex-1 flex flex-col space-y-1.5 min-h-0">
+                        {isLoading ? (
+                          <>
+                            {[1, 2, 3, 4, 6, 7, 8].map((item) => (
+                              <div
+                                key={item}
+                                className="h-[46px] relative px-4 py-3 bg-zinc-800 rounded-lg border flex items-center max-w-full border-zinc-800 group-hover:border-emerald-500/20 animate-pulse shrink-0"
                               />
-                            )}
+                            ))}
+                          </>
+                        ) : (
+                          <>
+                            {filteredProjects.map((project) => {
+                              const isSelected =
+                                project._id === selectedProjectId;
 
-                            {/* Resto do código permanece igual */}
-
-                            <div
-                              className={cn(
-                                "relative px-4 py-3 rounded-lg border transition-colors duration-300 flex items-center max-w-full",
-                                isSelected
-                                  ? "border-emerald-500/30"
-                                  : "border-zinc-800 group-hover:border-emerald-500/20"
-                              )}
-                            >
-                              {/* Remova o AnimatePresence aqui também */}
-                              {(isExpanded || isMobile) && (
-                                <span // Transforme em span normal em vez de motion.span
+                              return (
+                                <motion.button
+                                  layout
+                                  layoutId={`project-${project._id}`}
+                                  key={project._id}
+                                  onClick={() =>
+                                    handleProjectSelect(project._id)
+                                  }
                                   className={cn(
-                                    "truncate text-sm transition-colors duration-300",
-                                    isSelected
-                                      ? "text-emerald-300"
-                                      : "text-zinc-400 group-hover:text-emerald-300"
+                                    "relative w-full overflow-hidden group shrink-0",
+                                    isSelected &&
+                                      "pointer-events-none rounded-lg"
                                   )}
+                                  whileHover={{ scale: isSelected ? 1 : 1.01 }}
+                                  whileTap={{ scale: isSelected ? 1 : 0.99 }}
+                                  transition={{
+                                    type: "spring",
+                                    stiffness: 400,
+                                    damping: 30,
+                                    layout: { duration: 0.2 },
+                                  }}
                                 >
-                                  {project.name}
-                                </span>
-                              )}
-                            </div>
-                          </motion.button>
-                        );
-                      })}
+                                  {isSelected && (
+                                    <motion.div
+                                      layoutId={`bg-${project._id}`}
+                                      className="absolute inset-0 bg-emerald-500/10 backdrop-blur-sm"
+                                    />
+                                  )}
+
+                                  <div
+                                    className={cn(
+                                      "relative h-[46px] px-4 py-3 rounded-lg border transition-colors duration-300 flex items-center max-w-full",
+                                      isSelected
+                                        ? "border-emerald-500/30"
+                                        : "border-zinc-800 group-hover:border-emerald-500/20"
+                                    )}
+                                  >
+                                    {(isExpanded || isMobile) && (
+                                      <span
+                                        className={cn(
+                                          "truncate text-sm transition-colors duration-300",
+                                          isSelected
+                                            ? "text-emerald-300"
+                                            : "text-zinc-400 group-hover:text-emerald-300"
+                                        )}
+                                      >
+                                        {project.name}
+                                      </span>
+                                    )}
+                                  </div>
+                                </motion.button>
+                              );
+                            })}
+                          </>
+                        )}
+                      </div>
                     </nav>
 
                     {/* Toggle button */}
@@ -585,7 +602,7 @@ const Sidebar = ({
               </div>
 
               {/* Navigation */}
-              <nav className="flex-1 overflow-y-auto p-2 space-y-1.5 w-full flex-col flex max-w-full">
+              <nav className="flex-1 overflow-y-auto p-2 space-y-1.5 w-full flex flex-col max-w-full h-0 min-h-0">
                 {/* Create Object Button */}
 
                 {isCreateDisabled.signal ? (
@@ -595,7 +612,7 @@ const Sidebar = ({
                         layout
                         layoutId="create-button"
                         className={cn(
-                          "w-full px-4 py-3 rounded-lg flex items-center justify-center gap-2 group transition-all",
+                          "w-full px-4 py-3 rounded-lg flex items-center justify-center gap-2 group transition-all shrink-0",
                           isCreateDisabled.signal
                             ? "bg-zinc-700/50 text-zinc-500 cursor-not-allowed"
                             : "bg-emerald-500/10 hover:bg-emerald-500/30 text-emerald-300"
@@ -618,7 +635,6 @@ const Sidebar = ({
                               : "text-emerald-300"
                           )}
                         />
-                        {/* Remova o AnimatePresence aqui */}
 
                         {(isExpanded || isMobile) && (
                           <span className="text-sm">Create Project</span>
@@ -631,7 +647,7 @@ const Sidebar = ({
                     layout
                     layoutId="create-button"
                     className={cn(
-                      "w-full px-4 py-3 rounded-lg flex items-center justify-center gap-2 group transition-all",
+                      "w-full px-4 py-3 rounded-lg flex items-center justify-center gap-2 group transition-all shrink-0",
                       isCreateDisabled.signal
                         ? "bg-zinc-700/50 text-zinc-500 cursor-not-allowed"
                         : "bg-emerald-500/10 hover:bg-emerald-500/30 text-emerald-300"
@@ -654,87 +670,96 @@ const Sidebar = ({
                           : "text-emerald-300"
                       )}
                     />
-                    {/* Remova o AnimatePresence aqui */}
 
                     {(isExpanded || isMobile) && (
                       <span className="text-sm">Create Project</span>
                     )}
                   </motion.button>
                 )}
+                <div className="overflow-y-auto flex-1 flex flex-col space-y-1.5 min-h-0">
+                  {isLoading ? (
+                    <>
+                      {[1, 2, 3, 4, 6, 7, 8].map((item) => (
+                        <div
+                          key={item}
+                          className="h-[46px] relative px-4 py-3 bg-zinc-800 rounded-lg border flex items-center max-w-full border-zinc-800 group-hover:border-emerald-500/20 animate-pulse shrink-0"
+                        ></div>
+                      ))}
+                    </>
+                  ) : (
+                    <>
+                      {filteredProjects.map((project) => {
+                        const isSelected = project._id === selectedProjectId;
 
-                {filteredProjects.map((project) => {
-                  const isSelected = project._id === selectedProjectId;
-
-                  return (
-                    <motion.button
-                      layout // Adicione esta prop
-                      layoutId={`project-${project._id}`} // Adicione esta prop
-                      key={project._id}
-                      onClick={() => handleProjectSelect(project._id)}
-                      className={cn(
-                        "relative w-full overflow-hidden group",
-                        isSelected && "pointer-events-none rounded-lg"
-                      )}
-                      whileHover={{ scale: isSelected ? 1 : 1.01 }}
-                      whileTap={{ scale: isSelected ? 1 : 0.99 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 400,
-                        damping: 30,
-                        layout: { duration: 0.2 }, // Adicione esta config
-                      }}
-                    >
-                      {/* Remova o AnimatePresence aqui */}
-                      {isSelected && (
-                        <motion.div
-                          layoutId={`bg-${project._id}`} // Adicione esta prop
-                          className="absolute inset-0 bg-emerald-500/10 backdrop-blur-sm"
-                        />
-                      )}
-
-                      {/* Resto do código permanece igual */}
-
-                      <div
-                        className={cn(
-                          "relative px-4 py-3 rounded-lg border transition-colors duration-300 flex items-center w-full ",
-                          isSelected
-                            ? "border-emerald-500/30"
-                            : "border-zinc-800 group-hover:border-emerald-500/20"
-                        )}
-                      >
-                        {/* Remova o AnimatePresence aqui também */}
-                        {isExpanded || isMobile ? (
-                          <span
+                        return (
+                          <motion.button
+                            layout
+                            layoutId={`project-${project._id}`}
+                            key={project._id}
+                            onClick={() => handleProjectSelect(project._id)}
                             className={cn(
-                              " text-sm transition-colors duration-300 truncate",
-                              isSelected
-                                ? "text-emerald-300"
-                                : "text-zinc-400 group-hover:text-emerald-300"
+                              "relative w-full overflow-hidden group shrink-0",
+                              isSelected && "pointer-events-none rounded-lg"
                             )}
+                            // whileHover={{ scale: isSelected ? 1 : 1.01 }}
+                            whileTap={{ scale: isSelected ? 1 : 0.99 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 30,
+                              layout: { duration: 0.2 },
+                            }}
                           >
-                            {project.name}
-                          </span>
-                        ) : (
-                          <span
-                            className={cn(
-                              "mx-auto text-sm transition-colors duration-300",
-                              isSelected
-                                ? "text-emerald-300"
-                                : "text-zinc-400 group-hover:text-emerald-300"
+                            {isSelected && (
+                              <motion.div
+                                layoutId={`bg-${project._id}`}
+                                className="absolute inset-0 bg-emerald-500/10 backdrop-blur-sm"
+                              />
                             )}
-                          >
-                            {project.name
-                              .split(" ")
-                              .map((word) => word[0])
-                              .join("")
-                              .substring(0, 2)
-                              .toUpperCase()}
-                          </span>
-                        )}
-                      </div>
-                    </motion.button>
-                  );
-                })}
+
+                            <div
+                              className={cn(
+                                "relative px-4 py-3 rounded-lg h-[46px] border transition-colors duration-300 flex items-center w-full",
+                                isSelected
+                                  ? "border-emerald-500/30"
+                                  : "border-zinc-800 group-hover:border-emerald-500/20"
+                              )}
+                            >
+                              {isExpanded || isMobile ? (
+                                <span
+                                  className={cn(
+                                    "text-sm transition-colors duration-300 truncate",
+                                    isSelected
+                                      ? "text-emerald-300"
+                                      : "text-zinc-400 group-hover:text-emerald-300"
+                                  )}
+                                >
+                                  {project.name}
+                                </span>
+                              ) : (
+                                <span
+                                  className={cn(
+                                    "mx-auto text-sm transition-colors duration-300",
+                                    isSelected
+                                      ? "text-emerald-300"
+                                      : "text-zinc-400 group-hover:text-emerald-300"
+                                  )}
+                                >
+                                  {project.name
+                                    .split(" ")
+                                    .map((word) => word[0])
+                                    .join("")
+                                    .substring(0, 2)
+                                    .toUpperCase()}
+                                </span>
+                              )}
+                            </div>
+                          </motion.button>
+                        );
+                      })}
+                    </>
+                  )}
+                </div>
               </nav>
 
               {/* Toggle button */}
