@@ -19,7 +19,7 @@ export default function Background() {
 
       <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.05] via-transparent to-zinc-800/[0.2] blur-2xl pointer-events-none" />
 
-      <div className="sm:absolute hidden inset-0 overflow-hidden z-[1] pointer-events-none ">
+      <div className="absolute sm:opacity-100 opacity-0    inset-0 overflow-hidden z-[1] pointer-events-none ">
         <Geometric3DShape
           delay={0.3}
           width={600}
