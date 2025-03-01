@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useUser } from "@/components/ui/ConditionalLayout";
 import Home from "@/app/page";
+import { cn } from "@/lib/utils";
 
 export default function SuccessPage() {
   const router = useRouter();
@@ -46,5 +47,13 @@ export default function SuccessPage() {
     checkSuccessToken();
   }, [token, router]);
 
-  return <Home />;
+  return (
+    <div
+      className={cn(
+        isLoading ? "cursor-wait pointer-events-none selection-none" : ""
+      )}
+    >
+      <Home />
+    </div>
+  );
 }

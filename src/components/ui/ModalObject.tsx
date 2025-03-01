@@ -7,11 +7,7 @@ import { ObjectProperties } from "./Object-modal-content/ObjectProperties";
 import { ObjectActions } from "./Object-modal-content/ObjectActions";
 import { ProjectService } from "@/services/project.service";
 import { useUser } from "./ConditionalLayout";
-import type {
-  ModalObjectProps,
-  DynamicIntegrationObject,
-  SubscriptionPlan,
-} from "@/types";
+import type { ModalObjectProps, DynamicIntegrationObject } from "@/types";
 
 const DEFAULT_DATA: DynamicIntegrationObject = {};
 
@@ -26,7 +22,7 @@ export default function ModalObject({
 }: ModalObjectProps) {
   const [currentData, setCurrentData] =
     useState<DynamicIntegrationObject>(DEFAULT_DATA);
-  // const [userPlan] = useState<SubscriptionPlan>("premium");
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentKey, setCurrentKey] = useState(itemKey || "new-object");

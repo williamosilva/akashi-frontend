@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+
 import { useEffect, useState } from "react";
 import { Github, Linkedin, Globe } from "lucide-react";
 import { fadeInUpVariants } from "@/animations/variation";
@@ -23,7 +23,7 @@ export default function Footer() {
     return () => clearInterval(pulseInterval);
   }, []);
 
-  const { userId, setUserId, setFullName, setPhoto, setEmail } = useUser();
+  const { setUserId, setFullName, setPhoto, setEmail } = useUser();
 
   const handleLogout = () => {
     setUserId(null);
@@ -49,9 +49,14 @@ export default function Footer() {
 
       if (accessToken) {
         const validToken = await authService.validateToken(accessToken || "");
-        // console.log("Token válido:", validToken);
-        router.push("/form");
-        return;
+
+        if (validToken) {
+          router.push("/form");
+          return;
+        } else {
+          console.log("Usuario nao logado");
+          setTargetSection("hero");
+        }
       }
 
       console.log("Usuario nao logado");

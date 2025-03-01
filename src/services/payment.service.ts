@@ -97,7 +97,7 @@ export class PaymentService extends ApiService {
    * @param email User email
    * @returns Subscription status and plan if active
    */
-  public async verifySubscription(email: string): Promise<{
+  public async verifySubscription(): Promise<{
     hasActiveSubscription: boolean;
     subscription: { plan: "basic" | "premium" } | null;
   }> {

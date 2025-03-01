@@ -3,11 +3,11 @@ import { scroller } from "react-scroll";
 import HeroGeometric from "@/components/sections/Hero";
 import MindMapSection from "@/components/sections/MentalMapSection";
 import Features from "@/components/sections/SubFeatures";
-import DynamicVSCodeSection from "@/components/sections/vscode-section/Dynamic-vscode-section";
+import DynamicVSCodeSection from "@/components/sections/vscode-section/VscodeSection";
 import Background from "@/components/ui/Background";
 import Footer from "@/components/ui/Footer";
 import PriceSection from "@/components/sections/Price";
-import { useHook, useUser } from "@/components/ui/ConditionalLayout";
+import { useHook } from "@/components/ui/ConditionalLayout";
 import { useEffect } from "react";
 import { FeatureSteps } from "@/components/sections/FeatureSteps";
 import { featuresStep } from "@/data";
@@ -61,8 +61,6 @@ export default function Home() {
           <FeatureSteps
             features={featuresStep}
             title="Your Journey Starts Here"
-            autoPlayInterval={4000}
-            imageHeight="h-[500px]"
           />
         </div>
         <div id="sub-features">

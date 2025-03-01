@@ -5,12 +5,6 @@ import { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
-interface Language {
-  id: string;
-  label: string;
-  image: string;
-}
-
 interface LangButtonsProps extends React.HTMLAttributes<HTMLDivElement> {
   onLanguageChange?: (langId: string) => void;
   tabSize?: number;
@@ -39,7 +33,7 @@ const LangButtons = React.forwardRef<HTMLDivElement, LangButtonsProps>(
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const [hoverStyle, setHoverStyle] = useState({});
-    const [activeStyle, setActiveStyle] = useState({
+    const [, setActiveStyle] = useState({
       top: "0px",
       height: "0px",
     });

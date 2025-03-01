@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "@/components/ui/Navbar";
 import Sidebar from "@/components/ui/Sidebar";
 import type React from "react";
@@ -104,7 +104,7 @@ export default function ConditionalLayout({
     "free" | "premium" | "basic" | "admin" | null
   >(null);
   const isFormRoute = pathname.startsWith("/form");
-  const isHome = pathname === "/";
+
   const isSuccessCallbackRoute = pathname.match(/^\/success\/[^\/]+$/);
   const isValidRoute =
     VALID_ROUTES.includes(pathname) || isSuccessCallbackRoute;
@@ -134,7 +134,6 @@ export default function ConditionalLayout({
           return;
         }
 
-        const validToken = await authService.validateToken(accessToken);
         const userData = await authService.getMe(accessToken);
 
         // Atualiza o estado local com os dados da API
