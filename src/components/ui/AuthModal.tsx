@@ -162,7 +162,7 @@ export function AuthModal({
           password: formData.password,
         });
       }
-
+      console.log("response", response);
       if (response?.id) {
         setUserId(response.id);
         setEmail(response.email);

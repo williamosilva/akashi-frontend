@@ -54,7 +54,7 @@ export const plans = [
   },
   {
     name: "Premium",
-    price: "$4",
+    price: "$3",
     type: "premium",
     features: [
       "Create up to 10 projects",

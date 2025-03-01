@@ -120,16 +120,17 @@ export default function ConditionalLayout({
   };
 
   useEffect(() => {
+    console.log("validando");
     const validateAndLoadUser = async () => {
       try {
         const accessToken = AuthService.getAccessToken();
-        const refreshToken = AuthService.getRefreshToken();
-        if (!accessToken || !refreshToken) {
-          router.push("/");
-          return;
-        }
+        // const refreshToken = AuthService.getRefreshToken();
+        // if (!accessToken || !refreshToken) {
+        //   router.push("/");
+        //   return;
+        // }
 
-        const userData = await authService.getMe(accessToken);
+        const userData = await authService.getMe(accessToken || "");
 
         setPlan(userData.plan);
         setCountProjects(userData.projectCount);
