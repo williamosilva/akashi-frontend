@@ -28,7 +28,7 @@ export class ApiService {
       const newTokens = await AuthService.refreshToken();
       if (!newTokens) {
         console.error("Falha ao renovar o token. Deslogando usuário...");
-        AuthService.getInstance().logout();
+        // AuthService.getInstance().logout();
         throw new Error("Sessão expirada. Faça login novamente.");
       }
 
