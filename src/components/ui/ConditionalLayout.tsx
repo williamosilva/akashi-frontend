@@ -120,7 +120,7 @@ export default function ConditionalLayout({
   };
 
   useEffect(() => {
-    console.log("validando");
+    // console.log("validando");
     const validateAndLoadUser = async () => {
       try {
         const accessToken = AuthService.getAccessToken();

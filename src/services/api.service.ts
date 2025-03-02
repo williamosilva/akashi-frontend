@@ -35,7 +35,7 @@ export class ApiService {
       const refreshToken = AuthService.getRefreshToken();
       if (!refreshToken) {
         console.error("Nenhum refreshToken disponível. Deslogando usuário...");
-        // AuthService.getInstance().logout();
+        AuthService.getInstance().logout();
         throw new Error(
           "Nenhum refreshToken encontrado. Faça login novamente."
         );
