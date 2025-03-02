@@ -43,7 +43,7 @@ const quotes = [
   },
   {
     text: "Good things will come to those who know how to wait.",
-    author: "William Silva",
+    author: "William S.",
   },
   {
     text: "Opportunities don't happen. You create them.",
@@ -53,7 +53,7 @@ const quotes = [
 
 export default function QuoteCard({ link }: { link: string | null }) {
   const [quote, setQuote] = useState(quotes[0]);
-  const [typedQuote, setTypedQuote] = useState("");
+  const [typedQuote, setTypedQuote] = useState(quotes[0].text);
   const [displayedQuote, setDisplayedQuote] = useState(quotes[0]);
   const [isTyping, setIsTyping] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -126,24 +126,28 @@ export default function QuoteCard({ link }: { link: string | null }) {
         clearInterval(eraseInterval);
       };
     }
-  }, [quote, displayedQuote, quote.text, typedQuote]);
+  }, [quote, displayedQuote]);
 
   useEffect(() => {
-    if (typedQuote === "" && quote.text !== "") {
-      let index = 0;
-      setIsTyping(true);
-      const interval = setInterval(() => {
-        if (index < quote.text.length) {
-          setTypedQuote(quote.text.slice(0, index + 1));
-          index++;
-        } else {
-          clearInterval(interval);
-          setIsTyping(false);
-        }
-      }, typingSpeedRef.current);
-
-      return () => clearInterval(interval);
+    if (typedQuote === quotes[0].text) {
+      return;
     }
+
+    let index = 0;
+    setIsTyping(true);
+    setTypedQuote("");
+
+    const interval = setInterval(() => {
+      if (index < quotes[0].text.length) {
+        setTypedQuote(quotes[0].text.slice(0, index + 1));
+        index++;
+      } else {
+        clearInterval(interval);
+        setIsTyping(false);
+      }
+    }, typingSpeedRef.current);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
