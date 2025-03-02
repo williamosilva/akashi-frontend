@@ -5,10 +5,21 @@ import { cn } from "@/lib/utils";
 import NetworkCanvas from "@/three/NetworkCanvas";
 import { jetbrainsMono, montserrat } from "@/styles/fonts";
 import { fadeUpVariants } from "@/animations/variation";
-import { useHook } from "../ui/ConditionalLayout";
+import { useHook, useUser } from "../ui/ConditionalLayout";
+import { useRouter } from "next/navigation";
 
 export default function AkashiHero() {
   const { setOpenAuthModal, setTargetSection } = useHook();
+  const route = useRouter();
+  const { userId } = useUser();
+
+  function handleOpenModal() {
+    if (!userId) {
+      setOpenAuthModal(true);
+    } else {
+      route.push("/form");
+    }
+  }
 
   return (
     <div
@@ -89,7 +100,7 @@ export default function AkashiHero() {
             className="flex flex-col sm:flex-row gap-4 justify-center items-center pointer-events-auto"
           >
             <button
-              onClick={() => setOpenAuthModal(true)}
+              onClick={handleOpenModal}
               className="sm:w-1/2  md:w-auto w-[80%] px-6 py-3 rounded-lg bg-emerald-500 text-zinc-900 font-semibold hover:bg-emerald-400 transition-colors font-montserrat"
             >
               Get Started
