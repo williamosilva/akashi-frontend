@@ -22,13 +22,13 @@ export class ApiService {
 
     let response = await fetch(url, { ...options, headers });
 
-    if (response.status === 401) {
+    if (response.status === 498) {
       console.warn("Token expirado. Tentando renovar...");
 
       const newTokens = await AuthService.refreshToken();
       if (!newTokens) {
         console.error("Falha ao renovar o token. Deslogando usuário...");
-        // AuthService.getInstance().logout();
+        AuthService.getInstance().logout();
         throw new Error("Sessão expirada. Faça login novamente.");
       }
 
