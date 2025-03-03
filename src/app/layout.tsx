@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Azeret_Mono as Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ConditionalLayout from "@/components/ui/ConditionalLayout";
@@ -15,6 +15,18 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
   display: "swap",
 });
+
+// Novo objeto viewport exportado separadamente
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  colorScheme: "dark light",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#121212" },
+  ],
+};
 
 export const metadata: Metadata = {
   title: "Akashi - Gerador gratuito de backend para projetos web",
@@ -42,16 +54,7 @@ export const metadata: Metadata = {
   applicationName: "Akashi BaaS",
   generator: "Next.js",
   referrer: "origin-when-cross-origin",
-  colorScheme: "dark light",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#121212" },
-  ],
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
-  },
+  // Removi colorScheme, themeColor e viewport daqui
   robots: {
     index: true,
     follow: true,

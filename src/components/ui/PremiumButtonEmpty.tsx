@@ -85,7 +85,7 @@ export default function PremiumButtonEmpty({
       <button
         onClick={handleSimpleObjectCreate}
         disabled={isSimpleLoading}
-        className="w-full relative px-4 py-3 rounded-lg bg-zinc-800 border border-emerald-500/20 text-emerald-300 text-sm font-medium hover:bg-zinc-700 transition-all flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
+        className="w-full sm:h-auto h-28 relative px-4 py-3 rounded-lg bg-zinc-800 border border-emerald-500/20 text-emerald-300 text-sm font-medium hover:bg-zinc-700 transition-all flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
       >
         {isSimpleLoading ? (
           <Loader2 size={16} className="mr-2 animate-spin" />
@@ -95,14 +95,14 @@ export default function PremiumButtonEmpty({
         {isSimpleLoading ? "Creating..." : "Create Simple Object"}
       </button>
 
-      <div className="relative w-full h-auto">
+      <div className="relative w-full sm:h-auto h-28 ">
         <button
           onClick={() => {
             if (canAccessApiIntegration) {
               onApiIntegrationCreate();
             }
           }}
-          className={`w-full whitespace-nowrap relative flex-grow px-4 py-3 rounded-lg border h-[54px] sm:h-full text-sm font-medium transition-all flex items-center justify-center ${
+          className={`w-full h-full whitespace-nowrap relative flex-grow px-4 py-3 rounded-lg border h-[54px] sm:h-full text-sm font-medium transition-all flex items-center justify-center ${
             canAccessApiIntegration
               ? "bg-gradient-to-r from-emerald-500 to-green-500 text-white hover:from-emerald-600 hover:to-green-600"
               : "bg-zinc-800 border-zinc-700 text-zinc-500"
