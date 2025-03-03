@@ -104,7 +104,7 @@ export default function DynamicVSCodeSection() {
               <div className="w-3 h-3" />
             </div>
             <div className="flex">
-              <div className="bg-[#21222c] w-12 sm:w-48 p-2 hidden sm:block">
+              <div className="bg-[#21222c] w-12 sm:w-44 p-2 hidden sm:block">
                 <div className="flex items-center text-[#6272a4] mb-2 hover:bg-[#44475a] rounded px-2 py-1 transition-colors cursor-pointer">
                   <ChevronRight size={16} />
                   <span className="text-sm ml-1 hidden sm:inline">src</span>
