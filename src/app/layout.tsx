@@ -16,7 +16,6 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-// Novo objeto viewport exportado separadamente
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -29,32 +28,31 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Akashi - Gerador gratuito de backend para projetos web",
+  title: "Akashi - Free Backend Generator for Web Projects",
   description:
-    "Plataforma intuitiva para construção visual de APIs e objetos JSON. Crie, teste e implemente backends para seus projetos frontend sem codificação complexa.",
+    "An intuitive platform for visual API and JSON object creation. Build, test, and deploy backends for your frontend projects without complex coding.",
   keywords: [
     "baas",
     "backend as a service",
     "api",
     "json",
-    "requisições get",
-    "construção visual",
-    "gerador de api",
-    "backend sem código",
+    "get requests",
+    "visual building",
+    "api generator",
+    "no-code backend",
     "mock api",
-    "desenvolvimento web",
-    "prototipagem rápida",
-    "integração api",
+    "web development",
+    "rapid prototyping",
+    "api integration",
     "frontend",
   ],
-  authors: [{ name: "William Silva", url: "https://github.com/willianbs" }],
+  authors: [{ name: "William Silva", url: "https://github.com/williamosilva" }],
   creator: "William Silva",
   publisher: "William Silva",
-  category: "Tecnologia",
+  category: "Technology",
   applicationName: "Akashi BaaS",
   generator: "Next.js",
   referrer: "origin-when-cross-origin",
-  // Removi colorScheme, themeColor e viewport daqui
   robots: {
     index: true,
     follow: true,
@@ -67,49 +65,35 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://www.akashi-baas.com.br",
-    languages: {
-      "pt-BR": "https://www.akashi-baas.com.br",
-      "en-US": "https://www.akashi-baas.com.br/en",
-    },
+    // languages: {
+    //   "pt-BR": "https://www.akashi-baas.com.br",
+    //   "en-US": "https://www.akashi-baas.com.br/en",
+    // },
   },
   openGraph: {
     type: "website",
-    locale: "pt_BR",
+    locale: "en_US",
     url: "https://www.akashi-baas.com.br",
-    title: "Akashi - Construa backends visualmente para o seu frontend",
+    title: "Akashi - Visually Build Backends for Your Frontend",
     description:
-      "Crie APIs e objetos JSON de forma visual e use em seus projetos frontend sem se preocupar com infraestrutura de backend",
+      "Create APIs and JSON objects visually and use them in your frontend projects without worrying about backend infrastructure.",
     siteName: "Akashi",
-    images: [
-      {
-        url: "https://www.akashi-baas.com.br/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Akashi BaaS - Plataforma visual para criação de backends",
-      },
-    ],
+    // images: [
+    //   {
+    //     url: "https://www.akashi-baas.com.br/og-image.jpg",
+    //     width: 1200,
+    //     height: 630,
+    //     alt: "Akashi BaaS - Visual platform for backend creation",
+    //   },
+    // ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Akashi - Gerador Visual de APIs e Backends",
+    title: "Akashi - Visual API and Backend Generator",
     description:
-      "Crie APIs e objetos JSON visualmente para acelerar o desenvolvimento do seu frontend",
+      "Create APIs and JSON objects visually to speed up your frontend development.",
     creator: "@tnkswill",
   },
-  // icons: {
-  //   icon: [
-  //     { url: "/favicon.ico", sizes: "any" },
-  //     { url: "/icon.svg", type: "image/svg+xml" },
-  //   ],
-  //   apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
-  //   shortcut: ["/shortcut-icon.png"],
-  //   other: [
-  //     {
-  //       rel: "apple-touch-icon-precomposed",
-  //       url: "/apple-touch-icon-precomposed.png",
-  //     },
-  //   ],
-  // },
   manifest: "/site.webmanifest",
   verification: {
     google: "google-site-verification-code",
@@ -124,7 +108,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className="dark">
+    <html lang="en-US" className="dark">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
       >
