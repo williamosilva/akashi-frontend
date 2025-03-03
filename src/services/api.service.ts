@@ -15,7 +15,7 @@ export class ApiService {
 
     let headers: HeadersInit = {
       "Content-Type": "application/json",
-      "x-secret-key": API_CONFIG.secretKey,
+      // "x-secret-key": API_CONFIG.secretKey,
       ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
       ...options.headers,
     };
