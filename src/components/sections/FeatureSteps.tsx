@@ -23,7 +23,7 @@ interface FeatureStepsProps {
 export function FeatureSteps({
   features,
   className,
-  autoPlayInterval = 3000,
+  autoPlayInterval = 6000,
 }: FeatureStepsProps) {
   const [currentFeature, setCurrentFeature] = useState(0);
   const [progress, setProgress] = useState(0);
