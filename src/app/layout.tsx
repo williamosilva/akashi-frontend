@@ -81,16 +81,16 @@ export async function generateMetadata(): Promise<Metadata> {
         },
       },
       alternates: {
-        canonical: "https://www.akashi-baas.com.br/en",
+        canonical: "https://www.akashi-baas.com.br",
         languages: {
           "pt-BR": "https://www.akashi-baas.com.br",
-          "en-US": "https://www.akashi-baas.com.br/en",
+          "en-US": "https://www.akashi-baas.com.br",
         },
       },
       openGraph: {
         type: "website",
         locale: "en_US",
-        url: "https://www.akashi-baas.com.br/en",
+        url: "https://www.akashi-baas.com.br",
         title: "Akashi - Visually build backends for your frontend",
         description:
           "Create APIs and JSON objects visually and use them in your frontend projects without worrying about backend infrastructure",
@@ -111,22 +111,22 @@ export async function generateMetadata(): Promise<Metadata> {
           "Create APIs and JSON objects visually to accelerate your frontend development",
         creator: "@tnkswill",
       },
-      icons: {
-        icon: [
-          { url: "/favicon.ico", sizes: "any" },
-          { url: "/icon.svg", type: "image/svg+xml" },
-        ],
-        apple: [
-          { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
-        ],
-        shortcut: ["/shortcut-icon.png"],
-        other: [
-          {
-            rel: "apple-touch-icon-precomposed",
-            url: "/apple-touch-icon-precomposed.png",
-          },
-        ],
-      },
+      // icons: {
+      //   icon: [
+      //     { url: "/favicon.ico", sizes: "any" },
+      //     { url: "/icon.svg", type: "image/svg+xml" },
+      //   ],
+      //   apple: [
+      //     { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+      //   ],
+      //   shortcut: ["/shortcut-icon.png"],
+      //   other: [
+      //     {
+      //       rel: "apple-touch-icon-precomposed",
+      //       url: "/apple-touch-icon-precomposed.png",
+      //     },
+      //   ],
+      // },
       manifest: "/site.webmanifest",
       verification: {
         google: "google-site-verification-code",
