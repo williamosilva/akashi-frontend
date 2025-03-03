@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Azeret_Mono as Geist_Mono } from "next/font/google";
 import "./globals.css";
-import ConditionalLayout from "@/components/ui/ConditionalLayout";
+import ConditionalLayout from "@/components/ui/Layout/ConditionalLayout";
 import type React from "react";
 
 const geistSans = Geist({

@@ -2,7 +2,7 @@
 import { PaymentService } from "@/services/payment.service";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useUser } from "@/components/ui/ConditionalLayout";
+import { useUser } from "@/components/ui/Layout/ConditionalLayout";
 import Home from "@/app/page";
 import { cn } from "@/lib/utils";
 

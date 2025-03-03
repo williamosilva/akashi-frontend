@@ -9,7 +9,7 @@ import { authService } from "@/services";
 import { useRouter } from "next/navigation";
 import { API_CONFIG } from "@/config/api.config";
 import { AuthService } from "@/services/auth.service";
-import { useUser } from "./ConditionalLayout";
+import { useUser } from "@/components/ui/Layout/ConditionalLayout";
 import Image from "next/image";
 
 interface AuthModalProps {

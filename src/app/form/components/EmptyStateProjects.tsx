@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { FileText } from "lucide-react";
 import { montserrat } from "@/styles/fonts";
 import { cn } from "@/lib/utils";
-import { Tooltip, TooltipProvider } from "@/components/ui/Tooltip";
+import { Tooltip, TooltipProvider } from "@/components/ui/Utils/Tooltip";
 
 interface EmptyStateProjectsProps {
   setOpenCreateProjectModal: (isOpen: boolean) => void;

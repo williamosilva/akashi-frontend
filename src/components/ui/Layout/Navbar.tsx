@@ -6,7 +6,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { jetbrainsMono } from "@/styles/fonts";
-import { AuthModal } from "@/components/ui/AuthModal";
+import { AuthModal } from "@/components/ui/Modals/AuthModal";
 import { useUser } from "./ConditionalLayout";
 import { AuthService } from "@/services/auth.service";
 import { useRouter } from "next/navigation";

@@ -13,15 +13,19 @@ import {
   X,
   LogOut,
 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
-import { Input } from "@/components/ui/Input";
-import { CreateProjectModal } from "./CreateProjectModal";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/Utils/Avatar";
+import { Input } from "@/components/ui/Utils/Input";
+import { CreateProjectModal } from "../Modals/CreateProjectModal";
 import { ProjectService } from "@/services/project.service";
 import { Project, CreateProjectDto } from "@/types/project.types";
-import { Tooltip, TooltipProvider } from "./Tooltip";
+import { Tooltip, TooltipProvider } from "../Utils/Tooltip";
 import { AuthService } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
-import { useUser } from "@/components/ui/ConditionalLayout";
+import { useUser } from "@/components/ui/Layout/ConditionalLayout";
 
 const Sidebar = ({
   className,

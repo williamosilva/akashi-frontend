@@ -2,8 +2,8 @@ import React, { JSX, useState } from "react";
 import { Check, Copy } from "lucide-react";
 import Image from "next/image";
 import { jetbrainsMono } from "@/styles/fonts";
-import { Tooltip, TooltipProvider } from "../Tooltip";
-import { Button } from "../button";
+import { Tooltip, TooltipProvider } from "../Utils/Tooltip";
+import { Button } from "../Utils/button";
 import { cn } from "@/lib/utils";
 
 type ProgrammingLanguage = "typescript" | "python" | "java";

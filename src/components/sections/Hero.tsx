@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import NetworkCanvas from "@/three/NetworkCanvas";
 import { jetbrainsMono, montserrat } from "@/styles/fonts";
 import { fadeUpVariants } from "@/animations/variation";
-import { useHook, useUser } from "../ui/ConditionalLayout";
+import { useHook, useUser } from "../ui/Layout/ConditionalLayout";
 import { useRouter } from "next/navigation";
 
 export default function AkashiHero() {

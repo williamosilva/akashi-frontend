@@ -2,12 +2,12 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Navbar from "@/components/ui/Navbar";
-import Sidebar from "@/components/ui/Sidebar";
+import Navbar from "@/components/ui/Layout/Navbar";
+import Sidebar from "@/components/ui/Layout/Sidebar";
 import type React from "react";
 import { AuthService } from "@/services/auth.service";
 import { createContext, useContext } from "react";
-import LoadingComponent from "./LoadingComponent";
+import LoadingComponent from "../Utils/LoadingComponent";
 
 const VALID_ROUTES = ["/", "/form", "/success"];
 

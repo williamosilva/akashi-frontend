@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Star, Plus, Sparkles, Loader2 } from "lucide-react";
 import { PremiumButtonProps } from "@/types/user.types";
 import { PaymentService } from "@/services/payment.service";
-import { useUser } from "./ConditionalLayout";
+import { useUser } from "../Layout/ConditionalLayout";
 import { useState } from "react";
 
 const SparkleEffect = () => {

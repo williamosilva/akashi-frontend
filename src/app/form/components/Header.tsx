@@ -1,4 +1,4 @@
-import { Tooltip, TooltipProvider } from "@/components/ui/Tooltip";
+import { Tooltip, TooltipProvider } from "@/components/ui/Utils/Tooltip";
 import { cn } from "@/lib/utils";
 import { montserrat } from "@/styles/fonts";
 import { motion } from "framer-motion";

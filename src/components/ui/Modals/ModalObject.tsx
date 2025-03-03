@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Modal } from "./Modal";
-import { ObjectHeader } from "./Object-modal-content/ObjectHeader";
-import { ObjectProperties } from "./Object-modal-content/ObjectProperties";
-import { ObjectActions } from "./Object-modal-content/ObjectActions";
+import { Modal } from "../Modals/Modal";
+import { ObjectHeader } from "../Object-modal-content/ObjectHeader";
+import { ObjectProperties } from "../Object-modal-content/ObjectProperties";
+import { ObjectActions } from "../Object-modal-content/ObjectActions";
 import { ProjectService } from "@/services/project.service";
-import { useUser } from "./ConditionalLayout";
+import { useUser } from "@/components/ui/Layout/ConditionalLayout";
 import type { ModalObjectProps, DynamicIntegrationObject } from "@/types";
 
 const DEFAULT_DATA: DynamicIntegrationObject = {};

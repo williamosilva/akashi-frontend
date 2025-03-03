@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Copy, Check } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Utils/button";
 import { cn } from "@/lib/utils";
 import { jetbrainsMono, montserrat } from "@/styles/fonts";
 

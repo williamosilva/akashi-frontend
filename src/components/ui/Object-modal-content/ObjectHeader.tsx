@@ -1,8 +1,8 @@
 import { ArrowUpDown, Pencil, X } from "lucide-react";
-import PremiumButton from "@/components/ui/PremiumButton";
+import PremiumButton from "@/components/ui/Utils/PremiumButton";
 import type { ObjectHeaderProps } from "@/types";
 import { useState, useRef, memo } from "react";
-import PremiumButtonEmpty from "../PremiumButtonEmpty";
+import PremiumButtonEmpty from "../Utils/PremiumButtonEmpty";
 import { cn } from "@/lib/utils";
 
 const NameEditor = memo(

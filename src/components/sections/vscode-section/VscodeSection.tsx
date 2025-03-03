@@ -116,7 +116,7 @@ export default function DynamicVSCodeSection() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.3 }}
-                    className="text-sm hidden sm:inline"
+                    className="text-sm hidden sm:inline whitespace-nowrap"
                   >
                     {lang === "javascript"
                       ? "project-data.js"
@@ -126,7 +126,7 @@ export default function DynamicVSCodeSection() {
                   </motion.span>
                 </div>
               </div>
-              <div className="flex-grow p-4 overflow-auto bg-[#282a36] h-[300px] w-full sm:h-[400px] md:h-[500px] scrollbar-thin scrollbar-thumb-[#44475a] scrollbar-track-[#282a36]">
+              <div className="flex-grow p-4 overflow-auto bg-[#282a36] h-[300px]  sm:h-[400px] md:h-[500px] scrollbar-thin scrollbar-thumb-[#44475a] scrollbar-track-[#282a36]">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={`code-${key}`}

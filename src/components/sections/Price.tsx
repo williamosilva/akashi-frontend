@@ -6,7 +6,7 @@ import { plans } from "@/data";
 import { jetbrainsMono, montserrat } from "@/styles/fonts";
 import { useState, useEffect, useContext } from "react";
 import { PaymentService } from "@/services/payment.service";
-import { useHook, UserContext } from "@/components/ui/ConditionalLayout";
+import { useHook, UserContext } from "@/components/ui/Layout/ConditionalLayout";
 
 const PlanCard = ({
   plan,

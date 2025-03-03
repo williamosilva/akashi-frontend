@@ -6,7 +6,7 @@ import NetworkCanvas from "@/three/NetworkCanvas";
 import { jetbrainsMono, montserrat } from "@/styles/fonts";
 import { fadeUpVariants } from "@/animations/variation";
 import Link from "next/link";
-import Background from "@/components/ui/Background";
+import Background from "@/components/ui/Background/Background";
 import { Rocket } from "lucide-react";
 
 export default function Custom404() {

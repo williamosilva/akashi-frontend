@@ -1,22 +1,22 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { AuroraBackground } from "@/components/ui/AuroraBackground";
+import { AuroraBackground } from "@/components/ui/Background/AuroraBackground";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { montserrat, jetbrainsMono } from "@/styles/fonts";
-import { useProject } from "@/components/ui/ConditionalLayout";
+import { useProject } from "@/components/ui/Layout/ConditionalLayout";
 import { ProjectService } from "@/services/project.service";
 import { PartialProjectData, FormattedProject } from "@/types/project.types";
-import ModalObject from "@/components/ui/ModalObject";
-import LoadingComponent from "@/components/ui/LoadingComponent";
+import ModalObject from "@/components/ui/Modals/ModalObject";
+import LoadingComponent from "@/components/ui/Utils/LoadingComponent";
 import Header from "./components/Header";
 import MainContent from "./components/MainContent";
 import EmptyStateObjects from "./components/EmptyStateObjects";
 import EmptyStateProjects from "./components/EmptyStateProjects";
 import { SucessPaid } from "./components/sucess-paid/SucessPaid";
 import { useSearchParams } from "next/navigation";
-import { useUser } from "@/components/ui/ConditionalLayout";
+import { useUser } from "@/components/ui/Layout/ConditionalLayout";
 
 export default function FormPage() {
   const searchParams = useSearchParams();

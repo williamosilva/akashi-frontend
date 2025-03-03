@@ -3,7 +3,7 @@
 import type React from "react";
 import { useState } from "react";
 import { Modal } from "./Modal";
-import { Input } from "@/components/ui/Input";
+import { Input } from "@/components/ui/Utils/Input";
 import { motion } from "framer-motion";
 
 interface CreateProjectModalProps {

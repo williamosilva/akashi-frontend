@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { Github, Linkedin, Globe } from "lucide-react";
 import { fadeInUpVariants } from "@/animations/variation";
 import { jetbrainsMono } from "@/styles/fonts";
-import { useHook, useUser } from "@/components/ui/ConditionalLayout";
+import { useHook, useUser } from "@/components/ui/Layout/ConditionalLayout";
 import { AuthService } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
 

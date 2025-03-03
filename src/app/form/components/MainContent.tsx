@@ -3,9 +3,9 @@ import { motion } from "framer-motion";
 import { ArrowUpDown, Plus, Folder } from "lucide-react";
 import { PartialProjectData } from "@/types/project.types";
 import { montserrat } from "@/styles/fonts";
-import { MagicCard } from "@/components/ui/MagicCard";
+import { MagicCard } from "@/components/ui/Utils/MagicCard";
 import { JsonVisualizer } from "@/components/ui/JsonVisualizer/Main";
-import QuoteCard from "@/components/ui/QuoteCard";
+import QuoteCard from "@/components/ui/Utils/QuoteCard";
 import { cn } from "@/lib/utils";
 import { FormattedProject } from "@/types/project.types";
 

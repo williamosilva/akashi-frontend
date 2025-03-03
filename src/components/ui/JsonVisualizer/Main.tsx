@@ -7,7 +7,7 @@ import { jetbrainsMono } from "@/styles/fonts";
 import { JsonVisualizerContent } from "./JsonVisualizerContent";
 import { TypeVisualizerContent } from "./TypeVisualizerContent";
 import UsageVisualizerContent from "./UsageVisualizerContent";
-import { Tabs } from "@/components/ui/VercelTabs";
+import { Tabs } from "@/components/ui/Utils/VercelTabs";
 
 export type ViewType = "json" | "types" | "usage";
 
