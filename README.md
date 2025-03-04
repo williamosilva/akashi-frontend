@@ -74,8 +74,7 @@ All rights reserved. This code is shared for demonstration and educational revie
 This project is for educational purposes only. It is not intended for production use without proper review and security considerations.
 
 ## 🔗 Resources
-- **Metadata Analysis**: [https://www.akashi-baas.com.br/](https://www.akashi-baas.com.br/)
-
+- **Website**: [https://www.akashi-baas.com.br/](https://www.akashi-baas.com.br/)
 ---
 <div align="center">
   <p>Made with ❤️ for learning by Wiliam Silva</p>
