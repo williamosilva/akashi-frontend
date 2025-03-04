@@ -22,12 +22,10 @@
   <br>
 </div>
 
-## 📋 About
-
-This project is a frontend application for a SaaS product built with Next.js and React. It has been created for **educational purposes** and made public to share knowledge and demonstrate best practices in building modern React applications.
+## 🧩 What is Akashi?
+Akashi is a ready-to-use backend solution designed specifically for frontend developers who need a free API to retrieve and visualize data. It allows developers to make GET requests and receive information in a visual format without having to build a backend from scratch. Akashi also supports integration with external APIs, enabling developers to enhance their applications with additional functionality and data sources. This solution bridges the gap between frontend development and data management, making it easier to create full-stack applications without extensive backend knowledge.
 
 ## 🚀 Features
-
 - **Modern UI**: Built with Tailwind CSS and Radix UI components
 - **Responsive Design**: Fully responsive layout for all device sizes
 - **Animations**: Smooth animations powered by Framer Motion
@@ -39,7 +37,6 @@ This project is a frontend application for a SaaS product built with Next.js and
 - **SEO Friendly**: Built-in SEO optimizations
 
 ## 🛠️ Tech Stack
-
 - **Framework**: [Next.js](https://nextjs.org/) (v15)
 - **UI Library**: [React](https://react.dev/) (v19)
 - **Styling**: 
@@ -58,11 +55,8 @@ This project is a frontend application for a SaaS product built with Next.js and
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 
 ## 🔒 License
-
 ### Study Showcase License
-
 Copyright © 2025
-
 This codebase is provided solely for **educational and showcase purposes**. The code is made available publicly to demonstrate the author's learning process and implementation skills.
 
 **Permissions**:
@@ -77,11 +71,12 @@ This codebase is provided solely for **educational and showcase purposes**. The 
 All rights reserved. This code is shared for demonstration and educational review only.
 
 ## ⚠️ Disclaimer
-
 This project is for educational purposes only. It is not intended for production use without proper review and security considerations.
 
----
+## 🔗 Resources
+- **Metadata Analysis**: [https://www.akashi-baas.com.br/](https://www.akashi-baas.com.br/)
 
+---
 <div align="center">
   <p>Made with ❤️ for learning by Wiliam Silva</p>
 </div>
