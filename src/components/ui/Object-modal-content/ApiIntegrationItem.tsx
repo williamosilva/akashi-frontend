@@ -314,7 +314,7 @@ export function ApiIntegrationItem({
           <div className="p-4 h-full overflow-y-auto">
             <pre className="text-zinc-400 text-sm overflow-x-auto pr-32">
               {loading ? (
-                <span className="text-orange-500">Carregando...</span>
+                <span className="text-orange-500">Loading...</span>
               ) : apiResponse ? (
                 <>
                   {apiResponse.error && (
@@ -323,7 +323,7 @@ export function ApiIntegrationItem({
 
                       {apiResponse.details && (
                         <div className="text-red-300">
-                          Detalhes: {safeStringify(apiResponse.details, 2)}
+                          Details: {safeStringify(apiResponse.details, 2)}
                         </div>
                       )}
                     </div>
@@ -335,7 +335,7 @@ export function ApiIntegrationItem({
                   )}
                 </>
               ) : (
-                <span className="text-zinc-500">Nenhum dado recebido</span>
+                <span className="text-zinc-500">No data received</span>
               )}
             </pre>
           </div>
