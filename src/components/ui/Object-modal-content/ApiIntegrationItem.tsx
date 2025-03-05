@@ -65,7 +65,7 @@ export function ApiIntegrationItem({
     if (newKey === propertyKey) return true;
 
     if (existingKeys?.includes(newKey)) {
-      setLocalError(`A chave "${newKey}" já existe`);
+      setLocalError(`The key "${newKey}" already exists`);
       return false;
     }
 
@@ -78,7 +78,7 @@ export function ApiIntegrationItem({
     setDraftKey(newKey);
 
     if (newKey !== propertyKey && existingKeys?.includes(newKey)) {
-      setLocalError(`A chave "${newKey}" já existe`);
+      setLocalError(`The key "${newKey}" already exists`);
     } else {
       setLocalError(undefined);
     }
@@ -103,7 +103,7 @@ export function ApiIntegrationItem({
 
     try {
       if (!value.apiUrl) {
-        setApiResponse({ error: "API URL é obrigatória" });
+        setApiResponse({ error: "URL API is mandatory" });
         return;
       }
 
@@ -136,13 +136,12 @@ export function ApiIntegrationItem({
           setApiResponse(
             results.length > 0
               ? { data: results }
-              : { error: "JSONPath não retornou resultados" }
+              : { error: "JSONPath returned no results" }
           );
         } catch (error) {
           setApiResponse({
-            error: "Erro no JSONPath",
-            details:
-              error instanceof Error ? error.message : "Erro desconhecido",
+            error: "Error in JSONPath",
+            details: error instanceof Error ? error.message : "Unknown error",
           });
         }
       } else {
@@ -150,8 +149,8 @@ export function ApiIntegrationItem({
       }
     } catch (error) {
       const errorMessage =
-        error instanceof Error ? error.message : "Erro desconhecido";
-      setApiResponse({ error: "Erro na requisição", details: errorMessage });
+        error instanceof Error ? error.message : "Unknown error";
+      setApiResponse({ error: "Request error", details: errorMessage });
     } finally {
       setLoading(false);
     }
