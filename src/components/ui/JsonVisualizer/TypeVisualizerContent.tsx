@@ -421,6 +421,24 @@ export const TypeVisualizerContent: React.FC<{ data: DataObject }> = ({
     }
 
     const dataObj = data as Record<string, unknown>;
+
+    // Gerar interfaces filhas primeiro
+    let childInterfaces = "";
+    Object.entries(dataObj).forEach(([key, value]) => {
+      if (
+        typeof value === "object" &&
+        value !== null &&
+        !Array.isArray(value)
+      ) {
+        const nestedName = generateInterfaceName(key);
+        childInterfaces += generateTypeScriptCode(value, nestedName, indent);
+      }
+    });
+
+    // Adicionar interfaces filhas ao código
+    code += childInterfaces;
+
+    // Gerar a interface atual
     code += `${indentStr}export interface ${rootName} {\n`;
     Object.entries(dataObj).forEach(([key, value]) => {
       const propName =
@@ -432,9 +450,7 @@ export const TypeVisualizerContent: React.FC<{ data: DataObject }> = ({
         value !== null &&
         !Array.isArray(value)
       ) {
-        const nestedName = generateInterfaceName(key);
-        code += generateTypeScriptCode(value, nestedName, indent);
-        propType = nestedName;
+        propType = generateInterfaceName(key);
       }
 
       code += `${indentStr}  ${propName}: ${propType};\n`;
