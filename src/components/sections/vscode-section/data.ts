@@ -32,7 +32,7 @@ export const codeSnippetPython = `
 <span class="text-[#ff79c6]">import</span> <span class="text-[#f8f8f2]">requests</span>
 <span class="text-[#ff79c6]">import</span> <span class="text-[#f8f8f2]">json</span>
 
-<span class="text-[#6272a4]"># Função simples para buscar dados do projeto</span>
+<span class="text-[#6272a4]"># Simple function to search for project data</span>
 <span class="text-[#50fa7b]">def</span> <span class="text-[#8be9fd]">get_project_data</span><span class="text-[#f8f8f2]">():</span>
     <span class="text-[#ff79c6]">try</span><span class="text-[#f8f8f2]">:</span>
         <span class="text-[#f8f8f2]">response = requests.get(</span><span class="text-[#f1fa8c]">"Your-akashi-private-link"</span><span class="text-[#f8f8f2]">)</span>
@@ -43,7 +43,7 @@ export const codeSnippetPython = `
         <span class="text-[#f8f8f2]">print(</span><span class="text-[#f1fa8c]">f"Error fetching project data: {error}"</span><span class="text-[#f8f8f2]">)</span>
         <span class="text-[#ff79c6]">raise</span> <span class="text-[#f8f8f2]">error</span>
 
-<span class="text-[#6272a4]"># Uso principal</span>
+<span class="text-[#6272a4]"># Main use</span>
 <span class="text-[#ff79c6]">if</span> <span class="text-[#f8f8f2]">__name__ == </span><span class="text-[#f1fa8c]">"__main__"</span><span class="text-[#f8f8f2]">:</span>
     <span class="text-[#ff79c6]">try</span><span class="text-[#f8f8f2]">:</span>
         <span class="text-[#f8f8f2]">data = get_project_data()</span>
